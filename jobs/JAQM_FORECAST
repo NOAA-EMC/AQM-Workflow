@@ -1,0 +1,114 @@
+#!/bin/bash
+
+date
+export PS4='+ $SECONDS + '
+set -xue
+
+#-----------------------------------------------------------------------
+export USHaqm=${USHaqm:-${HOMEaqm}/ush}
+export PARMaqm=${PARMaqm:-${HOMEaqm}/parm}
+
+export subcyc=0
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export RUN="${RUN:-aqm}"
+export umbrella_forecast_data=${DATAROOT}/${RUN}_forecast_${cyc}_${aqm_ver}
+# exception handling for retro case
+if [ -d ${umbrella_forecast_data}/RESTART_ORG ]; then
+  [[ -d ${DATAROOT}/${RUN}_forecast_${cyc}_${aqm_ver}-BAK ]] && rm -rf ${DATAROOT}/${RUN}_forecast_${cyc}_${aqm_ver}-BAK
+  mv ${umbrella_forecast_data} ${DATAROOT}/${RUN}_forecast_${cyc}_${aqm_ver}-BAK
+fi
+
+export DATA=${DATA:-${umbrella_forecast_data}/${jobid}}
+mkdir -p ${DATA}
+cd ${DATA}
+
+. $USHaqm/aqm_nco_config.sh
+
+. $USHaqm/source_util_funcs.sh
+
+export cycle=${cycle:-t${cyc}z}
+
+setpdy.sh
+. ./PDY
+
+export CDATE=${PDY}${cyc}
+
+. $USHaqm/job_preamble.sh 
+
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+
+export EXECaqm=${EXECaqm:-${HOMEaqm}/exec}
+export PARMaqm=${PARMaqm:-${HOMEaqm}/parm}
+export FIXaqm=${FIXaqm:-${HOMEaqm}/fix}
+
+export COMIN="${COMIN:-$(compath.py ${NET}/${aqm_ver}/${RUN}.${PDY})}"
+export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${aqm_ver}/${RUN}.${PDY}/${cyc})}"
+
+#-----------------------------------------------------------------------
+# Get the full path to the file in which this script/function is located 
+# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
+# which the file is located (scrfunc_dir).
+#-----------------------------------------------------------------------
+#
+scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
+scrfunc_fn=$( basename "${scrfunc_fp}" )
+scrfunc_dir=$( dirname "${scrfunc_fp}" )
+
+#env
+#-----------------------------------------------------------------------
+# Print message indicating entry into script.
+#-----------------------------------------------------------------------
+#
+print_info_msg "
+========================================================================
+Entering script:  \"${scrfunc_fn}\"
+In directory:     \"${scrfunc_dir}\"
+
+This is the J-job script for the task that runs a forecast with FV3 for 
+the specified cycle.
+========================================================================"
+#
+#-----------------------------------------------------------------------
+# Create the INPUT and RESTART directories under the run directory.
+#-----------------------------------------------------------------------
+#
+mkdir -p ${DATA}/INPUT
+mkdir -p ${DATA}/RESTART
+
+export INPUT_DATA="${INPUT_DATA:-${COMIN}/${cyc}}"
+#
+#-----------------------------------------------------------------------
+# Call the ex-script for this J-job and pass to it the necessary varia-
+# bles.
+#-----------------------------------------------------------------------
+#
+${HOMEaqm}/scripts/exaqm_forecast.sh
+export err=$?
+err_chk
+#
+#=======================================================================
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
+# 
+#=======================================================================
+# Note:  $DATA for FORECAST will be deleted by JAQM_OUTPUT
+#=======================================================================
+# Print exit message
+print_info_msg "
+========================================================================
+Exiting script:  \"${scrfunc_fn}\"
+In directory:    \"${scrfunc_dir}\"
+========================================================================"
+#
+#-----------------------------------------------------------------------
+# Restore the shell options saved at the beginning of this script/func-
+# tion.
+#-----------------------------------------------------------------------
+#
+{ restore_shell_opts; } > /dev/null 2>&1
+
+date

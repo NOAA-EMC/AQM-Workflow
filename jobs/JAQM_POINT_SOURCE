@@ -1,0 +1,109 @@
+#!/bin/bash
+
+date
+export PS4='+ $SECONDS + '
+set -xue
+
+#-----------------------------------------------------------------------
+export USHaqm=${USHaqm:-${HOMEaqm}/ush}
+export PARMaqm=${PARMaqm:-${HOMEaqm}/parm}
+
+export subcyc=0
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+
+export DATA=${DATA:-${DATAROOT}/${jobid}}
+mkdir -p ${DATA}
+cd ${DATA}
+
+. $USHaqm/aqm_nco_config.sh
+
+. $USHaqm/source_util_funcs.sh
+
+export cycle=${cycle:-t${cyc}z}
+
+setpdy.sh
+. ./PDY
+
+export CDATE=${PDY}${cyc}
+. $USHaqm/job_preamble.sh
+
+export EXECaqm=${EXECaqm:-${HOMEaqm}/exec}
+export PARMaqm=${PARMaqm:-${HOMEaqm}/parm}
+export FIXaqm=${FIXaqm:-${HOMEaqm}/fix}
+
+export FIXemispt="${FIXemispt:-${FIXaqm}/emission/nei2016v1-pt}"
+
+export COMINgfs="${COMINgfs:-$(compath.py gfs/${gfs_ver})}"
+export COMIN="${COMIN:-$(compath.py ${NET}/${aqm_ver}/${RUN}.${PDY})}"
+export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${aqm_ver}/${RUN}.${PDY}/${cyc})}"
+
+#-----------------------------------------------------------------------
+# Get the full path to the file in which this script/function is located 
+# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
+# which the file is located (scrfunc_dir).
+#-----------------------------------------------------------------------
+scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
+scrfunc_fn=$( basename "${scrfunc_fp}" )
+scrfunc_dir=$( dirname "${scrfunc_fp}" )
+
+#env
+#-----------------------------------------------------------------------
+# Print message indicating entry into script.
+#-----------------------------------------------------------------------
+#
+print_info_msg "
+========================================================================
+Entering script:  \"${scrfunc_fn}\"
+In directory:     \"${scrfunc_dir}\"
+
+This is the J-job script for the task that generates the point source files.
+========================================================================"
+#
+#-----------------------------------------------------------------------
+# Set the name of and create the directory in which the output from this
+# script will be placed (if it doesn't already exist).
+#-----------------------------------------------------------------------
+#
+export INPUT_DATA="${INPUT_DATA:-${COMIN}/${cyc}}"
+mkdir -p ${INPUT_DATA}
+#
+#-----------------------------------------------------------------------
+# Set the run directory
+#-----------------------------------------------------------------------
+#
+DATA="${DATA:-${COMIN}${SLASH_ENSMEM_SUBDIR}/tmp_POINT_SOURCE}"
+#
+#
+#-----------------------------------------------------------------------
+# Call the ex-script for this J-job.
+#-----------------------------------------------------------------------
+#
+${HOMEaqm}/scripts/exaqm_point_source.sh
+export err=$?; err_chk
+#
+#======================================================================
+msg="JOB ${job} HAS COMPLETED NORMALLY."
+postmsg "${msg}"
+
+if [ "${KEEPDATA}" != "YES" ]; then
+   rm -rf ${DATA}
+fi
+#=======================================================================
+# Print exit message
+print_info_msg "
+========================================================================
+Exiting script:  \"${scrfunc_fn}\"
+In directory:    \"${scrfunc_dir}\"
+========================================================================"
+#
+#-----------------------------------------------------------------------
+#
+# Restore the shell options saved at the beginning of this script/func-
+# tion.
+#
+#-----------------------------------------------------------------------
+#
+{ restore_shell_opts; } > /dev/null 2>&1
+
+date
