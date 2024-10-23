@@ -46,7 +46,7 @@ DATA=$(printf '%q' "$DATA")
 MODEL_VER_DFV=$(printf '%q' "$MODEL_VER_DFV")
 #
 # Dynamically generate target files
-cd "$DATA" || { echo "Failed to change directory to $DATA"; exit 1; }
+#cd "$DATA" || { echo "Failed to change directory to $DATA"; exit 1; }
 #
 ## SET CONFIGURATION HERE
 # [metadata]
@@ -134,7 +134,7 @@ RUN_TASK_BIAS_CORRECTION_O3='TRUE'
 RUN_TASK_BIAS_CORRECTION_PM25='TRUE'
 
 #
-source configurable_variables
+source ${HOMEaqm}/ush/configurable_variables.sh
 for file_in in ${File_to_modify_source}; do
   cp "$HOMEaqm/parm/config/${file_in}.template" .
   file_src="${file_in}.template"
@@ -142,7 +142,7 @@ for file_in in ${File_to_modify_source}; do
   cp "$file_src" "$file_tmp" || { echo "Failed to copy $file_src to $file_tmp"; exit 1; }
   for variable in "${configurable_variables[@]}"; do
     if [ ! -z "${variable+x}" ]; then #CHECK IF VARIABLE IS SET ALREADY SO IT CAN SET IT IN THE TEMPLATE. (SET ABOVE)
-      sed -i -e "s|@${variable}@|${${variable}}|g" "${file_tmp}"
+      sed -i -e "s|@${variable}@|${!variable}|g" "${file_tmp}"
     fi
   done
   # sed -i -e "s|@HOMEaqm@|${HOMEaqm}|g"              "$file_tmp"
@@ -156,6 +156,7 @@ for file_in in ${File_to_modify_source}; do
 #
   mv "$file_tmp" "$file_in" || { echo "Failed to move $file_tmp to $file_in"; exit 1; }
 done
-. $DATA/var_defns.sh 
+#. $DATA/var_defns.sh 
+. var_defns.sh 
 
 exit 1
