@@ -31,13 +31,7 @@
 
 - [ ] gaea.intel
 - [ ] hera.intel
-- [ ] hercules.intel
-- [ ] orion.intel
 - [ ] wcoss2.intel
-- [ ] NOAA Cloud (indicate which platform)
-- [ ] Jenkins
-- [ ] fundamental test suite
-- [ ] comprehensive tests (specify *which* if a subset was used)
 
 ## DEPENDENCIES:
 <!-- Add any links to external PRs (e.g. regional_workflow and/or UFS PRs). For example:
