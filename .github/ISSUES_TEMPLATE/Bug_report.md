@@ -35,3 +35,11 @@ Please describe in as much detail as possible. -->
 
 # Output (optional)
 <!-- Please include any relevant log files, screenshots or other output here. -->
+
+## PRIOTIRY LEVEL
+<!-- Add an X to check off a box. -->
+- [ ] Critical: emergency fix for a major issue
+- [ ] High: upcoming production fix/change 
+- [ ] Normal: important but not high priority
+- [ ] Low: routine addition or bonus feature that can wait
+      
