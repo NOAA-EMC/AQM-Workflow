@@ -395,7 +395,11 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 # Before we go on load modules, we first need to activate Lmod for some systems
-module reset
+if [ "${PLATFORM}" = "wcoss2" ]; then
+  module reset
+else
+  module purge
+fi
 
 # source the module file for this platform/compiler combination, then build the code
 printf "... Load MODULE_FILE and create BUILD directory ...\n"
