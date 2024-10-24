@@ -47,8 +47,6 @@
 
 ## CHECKLIST
 <!-- Add an X to check off a box. -->
-- [ ] My code follows the style guidelines in the Contributor's Guide
-- [ ] I have performed a self-review of my own code using the Code Reviewer's Guide
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] My changes need updates to the documentation. I have made corresponding changes to the documentation
 - [ ] My changes do not require updates to the documentation (explain).
