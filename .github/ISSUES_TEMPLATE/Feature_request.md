@@ -36,3 +36,10 @@ other issues as appropriate e.g. #IssueNumber has a dependency on this issue -->
 ## Alternative Solutions (optional)
 <!-- If applicable, add a description of any alternative solutions or features 
 you've considered. -->
+
+## PRIOTIRY LEVEL
+<!-- Add an X to check off a box. -->
+- [ ] Critical: emergency fix for a major issue
+- [ ] High: upcoming production fix/change 
+- [ ] Normal: important but not high priority
+- [ ] Low: routine addition or bonus feature that can wait
