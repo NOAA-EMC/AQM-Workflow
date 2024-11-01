@@ -58,19 +58,19 @@ CCPP_PHYS_SUITE_FN='suite_FV3_GFS_v16.xml'
 CCPP_PHYS_SUITE_IN_CCPP_FP='${HOMEaqm}/sorc/ufs-weather-model/FV3/ccpp/suites/suite_FV3_GFS_v16.xml'
 CCPP_PHYS_SUITE_FP='${HOMEaqm}/parm/config/suite_FV3_GFS_v16.xml'
 PREDEF_GRID_NAME='AQM_NA_13km'
-DATE_FIRST_CYCL='202310180000'
-DATE_LAST_CYCL='209910181800'
+DATE_FIRST_CYCL='202307010000'
+DATE_LAST_CYCL='202307010000'
 INCR_CYCL_FREQ='6'
 FCST_LEN_HRS='-1'
-FCST_LEN_CYCL=( "6" "72" "72" "6" )
-RESTART_INTERVAL='6 12 18 24 30 36 42 48 54 60 66'
+FCST_LEN_CYCL=( "6" )
+RESTART_INTERVAL='6'
 VERBOSE='TRUE'
 DEBUG='FALSE'
 COMPILER='intel'
 SYMLINK_FIX_FILES='FALSE'
 DO_REAL_TIME='TRUE'
 COLDSTART='FALSE'
-WARMSTART_CYCLE_DIR='${COMaqm}/aqm.${WARMSTART_PDY}/18'
+WARMSTART_CYCLE_DIR='${COMaqm}/aqm.${WARMSTART_PDY}/00'
 RES_IN_FIXLAM_FILENAMES='793'
 CRES='C793'
 SDF_USES_RUC_LSM='FALSE'
@@ -145,8 +145,8 @@ for file_in in ${File_to_modify_source}; do
   file_tmp=$(mktemp -p .) || { echo "Failed to create temporary file"; exit 1; }
   cp "$file_src" "$file_tmp" || { echo "Failed to copy $file_src to $file_tmp"; exit 1; }
   for variable in "${configurable_variables[@]}"; do
-    if [ ! -z "${variable+x}" ]; then #CHECK IF VARIABLE IS SET ALREADY SO IT CAN SET IT IN THE TEMPLATE. (SET ABOVE)
-      ${!variable}=$(printf '%q' "${!variable}")
+    if [ -v ${variable} ]; then #CHECK IF VARIABLE IS SET ALREADY SO IT CAN SET IT IN THE TEMPLATE. (SET ABOVE)
+      eval "${variable}=$(printf '%q' "${!variable}")"
       sed -i -e "s|@${variable}@|${!variable}|g" "${file_tmp}"
     fi
   done

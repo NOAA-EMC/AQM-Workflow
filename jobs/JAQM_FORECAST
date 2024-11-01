@@ -23,7 +23,7 @@ export DATA=${DATA:-${umbrella_forecast_data}/${jobid}}
 mkdir -p ${DATA}
 cd ${DATA}
 
-. $USHaqm/aqm_nco_config.sh
+. $USHaqm/aqm_wcoss2_dev_config.sh
 
 . $USHaqm/source_util_funcs.sh
 
