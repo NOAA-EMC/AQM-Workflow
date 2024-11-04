@@ -1,25 +1,14 @@
 #!/bin/bash
 
-set -x
-
-msg="JOB $job HAS BEGUN"
-postmsg "$msg"
-   
-export pgm=aqm_fire_emission
-
-EMAIL_SDM=${EMAIL_SDM:-YES}
-
+#
 #-----------------------------------------------------------------------
 #
 # Source the variable definitions file and the bash utility functions.
 #
 #-----------------------------------------------------------------------
 #
-
-. $USHaqm/source_util_funcs.sh
-
+. $USHdir/source_util_funcs.sh
 source_config_for_task "cpl_aqm_parm|task_fire_emission" ${GLOBAL_VAR_DEFNS_FP}
-
 #
 #-----------------------------------------------------------------------
 #
@@ -28,7 +17,7 @@ source_config_for_task "cpl_aqm_parm|task_fire_emission" ${GLOBAL_VAR_DEFNS_FP}
 #
 #-----------------------------------------------------------------------
 #
-{ save_shell_opts; . $USHaqm/preamble.sh; } > /dev/null 2>&1
+{ save_shell_opts; . $USHdir/preamble.sh; } > /dev/null 2>&1
 #
 #-----------------------------------------------------------------------
 #
@@ -64,10 +53,11 @@ data files.
 #
 #-----------------------------------------------------------------------
 #
+set -x
 yyyymmdd=${FIRE_FILE_CDATE:0:8}
 hh=${FIRE_FILE_CDATE:8:2}
 
-CDATE_mh1=`$NDATE -1 ${yyyymmdd}${hh}`
+CDATE_mh1=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC - 1 hours" "+%Y%m%d%H" )
 
 yyyymmdd_mh1=${CDATE_mh1:0:8}
 hh_mh1=${CDATE_mh1:8:2}
@@ -82,93 +72,134 @@ aqm_fire_file_fn="${AQM_FIRE_FILE_PREFIX}_${yyyymmdd}_t${hh}z${AQM_FIRE_FILE_SUF
 
 # Check if the fire file exists in the designated directory
 if [ -e "${DCOMINfire}/${aqm_fire_file_fn}" ]; then
-  cpreq "${DCOMINfire}/${aqm_fire_file_fn}" "${FIRE_EMISSION_STAGING_DIR}"
+  cp "${DCOMINfire}/${aqm_fire_file_fn}" "${DATA}"
 else
   # Copy raw data 
   for ihr in {0..23}; do
-    download_time=`$NDATE -$ihr ${yyyymmdd_mh1}${hh_mh1}`
-    FILE_curr=Hourly_Emissions_13km_${download_time}00_${download_time}00.nc
-    FILE_13km=RAVE-HrlyEmiss-13km_v2r0_blend_s${download_time}00000_e${download_time}59590_c*.nc
+    download_time=$( $DATE_UTIL --utc --date "${yyyymmdd_mh1} ${hh_mh1} UTC - $ihr hours" "+%Y%m%d%H" )
+    FILE_curr=Hourly_Emissions_3km_${download_time}00_${download_time}00.nc
+    if [ "$DO_REAL_TIME" = 'TRUE' ]; then
+      FILE_3km=RAVE-HrlyEmiss-3km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
+    else
+     # FILE_3km=${AQM_FIRE_FILE_PREFIX}_${download_time}00_${download_time}00.nc
+      FILE_3km=RAVE-HrlyEmiss-3km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
+    fi
     yyyymmdd_dn=${download_time:0:8}
     hh_dn=${download_time:8:2}
-    missing_download_time=`$NDATE -24 ${yyyymmdd_dn}${hh_dn}`
+    missing_download_time=$( $DATE_UTIL --utc --date "${yyyymmdd_dn} ${hh_dn} UTC - 24 hours" "+%Y%m%d%H" )
     yyyymmdd_dn_md1=${missing_download_time:0:8}
-    FILE_13km_md1=RAVE-HrlyEmiss-13km_v2r0_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
-    if ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km} 1> /dev/null 2>&1; then
-       if [ $(stat -c %s ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km}) -gt 4000000 ]; then
-           cpreq ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km} ${FILE_curr}
-       fi
-    elif ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1} 1> /dev/null 2>&1; then
-       if [ $(stat -c %s ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1}) -gt 4000000 ]; then
-           echo "WARNING: ${FILE_13km} does not exist or is broken. Replacing with the file from the previous date..."
-           cpreq ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1} ${FILE_curr}
-       fi
+    if [ "$DO_REAL_TIME" = 'TRUE' ]; then
+     FILE_3km_md1=RAVE-HrlyEmiss-3km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
     else
-      message_txt="WARNING Fire Emission RAW data does not exist or broken:
-  FILE_13km_md1 = \"${FILE_13km_md1}\"
+    # FILE_3km_md1=${AQM_FIRE_FILE_PREFIX}_${yyyymmdd_dn_md1}00_${yyyymmdd_dn_md1}00.nc
+     FILE_3km_md1=RAVE-HrlyEmiss-3km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
+    fi
+    if [ -s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km}`) -gt 4000000 ]; then
+      cp -p ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km} ${FILE_curr}
+    elif [ -s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1}`) -gt 4000000 ]; then
+      echo "WARNING: ${FILE_3km} does not exist or broken. Replacing with the file of previous date ..."
+      cp -p ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1} ${FILE_curr}
+    else
+      message_txt="Fire Emission RAW data does not exist or broken:
+  FILE_3km_md1 = \"${FILE_3km_md1}\"
   DCOMINfire = \"${DCOMINfire}\""
 
-        cpreq ${FIXaqmfire}/Hourly_Emissions_13km_dummy.nc ${FILE_curr}
-        message_warning="WARNING: ${message_txt}. Replacing with the dummy file :: AQM RUN SOFT FAILED."
-        print_info_msg "${message_warning}"
-        if [ "${EMAIL_SDM^^}" = "YES" ] ; then
-	  MAILFROM=${MAILFROM:-"nco.spa@noaa.gov"}
-          MAILTO=${MAILTO:-"${maillist}"}
-          subject="${cyc}Z ${RUN^^} Output for ${basinname:-} WILDFIRE EMIS "
-          mail.py -s "${subject}" -v "${MAILTO}" 
-	fi
-
+      cp -p ${FIXaqmfire}/Hourly_Emissions_3km_dummy.nc ${FILE_curr}
+      message_warning="WARNING: ${message_txt}. Replacing with the dummy file :: AQM RUN SOFT FAILED."
+      print_info_msg "${message_warning}"
+      if [ ! -z "${maillist_group2}" ]; then
+        echo "${message_warning}" | mail.py $maillist_group2
+      fi
     fi
   done  
 
-  ncks -O -h --mk_rec_dmn time Hourly_Emissions_13km_${download_time}00_${download_time}00.nc temp.nc
+  ncks -O -h --mk_rec_dmn time Hourly_Emissions_3km_${download_time}00_${download_time}00.nc temp.nc
   export err=$?
   if [ $err -ne 0 ]; then
-    message_txt="FATAL ERROR Call to NCKS returned with nonzero exit code."
-      err_exit "${message_txt}"
+    message_txt="Call to NCKS returned with nonzero exit code."
+    err_exit "${message_txt}"
   fi
 
-  mv temp.nc Hourly_Emissions_13km_${download_time}00_${download_time}00.nc
+  mv temp.nc Hourly_Emissions_3km_${download_time}00_${download_time}00.nc
 
-  ncrcat -h Hourly_Emissions_13km_*.nc Hourly_Emissions_13km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc
+  ncrcat -h Hourly_Emissions_3km_*.nc Hourly_Emissions_3km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc
   export err=$?
   if [ $err -ne 0 ]; then
-    message_txt="FATAL ERROR Call to NCRCAT returned with nonzero exit code."
-      err_exit "${message_txt}"
+    message_txt="Call to NCRCAT returned with nonzero exit code."
+    err_exit "${message_txt}"
   fi
 
-  input_fire="${DATA}/Hourly_Emissions_13km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc"
-  output_fire="${DATA}/Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_new24.t${cyc}z.nc"
+  cp -p ${FIXaqmfire}/esmpy_NA_9km_weight_file.conserv.nc .
+  cp -p ${FIXaqmfire}/grid_spec_RAVE_NA_3km.nc .
+  cp -p ${FIXaqmfire}/grid_spec_RRFS_NA_9km.nc .
 
-  ${USHaqm}/aqm_utils_python/RAVE_remake.allspecies.aqmna13km.g793.py --date "${yyyymmdd}" --cyc "${hh}" --input_fire "${input_fire}" --output_fire "${output_fire}"
+  input_fire="${DATA}/Hourly_Emissions_3km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc"
+  output_fire="${DATA}/Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_new24.t${cyc}z.nc"
+  src_map="grid_spec_RAVE_NA_3km.nc"
+  tgt_map="grid_spec_RRFS_NA_9km.nc"
+  weight_file="esmpy_NA_9km_weight_file.conserv.nc"
+
+  ${USHdir}/aqm_utils_python/RAVE_remake.allspecies.aqmna9km.g1144.py --date "${yyyymmdd}" --cyc "${hh}" --src_map "${src_map}" --tgt_map "${tgt_map}" --weight_file "${weight_file}" --input_fire "${input_fire}" --output_fire "${output_fire}"
   export err=$?
   if [ $err -ne 0 ]; then
-    message_txt="FATAL ERROR Call to python script \"RAVE_remake.allspecies.py\" returned with nonzero exit code."
-      err_exit "${message_txt}"
+    message_txt="Call to python script \"RAVE_remake.allspecies.py\" returned with nonzero exit code."
+    err_exit "${message_txt}"
   fi
 
-  ncks --mk_rec_dmn Time Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_new24.t${cyc}z.nc -o Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc
+  ncks --mk_rec_dmn Time Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_new24.t${cyc}z.nc -o Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc
   export err=$?
   if [ $err -ne 0 ]; then
-    message_txt="FATAL ERROR Call to NCKS returned with nonzero exit code."
-      err_exit "${message_txt}"
+    message_txt="Call to NCKS returned with nonzero exit code."
+    err_exit "${message_txt}"
   fi
 
-  cpreq Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_1.nc 
-  cpreq Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_2.nc
+  cp Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_1.nc 
+  cp Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_2.nc
 
-  ncrcat -O -D 2 Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_1.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_2.nc ${aqm_fire_file_fn}
+  ncrcat -O -D 2 Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_1.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_2.nc ${aqm_fire_file_fn}
 
   export err=$?
   if [ $err -ne 0 ]; then
-    message_txt="FATAL ERROR Call to NCRCAT returned with nonzero exit code."
-      err_exit "${message_txt}"
+    message_txt="Call to NCRCAT returned with nonzero exit code."
+    err_exit "${message_txt}"
   fi
 
-  # Copy the final fire emission file to STAGING_DIR 
-  cpreq "${DATA}/${aqm_fire_file_fn}" "${FIRE_EMISSION_STAGING_DIR}"
+  # Archive the final fire emission file to disk and HPSS
+  if [ "${DO_AQM_SAVE_FIRE}" = "TRUE" ]; then
+    cp "${DATA}/${aqm_fire_file_fn}" ${DCOMINfire}
 
+    hsi_log_fn="log.hsi_put.${yyyymmdd}_${hh}"
+    hsi put ${aqm_fire_file_fn} : ${AQM_FIRE_ARCHV_DIR}/${aqm_fire_file_fn} >& ${hsi_log_fn}
+    export err=$?
+    if [ $err -ne 0 ]; then
+      message_txt="htar file writing operation (\"hsi put ...\") failed. Check the log 
+file hsi_log_fn in the DATA directory for details:
+  DATA = \"${DATA}\"
+  hsi_log_fn = \"${hsi_log_fn}\""
+      err_exit "${message_txt}"
+    fi
+  fi
 fi
+
+#mv ${aqm_fire_file_fn}  temp.nc
+#ncrename -v PM2.5,PM25 temp.nc temp1.nc
+#ncap2 -s 'where(Latitude > 30 && Latitude <=49 && land_cover == 1 ) PM25 = PM25 * 0.22222' temp1.nc temp2.nc
+#ncap2 -s 'where(Latitude <=30 && land_cover == 1 ) PM25 = PM25 * 0.4'       temp2.nc temp3.nc
+#ncap2 -s 'where(Latitude <=49 && land_cover == 3 ) PM25 = PM25 * 0.55555'   temp3.nc temp4.nc
+#ncap2 -s 'where(Latitude <=49 && land_cover == 4 ) PM25 = PM25 * 0.55555'   temp4.nc temp5.nc
+#ncrename -v PM25,PM2.5 temp5.nc temp6.nc
+#mv temp6.nc ${aqm_fire_file_fn}
+#
+
+mv ${aqm_fire_file_fn} temp.nc
+ncrename -v PM2.5,PM25 temp.nc temp1.nc
+ncap2 -s 'where(Latitude > 30 && Latitude <=49 && land_cover == 1 ) PM25 = PM25 * 0.22222' temp1.nc temp2.nc
+ncap2 -s 'where(Latitude <=30 && land_cover == 1 ) PM25 = PM25 * 0.4'       temp2.nc temp3.nc
+ncap2 -s 'where(Latitude <=30 && land_cover >= 2 ) PM25 = PM25 * 0.55555'   temp3.nc temp4.nc
+ncrename -v PM25,PM2.5 temp4.nc temp5.nc
+mv temp5.nc ${aqm_fire_file_fn}
+cp "${DATA}/${aqm_fire_file_fn}" ${FIRE_EMISSION_STAGING_DIR}
+
 #
 #-----------------------------------------------------------------------
 #

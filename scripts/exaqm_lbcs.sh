@@ -257,6 +257,7 @@ cat > gefs2lbc-nemsio.ini <<EOF
  bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
  mofile='${AQM_MOFILE_FP}','.nemsio'
  lbcfile='${NET}.${cycle}${dot_ensmem}.gfs_bndy.tile7.f','.nc'
+ inblend=10
  topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
 &end
 
@@ -298,7 +299,8 @@ Please ensure that you've built this executable."
  if [ ${GEFS_AERO_LBCS_CHECK} = "YES" ]; then    
   startmsg
   sync
-   eval ${RUN_CMD_AQMLBC} ${exec_fp} ${REDIRECT_OUT_ERR} >> $pgmout 2>errfile
+# eval ${RUN_CMD_AQMLBC} ${exec_fp} ${REDIRECT_OUT_ERR} >> $pgmout 2>errfile
+  mpiexec -n ${NUMTS}  ${exec_fp} ${REDIRECT_OUT_ERR} >> $pgmout 2>errfile
   export err=$?; err_chk
   if [ -e "${pgmout}" ]; then
    cat ${pgmout}

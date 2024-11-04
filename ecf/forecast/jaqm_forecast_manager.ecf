@@ -15,6 +15,7 @@ export cyc="%CYC%"
 ############################################################
 # Load modules
 ############################################################
+module load PrgEnv-intel/${PrgEnv_intel_ver}
 module load intel/${intel_ver}
 module load craype/${craype_ver}
 
