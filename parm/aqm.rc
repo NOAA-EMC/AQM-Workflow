@@ -7,23 +7,22 @@
 #
 #  General settings
 #
-ae_matrix_nml: {{ aqm_config_dir }}/AE_cb6r3_ae6_aq.nml
-gc_matrix_nml: {{ aqm_config_dir }}/GC_cb6r3_ae6_aq.nml
-nr_matrix_nml: {{ aqm_config_dir }}/NR_cb6r3_ae6_aq.nml
+ae_matrix_nml: {{ aqm_config_dir }}/AE_cb6r5_ae7_aq.nml
+gc_matrix_nml: {{ aqm_config_dir }}/GC_cb6r5_ae7_aq.nml
+nr_matrix_nml: {{ aqm_config_dir }}/NR_cb6r5_ae7_aq.nml
 tr_matrix_nml: {{ aqm_config_dir }}/Species_Table_TR_0.nml
 
-csqy_data:   {{ aqm_config_dir }}/CSQY_DATA_cb6r3_ae6_aq
+csqy_data:   {{ aqm_config_dir }}/CSQY_DATA_cb6r5_ae7_aq
 optics_data: {{ aqm_config_dir }}/PHOT_OPTICS.dat
 omi_data:    {{ aqm_config_dir }}/omi_cmaq_2015_361X179.dat
+
+desid_chem_ctrl: {{ aqm_config_dir }}/CMAQ_Control_DESID_cb6r5_ae7_aq.nml
+desid_ctrl: {{ aqm_config_dir }}/CMAQ_Control_DESID.nml
+misc_ctrl:  {{ aqm_config_dir }}/CMAQ_Control_Misc.nml
 
 init_concentrations: {{ init_concentrations | lower }}
 
 run_aerosol: true
-
-# - scale surface aerosol emissions over snow (fugitive dust correction)
-#   disabled if keyword is missing or value outside [0.,1.]
-#
-fugitive_dust_scale: 0.01
 
 {%- if ccpp_phys_suite in ["FV3_GFS_v15p2", "FV3_GFS_v16"] %}
 mp_tracer_map: gfdl
@@ -34,6 +33,7 @@ dy_tracer_map_start: 11
 {%- endif %}
 
 ctm_aod: true
+ctm_wb_dust: true 
 ctm_pmdiag: true
 ctm_stdout: maintask
 
@@ -92,6 +92,7 @@ anthro_species::
     ALD2          1.00000  ALD2          KG/M2/S
     ALD2_PRIMARY  1.00000  ALD2_PRIMARY  KG/M2/S
     ALDX          1.00000  ALDX          KG/M2/S
+    APIN          1.00000  APIN          KG/M2/S
     BENZ          1.00000  BENZ          KG/M2/S
     BUTADIENE13   1.00000  BUTADIENE13   KG/M2/S
     CH4           1.00000  CH4           KG/M2/S
@@ -157,16 +158,16 @@ anthro_species::
 #
 # dust
 #
-dust_type: fengsha
+#dust_type: fengsha
 dust_format: netcdf
 dust_file: {{ aqm_rc_dust_file_fp }}
 dust_frequency: monthly
-dust_alpha: 3.0
+dust_alpha: 1.1
 dust_species::
     CLAYF       1.00000   clayfrac     1
     SANDF       1.00000   sandfrac     1
     DRAG        1.00000   albedo_drag  1
-    UTHR        1.00000   uthres       1
+    UTHR        1.00000   uthres_bnu   1
 ::
 
 #
@@ -309,27 +310,27 @@ fire_species::
     SO2     0.0080     CO          KG/M2/S
     NH3     0.0150     CO          KG/M2/S
     CO      1.0000     CO          KG/M2/S
-    ACET    0.0000     CO          KG/M2/S
-    ALD2    0.0000     CO          KG/M2/S
-    ALDX    0.0000     CO          KG/M2/S
-    BENZ    0.0000     CO          KG/M2/S
-    CH4     0.0000     CO          KG/M2/S
-    ETH     0.0000     CO          KG/M2/S
-    ETHA    0.0000     CO          KG/M2/S
-    ETHY    0.0000     CO          KG/M2/S
+    ACET    0.0011     CO          KG/M2/S
+    ALD2    0.0010     CO          KG/M2/S
+    ALDX    0.0030     CO          KG/M2/S
+    BENZ    0.0010     CO          KG/M2/S
+    CH4     0.0092     CO          KG/M2/S
+    ETH     0.0022     CO          KG/M2/S
+    ETHA    0.0011     CO          KG/M2/S
+    ETHY    0.0005     CO          KG/M2/S
     ETOH    0.0000     CO          KG/M2/S
-    FORM    0.0000     CO          KG/M2/S
-    IOLE    0.0000     CO          KG/M2/S
-    ISOP    0.0000     CO          KG/M2/S
-    KET     0.0000     CO          KG/M2/S
-    MEOH    0.0000     CO          KG/M2/S
-    OLE     0.0000     CO          KG/M2/S
-    PAR     0.0000     CO          KG/M2/S
-    PRPA    0.0000     CO          KG/M2/S
-    TERP    0.0000     CO          KG/M2/S
-    TOL     0.0000     CO          KG/M2/S
-    UNR     0.0000     CO          KG/M2/S
-    XYL     0.0000     CO          KG/M2/S
+    FORM    0.0043     CO          KG/M2/S
+    IOLE    0.0005     CO          KG/M2/S
+    ISOP    0.0002     CO          KG/M2/S
+    KET     0.0003     CO          KG/M2/S
+    MEOH    0.0039     CO          KG/M2/S
+    OLE     0.0034     CO          KG/M2/S
+    PAR     0.0075     CO          KG/M2/S
+    PRPA    0.0005     CO          KG/M2/S
+    TERP    0.0004     CO          KG/M2/S
+    TOL     0.0013     CO          KG/M2/S
+    UNR     0.0100     CO          KG/M2/S
+    XYL     0.0003     CO          KG/M2/S
     FRP     1000000    MeanFRP     1
 ::
 

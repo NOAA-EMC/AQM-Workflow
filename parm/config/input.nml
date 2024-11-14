@@ -90,27 +90,27 @@
     hord_vt = 5
     hydrostatic = .false.
     io_layout = 1, 1
-    k_split = 1
+    k_split = 2
     ke_bg = 0.0
     kord_mt = 9
     kord_tm = -9
     kord_tr = 9
     kord_wz = 9
-    layout = 50, 34
+    layout = 64, 68
     make_nh = .false.
     mountain = .false.
-    n_split = 8
-    n_sponge = 10
+    n_split = 6
+    n_sponge = 42
     n_zs_filter = 0
     na_init = 0
     ncep_ic = .false.
     nggps_ic = .true.
     no_dycore = .false.
     nord = 2
-    npx = 801
-    npy = 545
+    npx = 1153 
+    npy = 769 
     npz = 64
-    nrows_blend = 0
+    nrows_blend = 10
     ntiles = 1
     nudge_dz = .false.
     nudge_qv = .true.
@@ -129,7 +129,7 @@
     stretch_fac = 0.999
     target_lat = 50.0
     target_lon = -118.0
-    tau = 10.0
+    tau = 2.5
     use_hydro_pressure = .false.
     vtdm4 = 0.02
     warm_start = .false.
@@ -270,7 +270,7 @@
     lwhtr = .true.
     n_var_lndp = 0
     n_var_spp = 0
-    nsradar_reset = 3600
+    nsfullradar_diag = 3600 
     nst_anl = .true.
     nstf_name = 2, 1, 0, 0, 0
     oz_phys = .false.
@@ -341,16 +341,16 @@
 /
 
 &namsfc_dict
-    fnabsc = 'fix/fix_lam/C793.maximum_snow_albedo.tileX.nc'
-    fnalbc = 'fix/fix_lam/C793.snowfree_albedo.tileX.nc'
-    fnalbc2 = 'fix/fix_lam/C793.facsf.tileX.nc'
-    fnslpc = 'fix/fix_lam/C793.slope_type.tileX.nc'
-    fnsotc = 'fix/fix_lam/C793.soil_type.tileX.nc'
-    fntg3c = 'fix/fix_lam/C793.substrate_temperature.tileX.nc'
-    fnvegc = 'fix/fix_lam/C793.vegetation_greenness.tileX.nc'
-    fnvetc = 'fix/fix_lam/C793.vegetation_type.tileX.nc'
-    fnvmnc = 'fix/fix_lam/C793.vegetation_greenness.tileX.nc'
-    fnvmxc = 'fix/fix_lam/C793.vegetation_greenness.tileX.nc'
+    fnabsc = 'fix/fix_lam/C1144.maximum_snow_albedo.tileX.nc'
+    fnalbc = 'fix/fix_lam/C1144.snowfree_albedo.tileX.nc'
+    fnalbc2 = 'fix/fix_lam/C1144.facsf.tileX.nc'
+    fnslpc = 'fix/fix_lam/C1144.slope_type.tileX.nc'
+    fnsotc = 'fix/fix_lam/C1144.soil_type.tileX.nc'
+    fntg3c = 'fix/fix_lam/C1144.substrate_temperature.tileX.nc'
+    fnvegc = 'fix/fix_lam/C1144.vegetation_greenness.tileX.nc'
+    fnvetc = 'fix/fix_lam/C1144.vegetation_type.tileX.nc'
+    fnvmnc = 'fix/fix_lam/C1144.vegetation_greenness.tileX.nc'
+    fnvmxc = 'fix/fix_lam/C1144.vegetation_greenness.tileX.nc'
 /
 
 &surf_map_nml

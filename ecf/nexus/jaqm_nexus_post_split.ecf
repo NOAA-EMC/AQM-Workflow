@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:15:00
-#PBS -l select=1:mpiprocs=1:ncpus=1:mem=32G:prepost=true
+#PBS -l select=1:mpiprocs=1:ncpus=1:mem=64G:prepost=true
 #PBS -l debug=true
 
 model=aqm
@@ -15,11 +15,14 @@ export cyc="%CYC%"
 ############################################################
 # Load modules
 ############################################################
+module load PrgEnv-intel/${PrgEnv_intel_ver}
 module load intel/${intel_ver}
 module load craype/${craype_ver}
+module load cray-mpich/${cray_mpich_ver}
 module load cray-pals/${cray_pals_ver}
-module load hdf5/${hdf5_ver}
-module load netcdf/${netcdf_ver}
+module load libjpeg/${libjpeg_ver}
+module load hdf5-A/${hdf5_ver}
+module load netcdf-A/${netcdf_ver}
 module load python/${python_ver}
 
 module list
