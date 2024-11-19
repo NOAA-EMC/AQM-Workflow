@@ -1,13 +1,7 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------
-#=====  Step 1: check out source code and  external compoments  ====
-#-------------------------------------------------------------------
-
-./manage_externals/checkout_externals
-
-#-------------------------------------------------------------------
-#=====  Step 2: create symbolic links for parm and ush  ============
+#=====  Step 1: create symbolic links for parm and ush  ============
 #-------------------------------------------------------------------
 
 cd ../parm
@@ -24,7 +18,7 @@ cd ../ush
 
 
 #-------------------------------------------------------------------
-#=====  Step 3: create symbolic links for source codes  ============
+#=====  Step 2: create symbolic links for source codes  ============
 #-------------------------------------------------------------------
 cd ../sorc
 

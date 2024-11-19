@@ -1,7 +1,9 @@
 [submodule "ufs-weather-model"]
 	path = sorc/ufs-weather-model
-	url = https://github.com/ufs-community/ufs-weather-model
-	branch = develop
+	#url = https://github.com/ufs-community/ufs-weather-model
+	#branch = develop
+	url = https://github.com/BrianCurtis-NOAA/ufs-weather-model
+	branch = cmaq54
 [submodule "ufs_utils"]
 	path = sorc/UFS_UTILS
 	url = https://github.com/ufs-community/UFS_UTILS
