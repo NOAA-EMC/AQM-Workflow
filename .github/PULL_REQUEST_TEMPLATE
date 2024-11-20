@@ -1,0 +1,65 @@
+- Update develop to AQM-Workflow at NOAA-EMC
+
+- Use this template to give a detailed message describing the change you want to make to the code.
+
+- You may delete any sections labeled "optional" and any instructions within <!-- these sections -->.
+
+- If you are unclear on what should be written here, see https://github.com/wrf-model/WRF/wiki/Making-a-good-pull-request-message for guidance. 
+
+- Code reviewers will assess the PR based on the criteria laid out in the Code Reviewer's Guide (https://github.com/ufs-community/ufs-srweather-app/wiki/Code-Manager's-Guide).
+
+- The title of this pull request should be a brief summary (ideally less than 100 characters) of the changes included in this PR. 
+
+- Use the "Preview" tab to see what your PR will look like when you hit "Create pull request"
+
+
+# --- Delete this line and those above before hitting "Create pull request" ---
+
+## DESCRIPTION OF CHANGES: 
+<!-- One or more paragraphs describing the problem, solution, and required changes. -->
+
+### Type of change
+<!-- Please delete options that are not relevant. Add an X to check off a box. -->
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] This change requires a documentation update
+
+## TESTS CONDUCTED: 
+<!-- Explicitly state what tests were run on these changes, or if any are still pending (for README or other text-only changes, just put "None required"). Make note of the compilers used, the platform/machine, and other relevant details as necessary. For more complicated changes, or those resulting in scientific changes, please be explicit! -->
+<!-- Add an X to check off a box. -->
+
+- [ ] gaea.intel
+- [ ] hera.intel
+- [ ] wcoss2.intel
+
+## DEPENDENCIES:
+<!-- Add any links to external PRs (e.g. regional_workflow and/or UFS PRs). For example:
+- ufs-community/regional_workflow/pull/<pr_number>
+- ufs-community/UFS_UTILS/pull/<pr_number>
+- ufs-community/ufs-weather-model/pull/<pr_number> -->
+
+## DOCUMENTATION:
+<!-- If this PR is contributing new capabilities that need to be documented, please also include updates to the RST files (docs/UsersGuide/source) as supporting material. -->
+
+## ISSUE: 
+<!-- If this PR is resolving or referencing one or more issues, in this repository or elsewhere, list them here (Remember, issues must always be created before starting work on a PR branch!). For example, "Fixes issue mentioned in #123" or "Related to bug in https://github.com/ufs-community/other_repository/pull/63" -->
+
+## CHECKLIST
+<!-- Add an X to check off a box. -->
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] My changes need updates to the documentation. I have made corresponding changes to the documentation
+- [ ] My changes do not require updates to the documentation (explain).
+- [ ] My changes generate no new warnings
+- [ ] New and existing tests pass with my changes
+- [ ] Any dependent changes have been merged and published
+
+## PRIOTIRY LEVEL
+<!-- Add an X to check off a box. -->
+- [ ] Critical: emergency fix for a major issue
+- [ ] High: upcoming production fix/change 
+- [ ] Normal: important but not high priority
+- [ ] Low: routine addition or bonus feature that can wait
+
+## CONTRIBUTORS (optional): 
+<!-- If others have contributed to this work aside from the PR author, list them here -->
