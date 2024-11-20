@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------
-#=====  Step 1: check out source code and  external compoments  ====
+#=====  Step 0: bring in dependencies ==============================
 #-------------------------------------------------------------------
 
-./manage_externals/checkout_externals
+git submodule update --init --recursive
 
 #-------------------------------------------------------------------
-#=====  Step 2: create symbolic links for parm and ush  ============
+#=====  Step 1: create symbolic links for parm and ush  ============
 #-------------------------------------------------------------------
 
 cd ../parm
@@ -24,7 +24,7 @@ cd ../ush
 
 
 #-------------------------------------------------------------------
-#=====  Step 3: create symbolic links for source codes  ============
+#=====  Step 2: create symbolic links for source codes  ============
 #-------------------------------------------------------------------
 cd ../sorc
 

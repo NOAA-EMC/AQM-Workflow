@@ -1,0 +1,22 @@
+[submodule "ufs-weather-model"]
+	path = sorc/ufs-weather-model
+	#url = https://github.com/ufs-community/ufs-weather-model
+	#branch = develop
+	url = https://github.com/BrianCurtis-NOAA/ufs-weather-model
+	branch = cmaq54
+[submodule "ufs_utils"]
+	path = sorc/UFS_UTILS
+	url = https://github.com/ufs-community/UFS_UTILS
+	branch = develop
+[submodule "UPP"]
+	path = sorc/UPP
+	url = https://github.com/NOAA-EMC/UPP
+	branch = develop
+[submodule "arl_nexus"]
+	path = sorc/arl_nexus
+	url = https://github.com/noaa-oar-arl/NEXUS
+	branch = develop
+[submodule "aqm-utils"]
+	path = sorc/AQM-utils
+	url = https://github.com/NOAA-EMC/AQM-utils
+	branch = develop
