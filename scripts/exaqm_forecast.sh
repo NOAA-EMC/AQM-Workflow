@@ -603,7 +603,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
- $USHaqm/create_nems_configure_file.py \
+# $USHaqm/create_nems_configure_file.py \
+ $USHaqm/create_ufs_configure_file.py \
   --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
   --run-dir "${DATA}"
 export err=$?
@@ -629,7 +630,7 @@ while [ $fhr -le ${FCST_LEN_HRS} ]; do
   fhr_ct=$(printf "%03d" $fhr)
   source_dyn="dynf${fhr_ct}.nc"
   source_phy="phyf${fhr_ct}.nc"
-  source_log="logf${fhr_ct}"
+  source_log="log.atm.f${fhr_ct}"
   target_dyn="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.dyn.f${fhr_ct}.nc"
   target_phy="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.phy.f${fhr_ct}.nc"
   target_log="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.logf${fhr_ct}"
@@ -669,7 +670,8 @@ else
   rst_yyyymmdd="${cdate_restart_hr:0:8}"
   rst_hh="${cdate_restart_hr:8:2}"
   for file_id in "${file_ids[@]}"; do
-    eval $NLN ${shared_restart_data}/${rst_yyyymmdd}.${rst_hh}0000.${file_id} ${file_id}
+    #jp eval $NLN ${shared_restart_data}/${rst_yyyymmdd}.${rst_hh}0000.${file_id} ${file_id}
+    eval $NLN ${shared_restart_data}/${rst_yyyymmdd}.${rst_hh}0000.${file_id} ${rst_yyyymmdd}.${rst_hh}0000.${file_id}
   done
 fi
 
@@ -695,6 +697,7 @@ fi
 
 
 eval cpreq ${AQM_RC_PRODUCT_FN} ${COMOUT}/${NET}.${cycle}${dot_ensmem}.${AQM_RC_PRODUCT_FN}
+
 echo "Forecast job is completed" &> ${umbrella_forecast_data}/clean.flag
 #
 #-----------------------------------------------------------------------

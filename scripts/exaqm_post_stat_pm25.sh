@@ -91,8 +91,8 @@ fi
 
 . prep_step
 
-if [ "${PREDEF_GRID_NAME}" = "AQM_NA_13km" ]; then
-  id_domain=793
+if [ "${PREDEF_GRID_NAME}" = "AQM_NA_9km" ]; then
+  id_domain=1144
 fi
 
 #---------------------------------------------------------------

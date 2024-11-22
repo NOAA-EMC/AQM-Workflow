@@ -25,6 +25,8 @@ OPTIONS
   --disable-options="OPTION1,OPTION2,..."
       disable ufs-weather-model options; delimited with ','
       (e.g. 32BIT | INLINE_POST | UFS_GOCART | MOM6 | CICE6 | WW3 | CMEPS)
+  --extrn
+      check out external components
   --continue
       continue with existing build
   --remove
@@ -43,7 +45,7 @@ OPTIONS
       installation binary directory name ("exec" by default; any name is available)
   --build-type=BUILD_TYPE
       build type; defaults to Release
-      (e.g. Debug | Release | RelWithDebInfo)
+      (e.g. Debug | Release | Relwithdebinfo)
   --build-jobs=BUILD_JOBS
       number of build jobs; defaults to 4
   --use-sub-modules
@@ -76,6 +78,7 @@ Settings:
   CCPP=${CCPP_SUITES}
   ENABLE_OPTIONS=${ENABLE_OPTIONS}
   DISABLE_OPTIONS=${DISABLE_OPTIONS}
+  EXTRN=${EXTRN}
   REMOVE=${REMOVE}
   CONTINUE=${CONTINUE}
   BUILD_TYPE=${BUILD_TYPE}
@@ -113,6 +116,7 @@ ENABLE_OPTIONS=""
 DISABLE_OPTIONS=""
 BUILD_TYPE="Release"
 BUILD_JOBS=4
+EXTRN=false
 REMOVE=false
 CONTINUE=false
 VERBOSE=false
@@ -120,7 +124,7 @@ VERBOSE=false
 # Turn off all apps to build and choose default later
 DEFAULT_BUILD=true 
 BUILD_UFS="off"
-BUILD_UFS_UTILS="off"
+BUILD_UFS_UTILS="on"
 BUILD_UPP="off"
 BUILD_GSI="off"
 BUILD_RRFS_UTILS="off"
@@ -131,7 +135,7 @@ BUILD_AQM_UTILS="off"
 CLEAN=false
 BUILD=false
 MOVE=false
-USE_SUB_MODULES=false #change default to true later
+USE_SUB_MODULES=true #change default to true later
 
 # process required arguments
 if [[ ("$1" == "--help") || ("$1" == "-h") ]]; then
@@ -155,6 +159,8 @@ while :; do
     --enable-options|--enable-options=) usage_error "$1 requires argument." ;;
     --disable-options=?*) DISABLE_OPTIONS=${1#*=} ;;
     --disable-options|--disable-options=) usage_error "$1 requires argument." ;;
+    --extrn) EXTRN=true ;;
+    --extrn=?*|--extrn=) usage_error "$1 argument ignored." ;;
     --remove) REMOVE=true ;;
     --remove=?*|--remove=) usage_error "$1 argument ignored." ;;
     --continue) CONTINUE=true ;;
@@ -223,11 +229,46 @@ fi
 MACHINE="${PLATFORM}"
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
 
+# check out external components specified in External.cfg
+if [ "${EXTRN}" = true ]; then
+  cd ${SORC_DIR}
+  # remove existing components
+  printf "... checking if external components exist ...\n"
+  if [ -d "${SORC_DIR}/AQM-utils" ]; then
+    printf "... removing AQM-utils ...\n"
+    rm -rf "${SORC_DIR}/AQM-utils"
+  fi
+  if [ -d "${SORC_DIR}/arl_nexus" ]; then
+    printf "... removing arl_nexus ...\n"
+    rm -rf "${SORC_DIR}/arl_nexus"
+  fi
+  if [ -d "${SORC_DIR}/UFS_UTILS" ]; then
+    printf "... removing UFS_UTILS ...\n"
+    rm -rf "${SORC_DIR}/UFS_UTILS"
+  fi
+  if [ -d "${SORC_DIR}/ufs-weather-model" ]; then
+    printf "... removing ufs-weather-model ...\n"
+    rm -rf "${SORC_DIR}/ufs-weather-model"
+  fi
+  if [ -d "${SORC_DIR}/UPP" ]; then
+    printf "... removing UPP ...\n"
+    rm -rf "${SORC_DIR}/UPP"
+  fi
+
+  # run check-out
+  printf "... checking out external components ...\n"
+  if [ "${PLATFORM}" = "hercules" ]; then
+    ./manage_externals/checkout_externals_python3
+  else
+    ./manage_externals/checkout_externals
+  fi
+fi
+
 # choose default apps to build
 if [ "${DEFAULT_BUILD}" = true ]; then
-  BUILD_UFS="on"
-  BUILD_UFS_UTILS="on"
-  BUILD_UPP="on"
+  BUILD_UFS="off"
+  BUILD_UFS_UTILS="off"
+  BUILD_UPP="off"
 fi
 
 # Choose components to build for air quality modeling (SRW-AQM)
@@ -249,7 +290,7 @@ set -eu
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
     jet|hera|gaea) COMPILER=intel ;;
-    orion) COMPILER=intel ;;
+    orion|hercules) COMPILER=intel ;;
     wcoss2) COMPILER=intel ;;
     cheyenne) COMPILER=intel ;;
     macos,singularity) COMPILER=gnu ;;
@@ -270,7 +311,7 @@ fi
 
 # source version file only if it is specified in versions directory
 BUILD_VERSION_FILE="${SRW_DIR}/versions/build.ver"
-if [ -f ${BUILD_VERSION_FILE} ]; then
+if [ "${PLATFORM}" = "wcoss2" ] && [ -f ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 
@@ -357,10 +398,13 @@ if [ "${VERBOSE}" = true ]; then
   MAKE_SETTINGS="${MAKE_SETTINGS} VERBOSE=1"
 fi
 
-# Before we go on load modules, we first need to activate Lmod for some systems
-module reset
+if [ "${PLATFORM}" = "wcoss2" ]; then
+  module reset
+else
+  module purge
+fi
 
-# source the module file for this platform/compiler combination, then build the code
+# load the module file for this platform/compiler combination, then build the code
 printf "... Load MODULE_FILE and create BUILD directory ...\n"
 
 if [ $USE_SUB_MODULES = true ]; then
@@ -370,7 +414,7 @@ if [ $USE_SUB_MODULES = true ]; then
         set +e
         #try most specialized modulefile first
         MODF="$1${PLATFORM}.${COMPILER}"
-        if [ $BUILD_TYPE != "Release" ]; then
+        if [ $BUILD_TYPE != "release" ]; then
             MODF="${MODF}.debug"
         else
             MODF="${MODF}.release"
