@@ -24,6 +24,7 @@
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
+- [ ] Scientific results will change based on this work 
 
 ## TESTS CONDUCTED: 
 <!-- Explicitly state what tests were run on these changes, or if any are still pending (for README or other text-only changes, just put "None required"). Make note of the compilers used, the platform/machine, and other relevant details as necessary. For more complicated changes, or those resulting in scientific changes, please be explicit! -->
