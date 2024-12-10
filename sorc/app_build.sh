@@ -25,8 +25,6 @@ OPTIONS
   --disable-options="OPTION1,OPTION2,..."
       disable ufs-weather-model options; delimited with ','
       (e.g. 32BIT | INLINE_POST | UFS_GOCART | MOM6 | CICE6 | WW3 | CMEPS)
-  --extrn
-      check out external components
   --continue
       continue with existing build
   --remove
@@ -78,7 +76,6 @@ Settings:
   CCPP=${CCPP_SUITES}
   ENABLE_OPTIONS=${ENABLE_OPTIONS}
   DISABLE_OPTIONS=${DISABLE_OPTIONS}
-  EXTRN=${EXTRN}
   REMOVE=${REMOVE}
   CONTINUE=${CONTINUE}
   BUILD_TYPE=${BUILD_TYPE}
@@ -116,7 +113,6 @@ ENABLE_OPTIONS=""
 DISABLE_OPTIONS=""
 BUILD_TYPE="Release"
 BUILD_JOBS=4
-EXTRN=false
 REMOVE=false
 CONTINUE=false
 VERBOSE=false
@@ -159,8 +155,6 @@ while :; do
     --enable-options|--enable-options=) usage_error "$1 requires argument." ;;
     --disable-options=?*) DISABLE_OPTIONS=${1#*=} ;;
     --disable-options|--disable-options=) usage_error "$1 requires argument." ;;
-    --extrn) EXTRN=true ;;
-    --extrn=?*|--extrn=) usage_error "$1 argument ignored." ;;
     --remove) REMOVE=true ;;
     --remove=?*|--remove=) usage_error "$1 argument ignored." ;;
     --continue) CONTINUE=true ;;
@@ -228,37 +222,6 @@ fi
 # set PLATFORM (MACHINE)
 MACHINE="${PLATFORM}"
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
-
-# check out external components specified in External.cfg
-if [ "${EXTRN}" = true ]; then
-  cd ${SORC_DIR}
-  # remove existing components
-  printf "... checking if external components exist ...\n"
-  if [ -d "${SORC_DIR}/AQM-utils" ]; then
-    printf "... removing AQM-utils ...\n"
-    rm -rf "${SORC_DIR}/AQM-utils"
-  fi
-  if [ -d "${SORC_DIR}/arl_nexus" ]; then
-    printf "... removing arl_nexus ...\n"
-    rm -rf "${SORC_DIR}/arl_nexus"
-  fi
-  if [ -d "${SORC_DIR}/UFS_UTILS" ]; then
-    printf "... removing UFS_UTILS ...\n"
-    rm -rf "${SORC_DIR}/UFS_UTILS"
-  fi
-  if [ -d "${SORC_DIR}/ufs-weather-model" ]; then
-    printf "... removing ufs-weather-model ...\n"
-    rm -rf "${SORC_DIR}/ufs-weather-model"
-  fi
-  if [ -d "${SORC_DIR}/UPP" ]; then
-    printf "... removing UPP ...\n"
-    rm -rf "${SORC_DIR}/UPP"
-  fi
-
-  # run check-out
-  printf "... checking out external components ...\n"
-  ./manage_externals/checkout_externals
-fi
 
 # choose default apps to build
 if [ "${DEFAULT_BUILD}" = true ]; then
