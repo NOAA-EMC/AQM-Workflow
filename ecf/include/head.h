@@ -11,6 +11,7 @@ export ECF_PORT=%ECF_PORT%
 export ECF_PASS=%ECF_PASS%
 export ECF_TRYNO=%ECF_TRYNO%
 export ECF_RID=${ECF_RID:-${PBS_JOBID:-$(hostname -s).$$}}
+#export ECF_RID=${ECF_RID:-${PBS_JOBID:-$$}}
 export ECF_JOB=%ECF_JOB%
 export ECF_JOBOUT=%ECF_JOBOUT%
 

@@ -20,7 +20,7 @@ COMROOT=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/com/aqm/v8.0
 DCOMROOT=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/dcom
 COMaqm=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/com/aqm/v8.0
 COMgefs=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/com/gefs/v12.3
-DATA=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/tmp
+#DATA=/lfs/h2/emc/nems/noscrub/brian.curtis/aqm_dirs/tmp
 MODEL_VER_DFV=${COMaqm:(-4)}
 
 # [metadata]
@@ -71,8 +71,8 @@ SYMLINK_FIX_FILES='FALSE'
 DO_REAL_TIME='TRUE'
 COLDSTART='FALSE'
 WARMSTART_CYCLE_DIR='${COMaqm}/aqm.${WARMSTART_PDY}/00'
-RES_IN_FIXLAM_FILENAMES='793'
-CRES='C793'
+RES_IN_FIXLAM_FILENAMES='1144'
+CRES='C1144'
 SDF_USES_RUC_LSM='FALSE'
 SDF_USES_THOMPSON_MP='FALSE'
 
