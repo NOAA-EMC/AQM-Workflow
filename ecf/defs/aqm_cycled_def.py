@@ -37,7 +37,7 @@ def main():
 
 #creates 00 Cycle
 def cycle_00(defs):
-    f_00 = defs.nco_aqm.primary.add_family('f00') #00
+    f_00 = defs.nco_aqm.primary.add_family('C00') #00
     f_00 += [ecf.Edit(CYC='00')]
     #tsk is task 
     tsk_cycle_end = f_00.add_task('cycle_end')
@@ -45,7 +45,7 @@ def cycle_00(defs):
                         ecf.Cron('23:00')]
     f_aqm = f_00.add_family('aqm') #aqm
     #f_v1 is the Python variable for family f_v1.0
-    f_v1 = f_aqm.add_family('v1')  #v1.0
+    f_v1 = f_aqm.add_family('v1_0')  #v1.0
     f_v1 += [ecf.Edit(ECF_FILES='%PACKAGEHOME%/ecf')]
     print('family 00 finished')
     out_file(defs)
@@ -91,7 +91,7 @@ def out_file(defs):
 
 def nexus(defs):
     #f_nexus = f_v1.add_family('f_nexus')
-    f_nexus = defs.nco_aqm.primary.f00.aqm.v1.add_family('nexus')  
+    f_nexus = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('nexus')  
     for i in range(6):
         #f_nexus += [ecf.Task('jaqm_nexus_emission_0'+str(i), 
         #            ecf.Edit(NSPT = '0'+str(i)),
@@ -118,7 +118,7 @@ def nexus(defs):
 #Prep ICs and LBCs
 def prep(defs):
 #    f_prep = f_aqm.add_family('f_prep')
-    f_prep = defs.nco_aqm.primary.f00.aqm.v1.add_family('prep')
+    f_prep = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('prep')
     f_prep += [ecf.Task('jaqm_make_ics',
                 ecf.Trigger('TIME >= 0142 and TIME < 0742'))]
     f_prep += [ecf.Task('jaqm_make_lbcs',
@@ -133,7 +133,7 @@ def prep(defs):
 #Point Source Fire Emissions
 def pts_fire_emis(defs):
 #    f_pts_fire_emis = f_aqm.add_family('f_pts_fire_emis')
-    f_pts_fire_emis = defs.nco_aqm.primary.f00.aqm.v1.add_family('f_pts_fire_emis')
+    f_pts_fire_emis = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('f_pts_fire_emis')
     f_pts_fire_emis += [ecf.Task('jaqm_point_source',
                         ecf.Trigger('TIME >= 0142 and TIME < 0742'))] 
     f_pts_fire_emis += [ecf.Task('jaqm_fire_emission',
@@ -173,7 +173,7 @@ def out_file(defs):
 
 def forecast(defs):
 #    f_forecast = f_aqm.add_family('f_forecast')
-    f_forecast = defs.nco_aqm.primary.f00.aqm.v1.add_family('forecast')
+    f_forecast = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('forecast')
     f_forecast += [ecf.Task('jaqm_forecast',
                     ecf.Trigger('../nexus==complete and ../prep==complete and ../pts_fire_emis==complete'),
                     ecf.Event(1, 'release_manager'))]
@@ -229,7 +229,7 @@ def out_file(defs):
 
 def post(defs):
 #    f_post = f_aqm.add_family('f_post')
-    f_post = defs.nco_aqm.primary.f00.aqm.v1.add_family('post')
+    f_post = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('post')
 
     for i in range(7):
         f_post += [ecf.Task('jaqm_post_f00'+str(i),
@@ -247,7 +247,7 @@ def post(defs):
 #Product
 def product(defs):
 #    f_product = f_aqm.add_family('f_product')
-    f_product = defs.nco_aqm.primary.f00.aqm.v1.add_family('product')
+    f_product = defs.nco_aqm.primary.C00.aqm.v1_0.add_family('product')
     f_product += [ecf.Task('jaqm_pre_post_stat',
                     ecf.Trigger('../forecast==complete'))]
     f_product += [ecf.Task('jaqm_post_stat_o3',
