@@ -9,10 +9,10 @@ module load ecflow
 
 server_check.sh
 
-ecflow_client --delete=force yes /nco_aqm
+ecflow_client --delete=force yes /aqm_test
 
-ecflow_client --load ecf/defs/aqm_cycled.def # This should he soft_coded to use variable 'aqm_${workflow_mode}.def'
+ecflow_client --load ecf/defs/aqm_testing.def # This should he soft_coded to use variable 'aqm_${workflow_mode}.def'
 
-ecflow_client --begin /nco_aqm #This should be soft coded to use a variable 'suite_name'
+ecflow_client --begin /aqm_test #This should be soft coded to use a variable 'suite_name'
 
 ecflow_ui &

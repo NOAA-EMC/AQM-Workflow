@@ -1,6 +1,6 @@
 STEPS TO GET WORKFLOW RUNNING (FOR NOW)
  * bash setup_workflow.sh
- * ssh into ecflow node 
+ * ssh into ecflow node (Using -X for ecflow_ui) 
  * cd into AQM-Workflow
  * edit user_settings.sh
  * source setup_ecflow.sh
