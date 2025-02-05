@@ -4,7 +4,7 @@ set -x
 
 msg="JOB $job HAS BEGUN"
 postmsg "$msg"
-   
+
 export pgm=aqm_nexus_emissions
 
 #-----------------------------------------------------------------------
@@ -13,7 +13,7 @@ export pgm=aqm_nexus_emissions
 #
 #-----------------------------------------------------------------------
 #
-. $USHaqm/source_util_funcs.sh
+. $USHdir/source_util_funcs.sh
 source_config_for_task "cpl_aqm_parm|task_nexus_emission|task_nexus_gfs_sfc" ${GLOBAL_VAR_DEFNS_FP}
 #
 #-----------------------------------------------------------------------
@@ -23,7 +23,7 @@ source_config_for_task "cpl_aqm_parm|task_nexus_emission|task_nexus_gfs_sfc" ${G
 #
 #-----------------------------------------------------------------------
 #
-{ save_shell_opts; . $USHaqm/preamble.sh; } > /dev/null 2>&1
+{ save_shell_opts; . $USHdir/preamble.sh; } > /dev/null 2>&1
 #
 #-----------------------------------------------------------------------
 #
@@ -137,7 +137,7 @@ else
     if [ "${WORKFLOW_MANAGER}" = "ecflow" ]; then	    
       GFS_SFC_INPUT="${DATAROOT}/${RUN}_nexus_gfs_sfc_${cyc}.${share_pid}"
       if [ ! -d ${GFS_SFC_INPUT} ]; then
-        message_txt="FATAL ERROR ${GFS_SFC_INPUT} not found in production mode"
+	message_txt="FATAL ERROR ${GFS_SFC_INPUT} not found in production mode"
         err_exit "${message_txt}"
       fi
     else
@@ -154,20 +154,68 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "TRUE" ]; then
   fi
 fi
 #
+
+#######################################################################
+# This will be the section to set the datasets used in $workdir/NEXUS_Config.rc
+# All Datasets in that file need to be placed here as it will link the files
+# necessary to that folder.  In the future this will be done by a get_nexus_input
+# script
+#If both NEI2016 and NEI2019 are FALSE, it defaults to NEI2016.
+NEI2016="FALSE"
+NEI2019="FALSE"
+NEI2019_GLOBTEMPO="TRUE"
+TIMEZONES="TRUE"
+CEDS="TRUE"
+HTAP="TRUE"
+OMIHTAP="TRUE"
+MASKS="TRUE"
+NOAAGMD="TRUE"
+SOA="TRUE"
+EDGAR="TRUE"
+MEGAN="TRUE"
+MODIS_XLAI="TRUE"
+OLSON_MAP="TRUE"
+Yuan_XLAI="TRUE"
+GEOS="TRUE"
+AnnualScalar="TRUE"
+OFFLINE_SOILNOX="TRUE"
+
+NEXUS_INPUT_BASE_DIR=${COMINemis}
+
 #-----------------------------------------------------------------------
 #
 # Copy the NEXUS config files to the tmp directory  
 #
 #-----------------------------------------------------------------------
 #
-cpreq ${EXECaqm}/nexus ${DATA}
+cpreq ${EXECdir}/nexus ${DATA}
 
 cpreq ${FIXaqmnexus}/${NEXUS_GRID_FN} ${DATA}/grid_spec.nc
 
-if [ "${USE_GFS_SFC}" = "TRUE" ]; then
-    cpreq ${PARMaqm}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
-else
-    cpreq ${PARMaqm}/nexus_config/cmaq/*.rc ${DATA}
+if [ "${NEI2016}" = "TRUE" ]; then  #Use NEI2016
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cpreq ${PARMdir}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
+  else
+    cpreq ${PARMdir}/nexus_config/cmaq/*.rc ${DATA}
+  fi
+elif [ "${NEI2019}" = "TRUE" ]; then  #Use NEI2019
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cpreq ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2019/*.rc ${DATA}
+  else
+    cpreq ${PARMdir}/nexus_config/cmaq_nei2019/*.rc ${DATA}
+  fi
+elif [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then  #Use NEI2019 with updated global
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cpreq ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2019_globtempo/*.rc ${DATA}
+  else
+    cpreq ${PARMdir}/nexus_config/cmaq_nei2019_globtempo/*.rc ${DATA}
+  fi
+else #Default to NEI2016 Configs
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cpreq ${PARMdir}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
+  else
+    cpreq ${PARMdir}/nexus_config/cmaq/*.rc ${DATA}
+  fi	
 fi
 #
 #-----------------------------------------------------------------------
@@ -200,11 +248,11 @@ else
   start_del_hr=$(( len_per_split * nspt ))
   start_date=`$NDATE +${start_del_hr} ${yyyymmdd}${hh}`
   if [ "${nsptp}" = "${NUM_SPLIT_NEXUS}" ];then
-    end_date=`$NDATE +$(expr $FCST_LEN_HRS + 1) ${yyyymmdd}${hh}` 
+    end_date=`$NDATE +$(expr $FCST_LEN_HRS + 1) ${yyyymmdd}${hh}`
   else
     end_del_hr=$(( len_per_split * nsptp ))
     end_del_hr1=$(( $end_del_hr + 1 ))
-    end_date=`$NDATE +${end_del_hr1} ${yyyymmdd}${hh}` 
+    end_date=`$NDATE +${end_del_hr1} ${yyyymmdd}${hh}`
   fi
 fi
 #
@@ -213,24 +261,25 @@ fi
 # All Datasets in that file need to be placed here as it will link the files 
 # necessary to that folder.  In the future this will be done by a get_nexus_input 
 # script
-NEI2016="TRUE"
-TIMEZONES="TRUE"
-CEDS="TRUE"
-HTAP2010="TRUE"
-OMIHTAP="TRUE"
-MASKS="TRUE"
-NOAAGMD="TRUE"
-SOA="TRUE"
-EDGAR="TRUE"
-MEGAN="TRUE"
-MODIS_XLAI="FALSE"
-OLSON_MAP="TRUE"
-Yuan_XLAI="TRUE"
-GEOS="TRUE"
-AnnualScalar="TRUE"
-OFFLINE_SOILNOX="TRUE"
-
-NEXUS_INPUT_BASE_DIR=${FIXemis}
+#NEI2016="FALSE"
+#NEI2019="TRUE"
+#TIMEZONES="TRUE"
+#CEDS="TRUE"
+#HTAP="TRUE"
+#OMIHTAP="TRUE"
+#MASKS="TRUE"
+#NOAAGMD="TRUE"
+#SOA="TRUE"
+#EDGAR="TRUE"
+#MEGAN="TRUE"
+#MODIS_XLAI="TRUE"
+#OLSON_MAP="TRUE"
+#Yuan_XLAI="TRUE"
+#GEOS="TRUE"
+#AnnualScalar="TRUE"
+#OFFLINE_SOILNOX="TRUE"
+#
+#NEXUS_INPUT_BASE_DIR=${COMINemis}
 ########################################################################
 
 #
@@ -258,8 +307,9 @@ fi
 #
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
+
 #
-if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
+if [ "${NEI2016}" = "TRUE" ]; then 
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
@@ -269,13 +319,63 @@ if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
     message_txt="FATAL ERROR Call to python script \"nexus_nei2016_linker.py\" failed."
     err_exit "${message_txt}"
   fi
-
   ${USHaqm}/nexus_utils/python/nexus_nei2016_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_nei2016_control_tilefix.py\" failed."
     err_exit "${message_txt}"
   fi
+#
+elif [ "${NEI2019}" = "TRUE" ]; then 
+  mkdir -p ${DATAinput}/NEMO
+  mkdir -p ${DATAinput}/NEMO/NEI2019
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
+  ${USHaqm}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2019_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHaqm}/nexus_utils/python/nexus_nei2019_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2019_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi
+elif [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then
+  mkdir -p ${DATAinput}/NEMO
+  mkdir -p ${DATAinput}/NEMO/NEI2019
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
+  ${USHaqm}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2019_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHaqm}/nexus_utils/python/nexus_nei2019_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2019_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi
+else #Default to NEI2016
+  mkdir -p ${DATAinput}/NEI2016v1
+  mkdir -p ${DATAinput}/NEI2016v1/v2022-07
+  mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
+  ${USHaqm}/nexus_utils/python/nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2022-07"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2016_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHaqm}/nexus_utils/python/nexus_nei2016_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2016_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi	
 fi
 
 if [ "${TIMEZONES}" = "TRUE" ]; then # TIME ZONES
@@ -286,15 +386,19 @@ if [ "${MASKS}" = "TRUE" ]; then # MASKS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/MASKS ${DATAinput}
 fi
 
+if [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
+  ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
+fi
+
 if [ "${CEDS}" = "TRUE" ]; then #CEDS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CEDS ${DATAinput}
 fi
 
-if [ "${HTAP2010}" = "TRUE" ]; then #CEDS2014
+if [ "${HTAP}" = "TRUE" ]; then #HTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/HTAP ${DATAinput}
 fi
 
-if [ "${OMIHTAP}" = "TRUE" ]; then #CEDS2014
+if [ "${OMIHTAP}" = "TRUE" ]; then #OMI-HTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/OMI-HTAP_2019 ${DATAinput}
 fi
 
@@ -346,7 +450,7 @@ if [ "${USE_GFS_SFC}" = "TRUE" ]; then # GFS INPUT
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_gfs_bio.py\" failed."
-      err_exit "${message_txt}"
+    err_exit "${message_txt}"
   fi
 fi
 

@@ -74,6 +74,7 @@ yyyymmddhh="${PDY}${cyc}"
 #-----------------------------------------------------------------------
 #
 PT_SRC_PRECOMB="${FIXemispt}"
+PT_REF_YEAR=2019
 #
 #-----------------------------------------------------------------------
 #
@@ -82,7 +83,7 @@ PT_SRC_PRECOMB="${FIXemispt}"
 #-----------------------------------------------------------------------
 #
 if [ ! -s "${DATA}/pt-${yyyymmddhh}.nc" ]; then 
-  ${USHaqm}/aqm_utils_python/stack-pt-merge.py -s ${yyyymmddhh} -n ${nstep} -i ${PT_SRC_PRECOMB}
+  ${USHaqm}/aqm_utils_python/stack-pt-merge.py -s ${yyyymmddhh} -n ${nstep} -i ${PT_SRC_PRECOMB} -r $PT_REF_YEAR 
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"stack-pt-merge.py\" failed."

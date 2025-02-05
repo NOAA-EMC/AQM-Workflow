@@ -96,10 +96,8 @@ anthro_species::
     BENZ          1.00000  BENZ          KG/M2/S
     BUTADIENE13   1.00000  BUTADIENE13   KG/M2/S
     CH4           1.00000  CH4           KG/M2/S
-    CH4_INV       1.00000  CH4_INV       KG/M2/S
     CL2           1.00000  CL2           KG/M2/S
     CO            1.00000  CO            KG/M2/S
-    CO2_INV       1.00000  CO2_INV       KG/M2/S
     ETH           1.00000  ETH           KG/M2/S
     ETHA          1.00000  ETHA          KG/M2/S
     ETHY          1.00000  ETHY          KG/M2/S
@@ -349,14 +347,11 @@ pt_stack_temperature: STKTK
 pt_stack_velocity:    STKVE
 pt_species::
     ACET          1.0000  ACET          MOL/S
-    ACROLEIN      1.0000  ACROLEIN      MOL/S
     ALD2          1.0000  ALD2          MOL/S
     ALD2_PRIMARY  1.0000  ALD2_PRIMARY  MOL/S
     ALDX          1.0000  ALDX          MOL/S
     BENZ          1.0000  BENZ          MOL/S
-    BUTADIENE13   1.0000  BUTADIENE13   MOL/S
     CH4           1.0000  CH4           MOL/S
-    CL2           1.0000  CL2           MOL/S
     CO            1.0000  CO            MOL/S
     ETH           1.0000  ETH           MOL/S
     ETHA          1.0000  ETHA          MOL/S
@@ -364,7 +359,6 @@ pt_species::
     ETOH          1.0000  ETOH          MOL/S
     FORM          1.0000  FORM          MOL/S
     FORM_PRIMARY  1.0000  FORM_PRIMARY  MOL/S
-    HCL           1.0000  HCL           MOL/S
     HONO          1.0000  HONO          MOL/S
     IOLE          1.0000  IOLE          MOL/S
     ISOP          1.0000  ISOP          MOL/S
