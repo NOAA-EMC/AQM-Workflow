@@ -1,6 +1,11 @@
 #! /bin/bash
+source user_settings.sh
 
-ln -s /lfs/h2/emc/physics/noscrub/UFS_SRW_App/aqm.v8.0/fix .
+cd ${workdir}
+
+if [[ -d ${fixdir} ]]; then
+  ln -s ${fixdir} .
+fi
 
 cd sorc
 bash auto_A1_checkout.sh
@@ -10,3 +15,12 @@ cd ..
 cd ecf
 bash setup_ecf_links.sh
 cd ..
+
+if [[ -d ${workdir}/ecf/defs/submit ]]; then
+  echo "Creating submit dir for workflow"
+  mkdir ${workdir}/ecf/defs/submit
+fi
+if [[ -d ${ptmpdir}/ecflow_aqm/para/com ]]; then
+  echo "Making para/com dir for workflow"
+  mkdir -p ${ptmpdir}/ecflow_aqm/para/com
+fi
