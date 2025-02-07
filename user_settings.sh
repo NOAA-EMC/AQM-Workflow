@@ -15,6 +15,8 @@ module load ecflow
 export ECF_HOST=cdecflow01
 
 # Location/path for ecflow files
+export fixdir=/lfs/h2/emc/physics/noscrub/UFS_SRW_App/aqm.v8.0/fix
+export ptmpdir=/lfs/h2/emc/ptmp/${USER}
 export ecflow_dir=/lfs/h2/emc/${user_group}/noscrub/${USER}/ecflow
 
 # Which mode will you be generating the workflow for?
