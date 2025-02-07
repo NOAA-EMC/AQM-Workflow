@@ -16,11 +16,11 @@ cd ecf
 bash setup_ecf_links.sh
 cd ..
 
-if [[ -d ${workdir}/ecf/defs/submit ]]; then
+if [[ ! -d ${workdir}/ecf/defs/submit ]]; then
   echo "Creating submit dir for workflow"
   mkdir ${workdir}/ecf/defs/submit
 fi
-if [[ -d ${ptmpdir}/ecflow_aqm/para/com ]]; then
+if [[ ! -d ${ptmpdir}/ecflow_aqm/para/com ]]; then
   echo "Making para/com dir for workflow"
   mkdir -p ${ptmpdir}/ecflow_aqm/para/com
 fi
