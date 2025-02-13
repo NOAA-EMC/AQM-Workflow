@@ -10,3 +10,7 @@ ush/*.swp
 *TOBEDELETED
 *.swp
 __pycache__
+sorc/build
+sorc/*.fd
+ecf/post/jaqm_post_f*.ecf
+ecf/nexus/jaqm_nexus_emission_0*.ecf
