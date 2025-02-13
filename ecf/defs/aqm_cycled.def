@@ -1,16 +1,16 @@
 suite nco_aqm
   family primary
-    edit aqm_ver 'v8.0.1'
-    edit PACKAGEHOME '/lfs/h2/emc/physics/noscrub/%EMC_USER%/nwdev/packages/aqm.%aqm_ver%'
+    edit PACKAGEHOME '/lfs/h2/emc/nems/noscrub/brian.curtis/git/BrianCurtis-NOAA/AQM-Workflow/ecflow_fixes'
     edit NET 'aqm'
     edit RUN 'aqm'
     edit PROJ 'AQM'
     edit PROJENVIR 'DEV'
     edit MACHINE_SITE 'development' 
     edit ENVIR 'prod'
-    edit QUEUE 'devhigh'
+    edit QUEUE 'dev'
     edit QUEUE_ARCH 'dev_transfer'
-    edit OUTPUTDIR '/lfs/h2/emc/ptmp/%EMC_USER%/ecflow_aqm/para/output/prod/today'
+    edit OUTPUTDIR '/lfs/h2/emc/ptmp/brian.curtis/ecflow_aqm/para/output/prod/today'
+    edit ECF_INCLUDE '/lfs/h2/emc/nems/noscrub/brian.curtis/git/BrianCurtis-NOAA/AQM-Workflow/ecflow_fixes/ecf/include'
     family 00
       edit CYC '00'
       task cycle_end
