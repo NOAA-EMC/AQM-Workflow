@@ -7,8 +7,9 @@ supported_machines:
     regex_hostnames:
     - "clogin0[1-9].cactus.wcoss2.ncep.noaa.gov"
     - "clogin10.cactus.wcoss2.ncep.noaa.gov"
-    - "dlogin0[1-9].cactus.wcoss2.ncep.noaa.gov"
-    - "dlogin10.cactus.wcoss2.ncep.noaa.gov"
+    - "dlogin0[1-9].dogwood.wcoss2.ncep.noaa.gov"
+    - "dlogin0[1-9]"
+    - "dlogin10.dogwood.wcoss2.ncep.noaa.gov"
   gaeac5:
     regex_hostnames:
     - "gaea5[1-8].ncrc.gov"

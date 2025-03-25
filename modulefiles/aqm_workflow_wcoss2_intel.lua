@@ -1,5 +1,5 @@
 whatis([===[Loads libraries & modules needed for AQM_Workflow on WCOSS2]===])
 
-export stack-python = 3.10.13
-export py-pyyaml = 6.0
-export ecflow = 5.11.4
+load("intel/19.1.3.304")
+load("ecflow/5.6.0.14")
+load("python/3.8.6")

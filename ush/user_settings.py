@@ -4,6 +4,7 @@
 import os
 import ecflow as ecf
 import yaml
+import detect_machine
 #import subprocess 
 from pathlib import Path
 
@@ -91,16 +92,17 @@ def user_set_check(yaml_us):
         print("ERROR: Invalid CYC. Set CYC in user_set.yml")
 
     #Check the machine_id from detect_machine.sh and use it to get user_dir from user_set.yml
-    machine_id: str = os.environ.get('MACHINE_ID')
+    #machine_id: str = os.environ.get('MACHINE_ID')
+    machine_id: str = detect_machine.get_machine_id()
     print(f'machine_id is: {machine_id}')
     #print(type(machine_id))
-    print(f"user_dir: {yaml_us['user_dir']['hera']}")
-    if machine_id == 'cactus' or machine_id =='dogwood':
+    #print(f"user_dir: {yaml_us['user_dir']['hera']}")
+    if machine_id == 'wcoss2':
         try:
             user_dir: str =  {yaml_us['user_dir']['wcoss2']}
             print(f'From try, user_dir is: {user_dir}')
             if None in user_dir:
-                raise KeyError("ERROR: USER_GROUP is not set. Set USER_GROUP in user_set.yml")
+                raise KeyError("ERROR: USER_DIR is not set. Set USER_DIR in user_set.yml")
         except Exception as e :
             print(e)
             cwd = os.getcwd()
@@ -111,7 +113,7 @@ def user_set_check(yaml_us):
             user_dir: str =  {yaml_us['user_dir']['hera']}
             print(f'From try, user_dir is: {user_dir}')
             if None in user_dir:
-                raise KeyError("ERROR: USER_GROUP is not set. Set USER_GROUP in user_set.yml")
+                raise KeyError("ERROR: USER_DIR is not set. Set USER_DIR in user_set.yml")
         except Exception as e :
             print(e)
             cwd = os.getcwd()
@@ -122,7 +124,7 @@ def user_set_check(yaml_us):
             user_dir: str =  {yaml_us['user_dir']['gaeac6']}
             print(f'From try, user_dir is: {user_dir}')
             if None in user_dir:
-                raise KeyError("ERROR: USER_GROUP is not set. Set USER_GROUP in user_set.yml")
+                raise KeyError("ERROR: USER_DIR is not set. Set USER_DIR in user_set.yml")
         except Exception as e :
             print(e)
             cwd = os.getcwd()
