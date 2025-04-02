@@ -1,7 +1,12 @@
 whatis([===[Loads libraries & modules needed for AQM_Workflow on GaeaC6]===])
 
 prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core")
-
-load(pathJoin("stack-python", "3.10.13"))
-load(pathJoin("py-pyyaml", "6.0"))
-load(pathJoin("ecflow", "5.11.4"))
+--prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core")
+prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/modulefiles")
+--load(pathJoin("stack-python", "3.10.13"))
+--load(pathJoin("py-pyyaml", "6.0"))
+--load(pathJoin("ecflow", "5.11.4"))
+load("stack-intel/2023.2.0")
+load("python/3.10.13")
+load("py-pyyaml/6.0")
+load("ecflow/5.8.4")
