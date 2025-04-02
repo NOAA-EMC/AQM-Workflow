@@ -33,8 +33,6 @@ def user_set_check(yaml_us):
     try:
         user_group: str = yaml_us['USER_GROUP']
         #print(type(user_group))
-        #user_group = list(user_group)
-        #if None in user_group:
         if user_group is None:
             print("ERROR: USER_GROUP is not set. Set USER_GROUP in user_set.yml")
         else:
