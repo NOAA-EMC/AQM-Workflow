@@ -5,21 +5,13 @@ import os
 import ecflow as ecf
 import yaml
 import detect_machine
-#import subprocess 
 from pathlib import Path
 
-#user customizes yaml
-#read in and check all user settings
-
 def main():
-    #detect_machine()
     yaml_us = yml_read()
     user_set_check(yaml_us)
-    #def_file_generate()
-    #def_file()
-
-#run detect machine script
-#def detect_machine():
+    def_file_generate()
+    def_file()
 
 #reads in user_set.yml
 def yml_read():
@@ -92,11 +84,8 @@ def user_set_check(yaml_us):
         print("ERROR: Invalid CYC. Set CYC in user_set.yml")
 
     #Check the machine_id from detect_machine.sh and use it to get user_dir from user_set.yml
-    #machine_id: str = os.environ.get('MACHINE_ID')
     machine_id: str = detect_machine.get_machine_id()
     print(f'machine_id is: {machine_id}')
-    #print(type(machine_id))
-    #print(f"user_dir: {yaml_us['user_dir']['hera']}")
     if machine_id == 'wcoss2':
         try:
             user_dir: str =  {yaml_us['user_dir']['wcoss2']}
@@ -130,120 +119,90 @@ def user_set_check(yaml_us):
             cwd = os.getcwd()
             user_dir: str = cwd
             print(f'From except, user_dir is: {user_dir}')
-
-    #ECFlow Host Server Location
-    #Before running this script, in the command line enter "module load ecflow"
-    #This can be left blank if set by module load properly
-
-
 '''
-    #ECFlow Host Server Location
-    #Before running this script, in the command line enter "module load ecflow"
-    #This can be left blank if set by module load properly
-    try:
-        ecf_host: str = os.environ.get('ECF_HOST')
-        #os.environ['ECF_HOST'] = ecf_host
-        #print(f'ecf_host from ENVIRON: {os.environ["ECF_HOST"]}')
-    except KeyError:
-        machine_id: str = os.environ.get('MACHINE_ID')
-        #os.environ['MACHINE_ID'] = machine_id
-        print(f'machine_id from EXCEPTION: {machine_id}')
-        if machine_id == 'cactus':
-            ecf_host: str = 'cdecflow01'
-            os.environ['ECF_HOST'] = ecf_host
-        elif machine_id == 'dogwood':
-            ecf_host: str = 'ddecflow01'
-            os.environ['ECF_HOST'] = ecf_host
-        elif machine_id == 'hera':
-            ecf_host: str = 'hecflow01'
-            os.environ['ECF_HOST'] = ecf_host
-        else:
-            ecf_host: str = 'gaea66'
-            os.environ['ECF_HOST'] = ecf_host
-        #print(f'ecf_host from EXCEPTION: {os.environ["ECF_HOST"]}')
-
     #ecf port number
-    #Before running this script, in the command line enter "module load ecflow"
-    #This can be left blank if set by module load properly
     try:
         ecf_port: int = os.environ['ECF_PORT']
-        #print(f'ecf_port from ENVIRON: {os.environ["ECF_PORT"]}')
+        print(f'ecf_port from ENVIRON: {ecf_port}')
     except KeyError:
         #get user_id & add 1500 to user_id to ge ecf_port
         user_id: int = os.getuid()
-        #print(f'user_id is from EXCEPTION: {user_id}')
         ecf_port: int = user_id + 1500
-        #print(f'ecf_port from EXCEPTION: {os.environ["ECF_PORT"]}')
+        print(f'ecf_port from EXCEPTION: {ecf_port}')
+
+    #ECF Host 
+    #assumes ecflow is loaded 
+        if machine_id == 'wcoss2':
+            try:
+                ecf_host: str = yaml_us['ECF_HOST']
+                print(f"ECF_HOST from YAML: {ecf_host}")
+            if None in ecf_host:
+                print("KeyError: You are on wcoss2. Please set ECF_HOST in user_set.yml to cdecflow01 or ddecflow01")
+                #ecf_host: str = 'cdecflow01'
+                #ecf_host: str = 'ddecflow01'
+                #if get_host 
+        elif machine_id == 'hera':
+            try:
+                ecf_host: str = yaml_us['ECF_HOST']
+                print(f"ECF_HOST from YAML: {ecf_host}")
+            if None in ecf_host:
+                ecf_host: str = 'hecflow01'
+                print(f"ECF_HOST generated: {ecf_host}")
+        else:
+             try:
+                ecf_host: str = yaml_us['ECF_HOST']
+                print(f"ECF_HOST from YAML: {ecf_host}")
+            if None in ecf_host:
+                ecf_host: str = 'gaea66'
+                print(f"ECF_HOST generated: {ecf_host}")
 
     #Location/path for ecflow files
-    #No need to edit this
     try:
-        ecflow_dir: str = f'/lfs/h2/emc/{os.environ["user_group"]}/noscrub/{os.environ["USER"]}/ecflow'
-        os.environ['ecflow_dir'] = ecflow_dir
-        #print(f'ecf_dir is: {os.environ["ecflow_dir"]}')
+        ecf_dir: str =  {yaml_us['ecflow_dir']['wcoss2']}
+        print(f'ecf_dir from yaml is: {ecflow_dir}')        
     except KeyError:
-        if machine_id == 'cactus':
-            ecflow_dir: str = f'/lfs/h2/emc/{os.environ["user_group"]}/noscrub/{os.environ["USER"]}/ecflow'
-            os.environ['ecflow_dir'] = ecflow_dir
-        elif machine_id == 'dogwood':
-            ecflow_dir: str = f'/lfs/h2/emc/{os.environ["user_group"]}/noscrub/{os.environ["USER"]}/ecflow'
-            os.environ['ecflow_dir'] = ecflow_dir
+        if machine_id == 'wcoss2':
+            ecf_dir: str = f'/lfs/h2/emc/{user_group}/noscrub/{user}/ecflow'
+            print(f'ecf_dir from except is: {ecflow_dir}')  
         #elif machine_id == 'hera':
         #    ecflow_dir: str == ''
-        #    os.environ['ecflow_dir'] = ecflow_dir
         #else: #assume we're on C6
         #    ecflow_dir: str == ''
-        #    os.environ['ecflow_dir'] = ecflow_dir
         #print(f'ecflow_dir from EXCEPTION: {os.environ["ecflow_dir"]}')        
 
     #Set path to the package
-    #The user should not need to edit this
-    #Package on WCOSS2
     try: 
-        packagehome: str = f'/lfs/h2/emc/physics/noscrub/{os.environ["USER"]}/nwdev/packages/aqm.{os.environ["aqm_ver"]}'
-        os.environ['PACKAGEHOME'] = packagehome
-        #print(f'package home is: {os.environ["PACKAGEHOME"]}')
+        pack_home: str =  {yaml_us['PACKAGEHOME']['wcoss2']}
+        print(f'pack_home from yaml is: {pack_home}')  
     except KeyError:
-        if machine_id == 'cactus':
-            packagehome: str = f'/lfs/h2/emc/physics/noscrub/{os.environ["USER"]}/nwdev/packages/aqm.{os.environ["aqm_ver"]}'
-            os.environ['PACKAGEHOME'] = packagehome
-        elif machine_id == 'dogwood':
-            packagehome: str = f'/lfs/h2/emc/physics/noscrub/{os.environ["USER"]}/nwdev/packages/aqm.{os.environ["aqm_ver"]}'
-            os.environ['PACKAGEHOME'] = packagehome
+        if machine_id == 'wcoss2':
+            pack_home: str = f'/lfs/h2/emc/{user_group}/noscrub/{user}/nwdev/packages/aqm.{aqm_ver}'
+            print(f'pack_home from except is: {pack_home}')  
         #elif machine_id == 'hera':
-        #    packagehome: str == ''
-        #    os.environ['PACKAGEHOME'] = packagehome
+        #    pack_home: str == ''
         #else: #assume we're on C6
-        #    packagehome: str == ''
-        #    os.environ['PACKAGEHOME'] = packagehome
-        #print(f'packagehome from EXCEPTION: {os.environ["PACKAGEHOME"]}')
+        #    pack_home: str == ''
 
     #Set output directory
-    #The user should not need to edit this 
     try:
-        outputdir: str = f'/lfs/h2/emc/ptmp/{os.environ["USER"]}/ecflow_aqm/para/output/prod/today'
-        os.environ['OUTPUTDIR']= outputdir
-        #print(f'output dir is: {os.environ["OUTPUTDIR"]}')
+        out_dir: str =  {yaml_us['outputdir']['wcoss2']}
+        print(f'out_dir from yaml is: {out_dir}')  
+
     except KeyError:
-        if machine_id == 'cactus':
-            outputdir: str = f'/lfs/h2/emc/ptmp/{os.environ["USER"]}/ecflow_aqm/para/output/prod/today'
-            os.environ['OUTPUTDIR'] = outputdir
-        elif machine_id == 'dogwood':
-            outputdir: str = f'/lfs/h2/emc/ptmp/{os.environ["USER"]}/ecflow_aqm/para/output/prod/today'
-            os.environ['OUTPUTDIR'] = outputdir
+        if machine_id == 'wcoss2':
+            out_dir: str = f'/lfs/h2/emc/ptmp/{user}/ecflow_aqm/para/output/prod/today'
+            print(f'out_dir from except is: {out_dir}')  
         #elif machine_id == 'hera':
         #    outputdir: str == ''
-        #    os.environ['OUTPUTDIR'] = outputdir
         #else: #assume we're on C6
         #    outputdir: str == ''
-        #    os.environ['OUTPUTDIR'] = outputdir
-        #print(f'outputdir from EXCEPTION: {os.environ["OUTPUTDIR"]}')
-
+'''
 #generate customized ecflow def file
 def def_file_generate():
- 
+
+#save ecf/defs/output.def
 def def_file(defs):
-    defs.save_as_defs('./def_out.def')  # save defs into file
-    print('def_out.def written')
-'''
+    defs.save_as_defs('../ecf/defs/output.def')
+    print('output.def written')
+
 main()
