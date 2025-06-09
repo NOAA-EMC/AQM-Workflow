@@ -1,0 +1,35 @@
+#SBATCH -e err
+#SBATCH -o out
+#SBATCH --job-name="aqm_point_source_%CYC%"
+#SBATCH --account=%PROJ%
+#SBATCH --qos=%QUEUE%
+#SBATCH --clusters=c6
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=%WALLTIME:00:15:00%
+
+model=aqm
+export cyc="%CYC%"
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+module load intel/${intel_ver}
+module load craype/${craype_ver}
+module load cray-pals/${cray_pals_ver}
+module load python/${python_ver}
+
+module list
+
+############################################################
+# CALL executable job script here
+############################################################
+${HOMEaqm}/jobs/JAQM_POINT_SOURCE
+
+%include <tail.h>
+
+%manual
+%end

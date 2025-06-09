@@ -1,6 +1,6 @@
 suite aqm_test
+  edit PACKAGEHOME '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/git/BrianCurtis-NOAA/AQM-Workflow/gaeac6_setup'
   family primary
-    edit PACKAGEHOME '/lfs/h2/emc/nems/noscrub/brian.curtis/git/BrianCurtis-NOAA/AQM-Workflow/ecflow_fixes'
     edit NET 'aqm'
     edit RUN 'aqm'
     edit PROJ 'AQM'
@@ -9,8 +9,10 @@ suite aqm_test
     edit ENVIR 'prod'
     edit QUEUE 'dev'
     edit QUEUE_ARCH 'dev_transfer'
-    edit OUTPUTDIR '/lfs/h2/emc/ptmp/brian.curtis/ecflow_aqm/para/output/prod/today'
-    edit ECF_INCLUDE '/lfs/h2/emc/nems/noscrub/brian.curtis/git/BrianCurtis-NOAA/AQM-Workflow/ecflow_fixes/ecf/include'
+    edit OUTPUTDIR '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/ecflow_aqm/para/output/prod/today'
+    edit ECF_INCLUDE '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/git/BrianCurtis-NOAA/AQM-Workflow/gaeac6_setup/ecf/include'
+    edit ECF_TRIES '1'
+    edit PDY '20230701
     family 00
       edit CYC '00'
       task cycle_end

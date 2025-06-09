@@ -1,0 +1,52 @@
+#SBATCH -e err
+#SBATCH -o out
+#SBATCH --job-name="aqm_nexus_emission_%NSPT%_%CYC%"
+#SBATCH --account=%PROJ%
+#SBATCH --qos=%QUEUE%
+#SBATCH --clusters=c6
+#SBATCH --partition=batch
+#SBATCH --nodes=3
+#SBATCH --ntasks-per-node=192
+#SBATCH --time=%WALLTIME:00:25:00%
+
+model=aqm
+export cyc="%CYC%"
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+module use /ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load stack-intel/${intel_ver}
+module load prod_util/2.1.1
+module load intel/${intel_ver}
+module load craype/${craype_ver}
+module load cray-mpich/${cray_mpich_ver}
+#WCOSS2 module load cray-pals/${cray_pals_ver}
+module load libjpeg/${libjpeg_ver}
+#WCOSS2 module load hdf5-A/${hdf5_ver}
+module load hdf5/${hdf5_ver}
+#WCOSS2 module load netcdf-A/${netcdf_ver}
+module load netcdf-c/4.9.2
+module load netcdf-fortran/4.6.1
+#WCOSS2 module load python/${python_ver}
+module load stack-python/3.10.13
+module load py-jinja2
+module load py-netcdf4
+module load py-scipy
+
+module list
+
+export nspt="%NSPT%"
+
+############################################################
+# CALL executable job script here
+############################################################
+${HOMEaqm}/jobs/JAQM_NEXUS_EMISSION
+
+%include <tail.h>
+
+%manual
+%end

@@ -4,6 +4,8 @@ set -xe  # print commands as they are executed and enable signal trapping
 
 export PS4='+ $SECONDS + '
 
+. %PACKAGEHOME%/user_settings.sh
+
 # Variables needed for communication with ecFlow
 export ECF_NAME=%ECF_NAME%
 export ECF_HOST=%ECF_HOST%

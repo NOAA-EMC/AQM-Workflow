@@ -2,7 +2,7 @@
 export job=${job:-$PBS_JOBNAME}
 export jobid=${jobid:-$job.$PBS_JOBID}
 
-export RUN_ENVIR=nco
+export RUN_ENVIR=${RUN_ENVIR:-nco}
 export envir=%ENVIR%
 export MACHINE_SITE=%MACHINE_SITE%
 export RUN=%RUN%
@@ -25,9 +25,10 @@ export DBNROOT=$SIPHONROOT
 if [[ ! " prod para test " =~ " ${envir} " && " ops.prod ops.para " =~ " $(whoami) " ]]; then err_exit "ENVIR must be prod, para, or test [envir-p1.h]"; fi
 
 # Developer configuration
-PTMP=/lfs/h2/emc/ptmp
-model=aqm
-PSLOT=ecflow_aqm
+PTMP=${PTMP:-/lfs/h2/emc/ptmp}
+STMP=${STMP:-/lfs/h2/emc/stmp}
+model=${model:-aqm}
+PSLOT=${PSLOT:-ecflow_aqm}
 export COMROOT=${PTMP}/${USER}/${PSLOT}/para/com
 export COMPATH=${COMROOT}/${model}
 if [ -n "%PDY:%" ]; then
@@ -36,9 +37,9 @@ else
   export PDY=$($NDATE | cut -c1-8)
 fi
 export CDATE=${PDY}%CYC:%
-export COMaqm=$(compath.py aqm/${aqm_ver})
-export COMOUT_PREP="$(compath.py obsproc/v1.1.0)"
+export COMaqm=${COMaqm:-$(compath.py aqm/${aqm_ver})}
+# export COMOUT_PREP="$(compath.py obsproc/v1.1.0)"
 
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/${model}/${PSLOT}
+export DATAROOT=${DATAROOT:-${STMP}/${USER}/${model}/${PSLOT}}
 mkdir -p ${DATAROOT} # ${COMaqm}
 

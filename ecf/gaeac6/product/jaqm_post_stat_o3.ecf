@@ -1,0 +1,48 @@
+#SBATCH -e err
+#SBATCH -o out
+#SBATCH --job-name="aqm_post_stat_o3_%CYC%"
+#SBATCH --account=%PROJ%
+#SBATCH --qos=%QUEUE%
+#SBATCH --clusters=c6
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=%WALLTIME:00:10:00%
+
+model=aqm
+export cyc="%CYC%"
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load intel/${intel_ver}
+module load craype/${craype_ver}
+module load cray-mpich/${cray_mpich_ver}
+module load hdf5-C/${hdf5_ver}
+module load netcdf-C/${netcdf_ver}
+module load w3emc/${w3emc_ver}
+module load w3nco/${w3nco_ver}
+module load wgrib2/${wgrib2_ver}
+module load jasper/${jasper_ver} 
+module load zlib/${zlib_ver} 
+module load libpng/${libpng_ver} 
+module load g2/${g2_ver}
+module load bacio/${bacio_ver} 
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load python/${python_ver}
+
+module list
+
+############################################################
+# CALL executable job script here
+############################################################
+${HOMEaqm}/jobs/JAQM_POST_STAT_O3
+
+%include <tail.h>
+
+%manual
+%end

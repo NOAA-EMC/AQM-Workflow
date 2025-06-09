@@ -1,0 +1,34 @@
+#SBATCH -e err
+#SBATCH -o out
+#SBATCH --job-name="aqm_forecast_manager_%CYC%"
+#SBATCH --account=%PROJ%
+#SBATCH --qos=%QUEUE%
+#SBATCH --clusters=c6
+#SBATCH --partition=batch
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=%WALLTIME:03:15:00%
+
+model=aqm
+export cyc="%CYC%"
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load intel/${intel_ver}
+module load craype/${craype_ver}
+
+module list
+
+############################################################
+# CALL executable job script here
+############################################################
+${HOMEaqm}/jobs/JAQM_FORECAST_MANAGER
+
+%include <tail.h>
+
+%manual
+%end
