@@ -3,7 +3,9 @@
 # Please fill out the following paths and settings to fit your preferences
 
 # You can set this in case you don't want to use this dir
-export MACHINE_ID=gaeac6
+
+MACHINE_ID=gaeac6
+export MACHINE_ID
 workflow_dir=${workflow_dir:-${PWD}}
 export workflow_dir
 echo "Workflow dir: ${workflow_dir}"
