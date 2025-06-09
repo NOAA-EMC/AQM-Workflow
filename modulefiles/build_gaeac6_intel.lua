@@ -7,7 +7,8 @@ whatis([===[Loads libraries needed for building the UFS SRW App on Gaea C5 ]===]
 
 
 --prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/spack-stack-1.6.0/envs/upp-addon-env/install/modulefiles/Core")
-prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/upp-addon-env/install/modulefiles/Core")
+--prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/upp-addon-env/install/modulefiles/Core")
+prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core")
 
 stack_intel_ver=os.getenv("stack_intel_ver") or "2023.2.0"
 load(pathJoin("stack-intel", stack_intel_ver))
@@ -39,8 +40,8 @@ load(pathJoin("fms", "2023.04"))
 
 load(pathJoin("bacio", "2.4.1"))
 load(pathJoin("crtm", "2.4.0.1"))
-load(pathJoin("g2", "3.5.1"))
-load(pathJoin("g2tmpl", "1.13.0"))
+load(pathJoin("g2", "3.4.5"))
+load(pathJoin("g2tmpl", "1.10.2"))
 load(pathJoin("ip", "4.3.0"))
 load(pathJoin("sp", "2.5.0"))
 load(pathJoin("w3emc", "2.10.0"))

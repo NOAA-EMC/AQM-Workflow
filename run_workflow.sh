@@ -2,12 +2,19 @@
 
 # Load ECFLOW
 module load ecflow
-
-# Bring in user settings
-# source user_settings.sh
-# source setup_ecflow.sh
-
-server_check.sh
+echo "MACHINEID: ${MACHINE_ID}"
+if [[ ${MACHINE_ID} =~ wcoss2 ]]; then
+  server_check.sh
+elif [[ ${MACHINE_ID} =~ gaeac6 ]]; then
+  # No Gaea ECFLOW nodes.
+  export ECF_HOST=$(hostname)
+  export ECF_PORT=$(( $(id -u ${USER}) + 1500 ))
+elif [[ ${MACHINE_ID} =~ hera ]]; then
+  echo "HERA HERA HERA HERA"
+else
+  echo "Unsupported System: Exiting"
+  exit 1
+fi
 
 ecflow_client --delete=force yes /aqm_test
 
