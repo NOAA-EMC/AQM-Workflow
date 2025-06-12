@@ -26,24 +26,25 @@ export cyc="%CYC%"
 ############################################################
 # Load modules
 ############################################################
-module load PrgEnv-intel/${PrgEnv_intel_ver}
-module load intel/${intel_ver}
+module use ${stack_location}
+module load stack-intel/${stack_intel_ver}
 module load craype/${craype_ver}
-module load cray-mpich/${cray_mpich_ver}
-module load cray-pals/${cray_pals_ver}
+module load stack-cray-mpich/${cray_mpich_ver}
+#module load cray-pals/${cray_pals_ver}
 module load libjpeg/${libjpeg_ver}
-module load hdf5-A/${hdf5_ver}
-module load netcdf-A/${netcdf_ver}
-module load fms-C/${fms_ver}
+module load hdf5/${hdf5_ver}
+module load netcdf-c/${netcdf_ver}
+module load netcdf-fortran/${netcdf_fortran_ver}
+module load fms/${fms_ver}
 module load crtm/${crtm_ver}
 module load g2/${g2_ver}
 module load g2tmpl/${g2tmpl_ver}
 module load ip/${ip_ver}
 module load sp/${sp_ver}
 module load w3emc/${w3emc_ver}
-module load pio/${pio_ver}
-module load esmf-B/${esmf_ver}
-module load libjpeg/${libjpeg_ver}
+module load parallelio/${pio_ver}
+module load esmf/${esmf_ver}
+module stack-python/${python_ver}
 module load python/${python_ver}
 
 module list
