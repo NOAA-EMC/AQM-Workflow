@@ -8,7 +8,7 @@
   hera: /scratch2/NCEPDEV/naqfc/Anna.Smoot/git/AnnaSmoot-NOAA/AQM-Workflow/ecf_update/ush
   wcoss2:
   gaeac6: 
- #What is your group for the workflow? (example: physics, nems, etc. )
+#What is your group for the workflow? (example: physics, nems, etc. )
  USER_GROUP: physics
  #What is your organization? (example: emc, arl, etc. )
  ORG: emc
@@ -16,16 +16,13 @@
  PDY: 20230701
  #Which mode will you be generating the workflow for: realtime or retro?
  MODE: realtime
- #Which type of workflow run do you want to do? (nco, user, or test)
- RUN_TYPE: test
  #What version of AQM are you using? Default is v8.0.1.
  aqm_ver: v8.0.1
- #Which cycles do you want to run? (choose from 00, 06, 12, or 18)
- #Format for multiple cycles example: [00, 06, 12]
- CYC: [00, 06, 12]
+ #Which cycle do you want to run? (testing default is [00])
+ CYC: [00]
  #How many forecast hours? (must match number of cycles you're running)
- #i.e. if you run 2 cycles, provide 2 forecast hours
- HOURS: [06, 72, 72]
+ #i.e. if you run 2 cycles, provide 2 forecast hours (testing default is [06])
+ HOURS: [06]
  #ecflow host (wcoss2 cactus: cdecflow01, wcoss2 dogwood: ddecflow01, gaeac6: gaea66, hera: hecflow01)
  #ECF_HOST: 
  #Change queue based on machine:(wcoss2: dev, hera:hera, gaeac6:normal)  
@@ -37,9 +34,10 @@
  #What is the project environment? 
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
  PROJENV: dev
+
  #---- do not edit below this line ----
+ #RUN_TYPE: test
  NET: aqm
  RUN: aqm
  ENVIR: dev
  MACHINE_SITE: development
- 

@@ -16,8 +16,6 @@
  PDY: 20230701
  #Which mode will you be generating the workflow for: realtime or retro?
  MODE: realtime
- #Which type of workflow run do you want to do? (nco, user, or test)
- RUN_TYPE: test
  #What version of AQM are you using? Default is v8.0.1.
  aqm_ver: v8.0.1
  #Which cycles do you want to run? (choose from 00, 06, 12, or 18)
@@ -37,9 +35,10 @@
  #What is the project environment? 
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
  PROJENV: dev
+
  #---- do not edit below this line ----
+ #RUN_TYPE: community
  NET: aqm
  RUN: aqm
  ENVIR: dev
  MACHINE_SITE: development
- 
