@@ -23,7 +23,9 @@
  CYC: [00, 06, 12]
  #How many forecast hours? (must match number of cycles you're running)
  #i.e. if you run 2 cycles, provide 2 forecast hours
- HOURS: [06, 72, 72]
+ HOURS: [06, 72, 06]
+ #How often do you want to restart? Example: every 6 hours is 06. 
+ RESTART_FREQ: 6
  #ecflow host (wcoss2 cactus: cdecflow01, wcoss2 dogwood: ddecflow01, gaeac6: gaea66, hera: hecflow01)
  #ECF_HOST: 
  #Change queue based on machine:(wcoss2: dev, hera:hera, gaeac6:normal)  
@@ -37,7 +39,6 @@
  PROJENV: dev
 
  #---- do not edit below this line ----
- #RUN_TYPE: community
  NET: aqm
  RUN: aqm
  ENVIR: dev

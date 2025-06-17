@@ -142,7 +142,15 @@ def user_set_check(vars_dict):
             print(f"PDY is: {pdy}")
             vars_dict['pdy'] = pdy
     except:
-        raise KeyError("ERROR: Invalid PDY. Set PDY in yaml")        
+        raise KeyError("ERROR: Invalid PDY. Set PDY in yaml")
+    #Restart var from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)     
+    try:
+        restart_freq: int = yaml_us['RESTART_FREQ']
+        print(type(restart_freq))
+        print(f'RESTART FREQ is: {restart_freq}')
+        vars_dict['RESTART_FREQ'] = restart_freq
+    except:
+        raise KeyError("ERROR: Invalid RESTART_FREQ. Set RESTART_FREQ in yaml")
 
     #Cycles var from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
     try:
@@ -445,22 +453,30 @@ def def_file_generate(defs, vars_dict):
         f_hr_list = vars_dict['HOURS']
         print(f'forecast hours type is: {type(f_hr_list)}')
         print(f'forecast hours are: {f_hr_list}')
-        print(f_hr_list[1])
-        #Calculate forecast hour limit for event generation
-        for i in range(len(cyc_list)):
-            for j in range(len(f_hr_list)):
-                if cyc_list[i] == 0:
-                    limit_6hr= int(f_hr_list[0] + f_hr_list[0]/6 + 2)
-                if cyc_list[i] == 6:
-                    limit_72hr= int(f_hr_list[1] + f_hr_list[1]/6 + 1)
-                if cyc_list[i] == 12:
-                    limit_72hr= int(f_hr_list[2] + f_hr_list[2]/6 + 1)
-                if cyc_list[i] == 18:
-                    limit_6hr= int(f_hr_list[3] + f_hr_list[3]/6 + 2)
-        print(limit_6hr)
-        print(limit_72hr)
+
+        #Create a list of restart frequencies
+        restart_hr = int(vars_dict['RESTART_FREQ'])
+        print(f'restart frequency is: {restart_hr}')
+        restart_list = []
+        for j in range(len(f_hr_list)):
+            print(f_hr_list[j])
+            if f_hr_list[j]==restart_hr:
+                restart_freq = 1
+                restart_list.append(restart_freq)
+            else:
+                restart_freq = (int(f_hr_list[j]/restart_hr) -1)
+                restart_list.append(restart_freq)
+        print(restart_list)
+        #initialize event list
+        event_num_list = []
+
         #Loop through cycles and generate tasks for nco_aqm
         for i in range(len(cyc_list)):
+             #Calculate event generation based on forecast hours and restart frequencies
+            event_num = int(f_hr_list[i] + 1 + restart_list[i])
+            event_num_list.append(event_num)
+            print(event_num_list)
+            #Create cycle family
             f_cyc = defs.nco_aqm.primary.add_family(str(cyc_list[i]).zfill(2))
             f_cyc += [ecf.Edit(CYC=str(cyc_list[i]).zfill(2))]
             tsk_cyc_end = f_cyc.add_task('cycle_end')
@@ -475,9 +491,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i)), ecf.Trigger('TIME >= 0142 and TIME < 0742')]
+                for k in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(k))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(k)), ecf.Trigger('TIME >= 0142 and TIME < 0742')]
                     f_nexus += [ecf.Task('jaqm_nexus_post_split',
                         ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
                         ./jaqm_nexus_emission_03==complete and./jaqm_nexus_emission_04==complete and ./jaqm_nexus_emission_05==complete"""))]
@@ -504,17 +520,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                #create forecast manager events based on limit calcualted above
-                for i in range(1,limit_6hr):
-                    if i ==1:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp1_rdy')]
+                #create forecast manager events 
+                for j in range(event_num_list[i]):
+                    if j==0:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp1_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-2)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, '00'+ str(j-1)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(7):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for j in range(event_num_list[i]-1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(j).zfill(3),
+                        ecf.Edit(FHR = str(j).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -538,9 +554,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 0742 and TIME < 1342')]
                     f_nexus += [ecf.Task('jaqm_nexus_post_split',
                         ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -568,17 +584,16 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                for i in range(1,limit_72hr):
-                    if i<12: 
-                        j=i
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp'+str(j)+'_rdy')]
+                for j in range(event_num_list[i]):
+                    if j<restart_list[i]: 
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp'+str(j+1)+'_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-12)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, str(j-restart_list[i]).zfill(3)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(73):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for i in range(f_hr_list[i]+1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(i).zfill(3),
+                        ecf.Edit(FHR = str(i).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -602,9 +617,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 1342 and TIME < 1942')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
                     ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -625,6 +640,36 @@ def def_file_generate(defs, vars_dict):
                         ecf.Trigger('TIME >= 1342 and TIME < 1942'))]
                 f_pts_fire_emis += [ecf.Task('jaqm_fire_emission',
                         ecf.Trigger('TIME >= 1342 and TIME < 1942'))]
+                #create forecast family
+                f_forecast = f_v1.add_family('forecast')
+                f_forecast += [ecf.Task('jaqm_forecast',
+                    ecf.Trigger('../nexus==complete and ../prep==complete and ../pts_fire_emis==complete'),
+                    ecf.Event(1, 'release_manager'))]
+                f_forecast += [ecf.Task('jaqm_forecast_manager',
+                    ecf.Trigger('./jaqm_forecast:release_manager'))]
+                for j in range(event_num_list[i]):
+                    if j<restart_list[i]: 
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp'+str(j+1)+'_rdy')]
+                    else:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, str(j-restart_list[i]).zfill(3)+'_rdy')]
+                #create post family
+                f_post = f_v1.add_family('post')
+                for i in range(f_hr_list[i]+1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(i).zfill(3),
+                        ecf.Edit(FHR = str(i).zfill(3)),
+                        ecf.Trigger('../forecast==complete'))]
+                #create product family
+                f_product = f_v1.add_family('product')
+                f_product += [ecf.Task('jaqm_pre_post_stat',
+                    ecf.Trigger('../forecast==complete'))]
+                f_product += [ecf.Task('jaqm_post_stat_o3',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_post_stat_pm25',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_bias_correction_o3',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_bias_correction_pm25',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
             elif cyc_list[i] == 18:
                 tsk_cyc_end += [ecf.Cron('17:00')]
                 #create aqm family
@@ -635,9 +680,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 1942 and TIME < 2342')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
                     ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -665,17 +710,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                #create forecast manager events based on limit calcualted above
-                for i in range(1,limit_6hr):
-                    if i ==1:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp1_rdy')]
+                #create forecast manager events 
+                for j in range(event_num_list[i]):
+                    if j==0:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp1_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-2)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, '00'+ str(j-1)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(7):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for j in range(event_num_list[i]-1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(j).zfill(3),
+                        ecf.Edit(FHR = str(j).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -690,7 +735,7 @@ def def_file_generate(defs, vars_dict):
                 f_product += [ecf.Task('jaqm_bias_correction_pm25',
                     ecf.Trigger('./jaqm_pre_post_stat==complete'))]
             else:
-                raise ValueError("ERROR: Cycle value is incorrect.")                              
+                raise ValueError("ERROR: Cycle value is incorrect.")                          
     
     #Generate test_aqm for cycle 00
     elif vars_dict['RUN_TYPE'] == 'test':
@@ -711,7 +756,34 @@ def def_file_generate(defs, vars_dict):
             ecf.Edit(OUTPUTDIR = vars_dict['OUTPUTDIR']),
             ecf.Edit(ECF_INCLUDE = vars_dict['ECF_INCLUDE'])]
         cyc_list = vars_dict['CYC']
+        print(f'cyc_list type is: {type(cyc_list)}')
+        print(f'cyc_list is: {cyc_list}')
+        f_hr_list = vars_dict['HOURS']
+        print(f'forecast hours type is: {type(f_hr_list)}')
+        print(f'forecast hours are: {f_hr_list}')
+        #Create a list of restart frequencies
+        restart_hr = int(vars_dict['RESTART_FREQ'])
+        print(f'restart frequency is: {restart_hr}')
+        restart_list = []
+        for j in range(len(f_hr_list)):
+            print(f_hr_list[j])
+            if f_hr_list[j]==restart_hr:
+                restart_freq = 1
+                restart_list.append(restart_freq)
+            else:
+                restart_freq = (int(f_hr_list[j]/restart_hr) -1)
+                restart_list.append(restart_freq)
+        print(restart_list)
+        #initialize event list
+        event_num_list = []
+
+        #Create cycle task
         for i in range(len(cyc_list)):
+            #calculate event numbers within cycle loop
+            event_num = int(f_hr_list[i] + 1 + restart_list[i])
+            event_num_list.append(event_num)
+            print(event_num_list)
+
             print(cyc_list[i])
             f_cyc = defs.test_aqm.primary.add_family(str(cyc_list[i]).zfill(2))
             f_cyc += [ecf.Edit(CYC=str(cyc_list[i]).zfill(2))]
@@ -727,9 +799,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     #tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 0142 and TIME < 0742')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
                     ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -753,16 +825,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                for i in range(1,9):
-                    if i == 1:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp1_rdy')]
+                #create forecast manager events 
+                for j in range(event_num_list[i]):
+                    if j==0:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp1_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-2)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, '00'+ str(j-1)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(7):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for j in range(event_num_list[i]-1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(j).zfill(3),
+                        ecf.Edit(FHR = str(j).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -777,7 +850,7 @@ def def_file_generate(defs, vars_dict):
                 f_product += [ecf.Task('jaqm_bias_correction_pm25',
                     ecf.Trigger('./jaqm_pre_post_stat==complete'))]
             else:
-                raise ValueError("ERROR: Cycle value is incorrect.")                             
+                raise ValueError("ERROR: Cycle value is incorrect.")                            
 
     #cycle based generation of user_aqm
     else:  #assume community (configurable) run, user
@@ -800,23 +873,30 @@ def def_file_generate(defs, vars_dict):
         f_hr_list = vars_dict['HOURS']
         print(f'forecast hours type is: {type(f_hr_list)}')
         print(f'forecast hours are: {f_hr_list}')
-        print(f_hr_list[1])
-        #Calculate forecast hour limit for event generation
-        for i in range(len(cyc_list)):
-            for j in range(len(f_hr_list)):
-                if cyc_list[i] == 0:
-                    limit_6hr= int(f_hr_list[0] + f_hr_list[0]/6 + 2)
-                if cyc_list[i] == 6:
-                    limit_72hr= int(f_hr_list[1] + f_hr_list[1]/6 + 1)
-                if cyc_list[i] == 12:
-                    limit_72hr= int(f_hr_list[2] + f_hr_list[2]/6 + 1)
-                if cyc_list[i] == 18:
-                    limit_6hr= int(f_hr_list[3] + f_hr_list[3]/6 + 2)
-        print(limit_6hr)
-        print(limit_72hr)
+        #Create a list of restart frequencies
+        restart_hr = int(vars_dict['RESTART_FREQ'])
+        print(f'restart frequency is: {restart_hr}')
+        restart_list = []
+        for j in range(len(f_hr_list)):
+            print(f_hr_list[j])
+            if f_hr_list[j]==restart_hr:
+                restart_freq = 1
+                restart_list.append(restart_freq)
+            else:
+                restart_freq = (int(f_hr_list[j]/restart_hr) -1)
+                restart_list.append(restart_freq)
+        print(restart_list)
+        #initialize event list
+        event_num_list = []
+
         #Loop through cycles and generate tasks for nco_aqm
         for i in range(len(cyc_list)):
-            f_cyc = defs.nco_aqm.primary.add_family(str(cyc_list[i]).zfill(2))
+            #Calculate event generation based on forecast hours and restart frequencies
+            event_num = int(f_hr_list[i] + 1 + restart_list[i])
+            event_num_list.append(event_num)
+            print(event_num_list)
+            #create cycle family
+            f_cyc = defs.user_aqm.primary.add_family(str(cyc_list[i]).zfill(2))
             f_cyc += [ecf.Edit(CYC=str(cyc_list[i]).zfill(2))]
             tsk_cyc_end = f_cyc.add_task('cycle_end')
             tsk_cyc_end += [ecf.Edit(ECF_FILES='%PACKAGEHOME%/ecf')]
@@ -830,9 +910,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i)), ecf.Trigger('TIME >= 0142 and TIME < 0742')]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j)), ecf.Trigger('TIME >= 0142 and TIME < 0742')]
                     f_nexus += [ecf.Task('jaqm_nexus_post_split',
                         ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
                         ./jaqm_nexus_emission_03==complete and./jaqm_nexus_emission_04==complete and ./jaqm_nexus_emission_05==complete"""))]
@@ -859,17 +939,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                #create forecast manager events based on limit calcualted above
-                for i in range(1,limit_6hr):
-                    if i ==1:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp1_rdy')]
+                #create forecast manager events 
+                for j in range(event_num_list[i]):
+                    if j==0:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp1_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-2)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, '00'+ str(j-1)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(7):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for j in range(event_num_list[i]-1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(j).zfill(3),
+                        ecf.Edit(FHR = str(j).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -893,9 +973,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 0742 and TIME < 1342')]
                     f_nexus += [ecf.Task('jaqm_nexus_post_split',
                         ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -923,17 +1003,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                for i in range(1,limit_72hr):
-                    if i<12: 
-                        j=i
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp'+str(j)+'_rdy')]
+                #create forecast manager family
+                for j in range(event_num_list[i]):
+                    if j<restart_list[i]: 
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp'+str(j+1)+'_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-12)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, str(j-restart_list[i]).zfill(3)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(73):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for i in range(f_hr_list[i]+1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(i).zfill(3),
+                        ecf.Edit(FHR = str(i).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -957,9 +1037,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 1342 and TIME < 1942')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
                     ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -980,6 +1060,37 @@ def def_file_generate(defs, vars_dict):
                         ecf.Trigger('TIME >= 1342 and TIME < 1942'))]
                 f_pts_fire_emis += [ecf.Task('jaqm_fire_emission',
                         ecf.Trigger('TIME >= 1342 and TIME < 1942'))]
+               #create forecast family
+                f_forecast = f_v1.add_family('forecast')
+                f_forecast += [ecf.Task('jaqm_forecast',
+                    ecf.Trigger('../nexus==complete and ../prep==complete and ../pts_fire_emis==complete'),
+                    ecf.Event(1, 'release_manager'))]
+                f_forecast += [ecf.Task('jaqm_forecast_manager',
+                    ecf.Trigger('./jaqm_forecast:release_manager'))]
+                #create forecast manager family
+                for j in range(event_num_list[i]):
+                    if j<restart_list[i]: 
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp'+str(j+1)+'_rdy')]
+                    else:
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, str(j-restart_list[i]).zfill(3)+'_rdy')]
+                #create post family
+                f_post = f_v1.add_family('post')
+                for i in range(f_hr_list[i]+1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(i).zfill(3),
+                        ecf.Edit(FHR = str(i).zfill(3)),
+                        ecf.Trigger('../forecast==complete'))]
+                #create product family
+                f_product = f_v1.add_family('product')
+                f_product += [ecf.Task('jaqm_pre_post_stat',
+                    ecf.Trigger('../forecast==complete'))]
+                f_product += [ecf.Task('jaqm_post_stat_o3',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_post_stat_pm25',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_bias_correction_o3',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
+                f_product += [ecf.Task('jaqm_bias_correction_pm25',
+                    ecf.Trigger('./jaqm_pre_post_stat==complete'))]
             elif cyc_list[i] == 18:
                 tsk_cyc_end += [ecf.Cron('17:00')]
                 #create aqm family
@@ -990,9 +1101,9 @@ def def_file_generate(defs, vars_dict):
                 #create nexus family
                 f_nexus = f_v1.add_family('nexus')
                 #create 0-5 nexus emission tasks, the nexus post split, and complete triggers
-                for i in range (6):
-                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(i))
-                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(i))]
+                for j in range(6):
+                    tsk_jaqm_nex_emis = f_nexus.add_task('jaqm_nexus_emission_0'+str(j))
+                    tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 1942 and TIME < 2342')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
                     ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
@@ -1020,17 +1131,17 @@ def def_file_generate(defs, vars_dict):
                     ecf.Event(1, 'release_manager'))]
                 f_forecast += [ecf.Task('jaqm_forecast_manager',
                     ecf.Trigger('./jaqm_forecast:release_manager'))]
-                #create forecast manager events based on limit calcualted above
-                for i in range(1,limit_6hr):
-                    if i ==1:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, 'restart_gp1_rdy')]
+                #create forecast manager family
+                for j in range(event_num_list[i]):
+                    if j<restart_list[i]: 
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, 'restart_gp'+str(j+1)+'_rdy')]
                     else:
-                        f_forecast.jaqm_forecast_manager += [ecf.Event(i, '00'+ str(i-2)+'_rdy')]
+                        f_forecast.jaqm_forecast_manager += [ecf.Event(j+1, str(j-restart_list[i]).zfill(3)+'_rdy')]
                 #create post family
                 f_post = f_v1.add_family('post')
-                for i in range(7):
-                    f_post += [ecf.Task('jaqm_post_f00'+str(i),
-                        ecf.Edit(FHR = '00'+str(i)),
+                for i in range(f_hr_list[i]+1):
+                    f_post += [ecf.Task('jaqm_post_f'+str(i).zfill(3),
+                        ecf.Edit(FHR = str(i).zfill(3)),
                         ecf.Trigger('../forecast==complete'))]
                 #create product family
                 f_product = f_v1.add_family('product')
@@ -1045,7 +1156,7 @@ def def_file_generate(defs, vars_dict):
                 f_product += [ecf.Task('jaqm_bias_correction_pm25',
                     ecf.Trigger('./jaqm_pre_post_stat==complete'))]
             else:
-                raise ValueError("ERROR: Cycle value is incorrect.")                           
+                raise ValueError("ERROR: Cycle value is incorrect.")                        
 
     print('definition finished!')
     def_file(defs)

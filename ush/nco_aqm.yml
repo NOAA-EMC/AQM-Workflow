@@ -22,7 +22,7 @@
  #---- do not edit below this line ----
  CYC: [00, 06, 12, 18]
  HOURS: [06, 72, 72, 06]
- #RUN_TYPE: nco
+ RESTART_FREQ: 6
  NET: aqm
  RUN: aqm
  ENVIR: dev

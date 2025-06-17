@@ -23,7 +23,8 @@
  #How many forecast hours? (must match number of cycles you're running)
  #i.e. if you run 2 cycles, provide 2 forecast hours (testing default is [06])
  HOURS: [06]
- #ecflow host (wcoss2 cactus: cdecflow01, wcoss2 dogwood: ddecflow01, gaeac6: gaea66, hera: hecflow01)
+ #how often do you want to restart? Example: every 6 hours is 06. 
+ RESTART_FREQ: 6
  #ECF_HOST: 
  #Change queue based on machine:(wcoss2: dev, hera:hera, gaeac6:normal)  
  QUEUE: dev
@@ -31,12 +32,10 @@
  QUEUE_ARCH: dev_transfer
  #What is your project? This changes depending on machine. (wcoss2: AQM, NEMS, etc., gaeac6: drsa-fire2, etc., hera:naqfc, etc.)
  PROJ: AQM #nems  currently does PROJ-PROJENV (c6:drsa-fire2, hera:naqfc)
- #What is the project environment? 
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
  PROJENV: dev
 
  #---- do not edit below this line ----
- #RUN_TYPE: test
  NET: aqm
  RUN: aqm
  ENVIR: dev
