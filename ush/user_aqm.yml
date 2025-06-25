@@ -23,19 +23,18 @@
  CYC: [00, 06, 12]
  #How many forecast hours? (must match number of cycles you're running)
  #i.e. if you run 2 cycles, provide 2 forecast hours
+ #Format for forecast hours example: [06, 72, 06]
  HOURS: [06, 72, 06]
  #How often do you want to restart? Example: every 6 hours is 06. 
  RESTART_FREQ: 6
- #ecflow host (wcoss2 cactus: cdecflow01, wcoss2 dogwood: ddecflow01, gaeac6: gaea66, hera: hecflow01)
- #ECF_HOST: 
  #Change queue based on machine:(wcoss2: dev, hera:hera, gaeac6:normal)  
  QUEUE: dev
  #Change queue_arch based on machine:(wcoss2: dev_transfer, hera: dtn-hera, gaeac6: hdtn1-ha)
  QUEUE_ARCH: dev_transfer
  #What is your project? This changes depending on machine. (wcoss2: AQM, NEMS, etc., gaeac6: drsa-fire2, etc., hera:naqfc, etc.)
- PROJ: AQM #nems  currently does PROJ-PROJENV (c6:drsa-fire2, hera:naqfc)
- #What is the project environment? 
+ PROJ: AQM
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
+ #What is the project environment? 
  PROJENV: dev
 
  #---- do not edit below this line ----
