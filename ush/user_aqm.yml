@@ -5,11 +5,11 @@
  #wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]
  #gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username]
  user_dir:
-  hera: /scratch2/NCEPDEV/naqfc/Anna.Smoot/git/AnnaSmoot-NOAA/AQM-Workflow/ecf_update/ush
+  hera:
   wcoss2:
-  gaeac6: 
+  gaeac6: /gpfs/f6/drsa-fire2/world-shared/Anna.Smoot/git/AnnaSmoot-NOAA/AQM-Workflow/ecf_updates/ush
  #What is your group for the workflow? (example: physics, nems, etc. )
- USER_GROUP: physics
+ USER_GROUP: drsa-fire2
  #What is your organization? (example: emc, arl, etc. )
  ORG: emc
  #What's the start date? (YYYYMMDD)
@@ -32,7 +32,7 @@
  #Change queue_arch based on machine:(wcoss2: dev_transfer, hera: dtn-hera, gaeac6: hdtn1-ha)
  QUEUE_ARCH: dev_transfer
  #What is your project? This changes depending on machine. (wcoss2: AQM, NEMS, etc., gaeac6: drsa-fire2, etc., hera:naqfc, etc.)
- PROJ: AQM
+ PROJ: drsa-fire2
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
  #What is the project environment? 
  PROJENV: dev

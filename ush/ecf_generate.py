@@ -38,6 +38,7 @@ def user_set_check(vars_dict):
     user: str = os.environ['USER']
     #add user name to the dictionary
     vars_dict['user'] = user
+    print(vars_dict['user'])
 
     #The path to user_settings.sh should be in /ush, the same directoary as this script
     user_set_path = './user_settings.sh'
@@ -311,7 +312,7 @@ def user_set_check(vars_dict):
             vars_dict['user_dir'] = user_dir
         #Try and use machine_id to get user the user directory from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
         #and add it to the dictionary
-    else: #assume Gaea C6
+    elif machine_id == 'gaeac6':
         try:
             user_dir: str =  yaml_us['user_dir']['gaeac6']
             print(f'From try, user_dir is: {user_dir}')
@@ -389,10 +390,10 @@ def user_set_check(vars_dict):
             print(e)
             raise KeyError("ERROR: output directory not genereated!")
     #Try and use machine_id to generate ecflow dir and add to dictionary
-    else: #assume Gaea C6
+    elif machine_id == 'gaeac6':
         try:
             ecf_dir: str = f'/gpfs/f6/{project}/scratch/{user}/noscrub/{user}/ecflow'
-            print(f'ecflow directory is: {ecflow_dir}')
+            print(f'ecflow directory is: {ecf_dir}')
             vars_dict['ecf_dir'] = ecf_dir
         #if ecf directory is not generated, raise KeyError
         except Exception as e:
