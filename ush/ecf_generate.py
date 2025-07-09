@@ -86,6 +86,7 @@ def user_set_check(vars_dict):
     #try to read user group from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
     try:
         user_group: str = yaml_us['USER_GROUP']
+        print(f'User group is: {user_group}')
         #check for unacceptable NoneType
         if user_group is None:
             raise TypeError("ERROR: USER_GROUP is not set. Set USER_GROUP in yaml")
@@ -113,6 +114,7 @@ def user_set_check(vars_dict):
     #try to read organization from from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
     try:
         org: str = yaml_us['ORG']
+        print(f'org is: {org}')
         #check for unacceptable NoneType
         if org is None:
             raise TypeError("ERROR: ORG is not set. Set ORG in yaml")
@@ -198,14 +200,14 @@ def user_set_check(vars_dict):
     #Try to read project environment variable from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
     #and add it to the dictionary
     try:
-        proj_env: str = yaml_us['PROJENV']
-        vars_dict['PROJENV'] = proj_env
+        proj_env: str = yaml_us['PROJENVIR']
+        vars_dict['PROJENVIR'] = proj_env
         #check for unacceptable NoneType
         if proj_env is None:
-            raise TypeError("ERROR: PROJENV is not set. Set PROJENV in yaml")
-    #if there is no PROJENV set in yaml, raise KeyError
+            raise TypeError("ERROR: PROJENVIR is not set. Set PROJENVIR in yaml")
+    #if there is no PROJENVIR set in yaml, raise KeyError
     except:
-        raise KeyError("ERROR: Invalid PROJENV. Set PROJENV in yaml")
+        raise KeyError("ERROR: Invalid PROJENVIR. Set PROJENVIR in yaml")
 
     #Try to read net variable from yaml (test_aqm.yml, nco_aqm.yml, user_aqm.yml)
     #and add it to the dictionary
@@ -329,7 +331,7 @@ def user_set_check(vars_dict):
     if machine_id == 'wcoss2':
         try:
             ecf_dir: str = f'/lfs/h2/{org}/{user_group}/noscrub/{user}/ecflow'
-            print(f'ecflow directory is: {ecflow_dir}')
+            print(f'ecflow directory is: {ecf_dir}')
             vars_dict['ecf_dir'] = ecf_dir
         #if ecf directory is not generated, raise KeyError
         except Exception as e:
@@ -755,7 +757,7 @@ def def_file_generate(defs, vars_dict):
             ecf.Edit(NET = vars_dict['NET']),
             ecf.Edit(RUN = vars_dict['RUN']),
             ecf.Edit(PROJ = vars_dict['PROJ']),
-            ecf.Edit(PROJENV = vars_dict['PROJENV']),
+            ecf.Edit(PROJENVIR = vars_dict['PROJENVIR']),
             ecf.Edit(MACHINE_SITE = vars_dict['MACHINE_SITE']),
             ecf.Edit(ENVIR = vars_dict['ENVIR']),
             ecf.Edit(QUEUE = vars_dict['QUEUE']),
@@ -800,8 +802,7 @@ def def_file_generate(defs, vars_dict):
                     tsk_jaqm_nex_emis += [ecf.Edit(NSPT = '0'+str(j))]
                     #tsk_jaqm_nex_emis += [ecf.Trigger('TIME >= 0142 and TIME < 0742')]
                 f_nexus += [ecf.Task('jaqm_nexus_post_split',
-                    ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and 
-                    ./jaqm_nexus_emission_03==complete and./jaqm_nexus_emission_04==complete and ./jaqm_nexus_emission_05==complete"""))]
+                    ecf.Trigger("""./jaqm_nexus_emission_00==complete and ./jaqm_nexus_emission_01==complete and ./jaqm_nexus_emission_02==complete and  ./jaqm_nexus_emission_03==complete and./jaqm_nexus_emission_04==complete and ./jaqm_nexus_emission_05==complete"""))]
                 #create prep family
                 f_prep = f_v1.add_family('prep') 
                 f_prep += [ecf.Task('jaqm_make_ics')]

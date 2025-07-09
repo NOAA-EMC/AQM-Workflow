@@ -11,6 +11,9 @@ echo "Workflow dir: ${workflow_dir}"
 module load ecflow
 export ECF_HOST=cdecflow01
 
+#What is your user group?
+export user_group=physics
+
 # Location/path for ecflow files
 export fixdir=/lfs/h2/emc/physics/noscrub/UFS_SRW_App/aqm.v8.0/fix
 export ptmpdir=/lfs/h2/emc/ptmp/${USER}
@@ -21,4 +24,4 @@ export ecflow_dir=/lfs/h2/emc/${user_group}/noscrub/${USER}/ecflow
 # nco is for running the full operational suite
 # test is for running one test cycle 
 # user is customizable
-export run_type=user
+export run_type=test

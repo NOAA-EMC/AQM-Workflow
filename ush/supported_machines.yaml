@@ -10,6 +10,8 @@ supported_machines:
     - "dlogin0[1-9].dogwood.wcoss2.ncep.noaa.gov"
     - "dlogin0[1-9]"
     - "dlogin10.dogwood.wcoss2.ncep.noaa.gov"
+    - "ddecflow0[1-2]"
+    - "cdecflow0[1-2]"
   gaeac5:
     regex_hostnames:
     - "gaea5[1-8].ncrc.gov"
