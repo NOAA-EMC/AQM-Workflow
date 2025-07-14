@@ -339,15 +339,19 @@ def user_set_check(vars_dict):
             raise KeyError("ERROR: ecflow directory not genereated!")
         #Try and use machine_id to generate package home and ecf_files and add to dictionary
         try:
+            pack_home: str = yaml_us['pack_home']['wcoss2']
+            print(f'Package home from yaml is: {pack_home}')
+            vars_dict['PACKAGEHOME'] = pack_home
             pack_home: str = f'/lfs/h2/{org}/{user_group}/noscrub/{user}/nwdev/packages/aqm.{AQM_version}'
             ecf_files: str = f'{pack_home}/ecf'
-            print(f'packagehome is: {pack_home}')
             print(f'ecf_files is: {ecf_files}')
-            vars_dict['PACKAGEHOME'] = pack_home
             vars_dict['ECF_FILES'] = ecf_files  
         #if package home and ecf_files are not generated, raise KeyError
         except Exception as e:
             print(e)
+            pack_home: str = f'/lfs/h2/{org}/{user_group}/noscrub/{user}/nwdev/packages/aqm.{AQM_version}'
+            vars_dict['PACKAGEHOME'] = pack_home
+            print(f'From exception, packagehom is: {pack_home}. This is based on NCO standards. To move past error, copy paste this path into your yaml for the variable pack_home.')
             raise KeyError("ERROR: packagehome not genereated!")
         #Try and use machine_id to generate output directory and add to dictionary
         try:
@@ -371,15 +375,18 @@ def user_set_check(vars_dict):
         #Try and use machine_id to generate package home and ecf_files
         #and add to dictionary
         try:
-            pack_home: str = f'/scratch2/NCEPDEV/{org}/{user_group}/{user}/nwdev/packages/aqm.{AQM_version}'
-            ecf_files: str = f'{pack_home}/ecf'
+            pack_home: str = yaml_us['pack_home']['hera']
             print(f'packagehome is: {pack_home}')
-            print(f'ecf_files is: {ecf_files}')
             vars_dict['PACKAGEHOME'] = pack_home
+            ecf_files: str = f'{pack_home}/ecf'
+            print(f'ecf_files is: {ecf_files}')
             vars_dict['ECF_FILES'] = ecf_files
         #if package home and ecf_files are not generated, raise KeyError
         except Exception as e:
             print(e)
+            pack_home: str = f'/scratch2/NCEPDEV/{org}/{user_group}/{user}/nwdev/packages/aqm.{AQM_version}'
+            vars_dict['PACKAGEHOME'] = pack_home
+            print(f'From exception, packagehom is: {pack_home}. This is based on NCO standards. To move past error, copy paste this path into your yaml for the variable pack_home.')
             raise KeyError("ERROR: packagehome not genereated!")
         #Try and use machine_id to generate output directory
         #and add to dictionary
@@ -403,16 +410,20 @@ def user_set_check(vars_dict):
             raise KeyError("ERROR: ecflow directory not genereated!")
         #Try and use machine_id to generate package home and ecf_files
         #and add to dictionary
+        
         try:
-            pack_home: str = f'/gpfs/f6/{project}/world-shared/{user}/nwdev/packages/aqm.{AQM_version}'
-            ecf_files: str = f'{pack_home}/ecf'
+            pack_home: str = yaml_us['pack_home']['gaeac6']
             print(f'packagehome is: {pack_home}')
-            print(f'ecf_files is: {ecf_files}')
             vars_dict['PACKAGEHOME'] = pack_home
+            ecf_files: str = f'{pack_home}/ecf'
+            print(f'ecf_files is: {ecf_files}')
             vars_dict['ECF_FILES'] = ecf_files
         #if package home and ecf_files are not generated, raise KeyError
         except Exception as e:
             print(e)
+            pack_home: str = f'/gpfs/f6/{project}/world-shared/{user}/nwdev/packages/aqm.{AQM_version}'
+            vars_dict['PACKAGEHOME'] = pack_home
+            print(f'From exception, packagehom is: {pack_home}. This is based on NCO standards. To move past error, copy paste this path into your yaml for the variable pack_home.')
             raise KeyError("ERROR: packagehome not genereated!")
         #Try and use machine_id to generate output directory and add to dictionary
         try:
@@ -452,13 +463,15 @@ def def_file_generate(defs, vars_dict):
     defs = ecf.Defs()
     #Generate ecflow suite definitions for nco 
     if vars_dict['RUN_TYPE'] == 'nco':
+        #add nco_aqm suite
         suite = defs.add_suite('nco_aqm')
+        #add primary family and packagehome to suite
+        defs.nco_aqm += ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME'])
         f_primary = suite.add_family('primary')
-        defs.nco_aqm.primary += [ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME']),
-            ecf.Edit(NET = vars_dict['NET']),
+        defs.nco_aqm.primary += [ecf.Edit(NET = vars_dict['NET']),
             ecf.Edit(RUN = vars_dict['RUN']),
             ecf.Edit(PROJ = vars_dict['PROJ']),
-            ecf.Edit(PROJENV = vars_dict['PROJENV']),
+            ecf.Edit(PROJENVIR = vars_dict['PROJENVIR']),
             ecf.Edit(MACHINE_SITE = vars_dict['MACHINE_SITE']),
             ecf.Edit(ENVIR = vars_dict['ENVIR']),
             ecf.Edit(QUEUE = vars_dict['QUEUE']),
@@ -750,11 +763,11 @@ def def_file_generate(defs, vars_dict):
     elif vars_dict['RUN_TYPE'] == 'test':
         #create test_aqm suite based on run_type
         suite = defs.add_suite('test_aqm') 
-        #add primary family
+        #add packagehome & primary family
+        defs.test_aqm += ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME'])
         f_primary = suite.add_family('primary')
         #add edits to primary family
-        defs.test_aqm.primary += [ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME']),
-            ecf.Edit(NET = vars_dict['NET']),
+        defs.test_aqm.primary += [ecf.Edit(NET = vars_dict['NET']),
             ecf.Edit(RUN = vars_dict['RUN']),
             ecf.Edit(PROJ = vars_dict['PROJ']),
             ecf.Edit(PROJENVIR = vars_dict['PROJENVIR']),
@@ -851,13 +864,16 @@ def def_file_generate(defs, vars_dict):
 
     #Generate ecflow suite definitions for user 
     elif vars_dict['RUN_TYPE'] == 'user':
+        #create user_aqm suite
         suite = defs.add_suite('user_aqm')
+        #Add primary family and packagehome
+        defs.user_aqm += ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME'])
         f_primary = suite.add_family('primary')
-        defs.user_aqm.primary += [ecf.Edit(PACKAGEHOME = vars_dict['PACKAGEHOME']),
-            ecf.Edit(NET = vars_dict['NET']),
+        #Add edits to primary family
+        defs.user_aqm.primary += [ecf.Edit(NET = vars_dict['NET']),
             ecf.Edit(RUN = vars_dict['RUN']),
             ecf.Edit(PROJ = vars_dict['PROJ']),
-            ecf.Edit(PROJENV = vars_dict['PROJENV']),
+            ecf.Edit(PROJENVIR = vars_dict['PROJENVIR']),
             ecf.Edit(MACHINE_SITE = vars_dict['MACHINE_SITE']),
             ecf.Edit(ENVIR = vars_dict['ENVIR']),
             ecf.Edit(QUEUE = vars_dict['QUEUE']),
@@ -1155,7 +1171,8 @@ def def_file(defs):
     in /ecf/defs based on the ecflow definitions from def_file_generate()
     """
     try:
-        defs.save_as_defs('../ecf/defs/output.def')
+        #defs.save_as_defs('../ecf/defs/output.def')
+        defs.save_as_defs('/ecf/defs/output.def')
         print('output.def written')
     except Exception:
         print('Caught Error')

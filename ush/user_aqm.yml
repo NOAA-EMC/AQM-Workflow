@@ -1,13 +1,17 @@
 ---
  #Set user directory, or the current working directory will be used
  #Example user_dirs include: 
- #hera: /scratch2/NCEPDEV/naqfc/[hera_username]
- #wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]
- #gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username]
+ #wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]/ush
+ #gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username]/ush
  user_dir:
-  hera:
-  wcoss2:
+  wcoss2: /lfs/h2/emc/physics/noscrub/anna.smoot/git/AnnaSmoot-NOAA/AQM-Workflow/20250630/AQM-Workflow/ecf_updates/ush
   gaeac6: /gpfs/f6/drsa-fire2/world-shared/Anna.Smoot/git/AnnaSmoot-NOAA/AQM-Workflow/ecf_updates/ush
+#Provide package home. This will be the user_dir but without ush:
+#wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]
+#gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username] 
+ pack_home:
+  wcoss2: /lfs/h2/emc/physics/noscrub/anna.smoot/git/AnnaSmoot-NOAA/AQM-Workflow/20250630/AQM-Workflow/ecf_updates
+  gaeac6: /gpfs/f6/drsa-fire2/world-shared/Anna.Smoot/git/AnnaSmoot-NOAA/AQM-Workflow/ecf_updates
  #What is your group for the workflow? (example: physics, nems, etc. )
  USER_GROUP: drsa-fire2
  #What is your organization? (example: emc, arl, etc. )
@@ -35,10 +39,10 @@
  PROJ: drsa-fire2
  #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
  #What is the project environment? 
- PROJENV: dev
+ PROJENVIR: DEV
 
  #---- do not edit below this line ----
  NET: aqm
  RUN: aqm
- ENVIR: dev
+ ENVIR: prod
  MACHINE_SITE: development
