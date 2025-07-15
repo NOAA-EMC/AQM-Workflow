@@ -1171,8 +1171,8 @@ def def_file(defs):
     in /ecf/defs based on the ecflow definitions from def_file_generate()
     """
     try:
-        #defs.save_as_defs('../ecf/defs/output.def')
-        defs.save_as_defs('/ecf/defs/output.def')
+        defs.save_as_defs('../ecf/defs/output.def')
+        #defs.save_as_defs('/ecf/defs/output.def')
         print('output.def written')
     except Exception:
         print('Caught Error')
