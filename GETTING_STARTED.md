@@ -1,8 +1,9 @@
 STEPS TO GET WORKFLOW RUNNING (FOR NOW)
- * edit user_settings.sh
- * bash setup_workflow.sh
- * ssh into ecflow node (Using -X for ecflow_ui) 
- * cd into AQM-Workflow
- * source setup_ecflow.sh
- * edit top primary section of ecf/defs/aqm_testing.def (edit to match your package structure for now)
- * bash run_workflow.sh
+If using Ecflow, make sure you have Xming or some x window loaded, ssh -X to an ecflow node before starting.
+ * module use modulefiles/
+ * module load build_wcoss2_intl OR module load build_gaeac6_intel
+ * module load aqm_workflow_ecoss2_intel OR module load aqm_workflow_gaeac6_intel
+ * python -c 'import ecflow'
+ * python -c 'import yaml'
+ * cd ush/
+ * cat GETTING_STARTED.md in ush

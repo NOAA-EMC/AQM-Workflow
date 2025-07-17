@@ -1,8 +1,8 @@
 STEPS TO GET WORKFLOW RUNNING (FOR NOW)
  * edit user_settings.sh
  * bash setup_workflow.sh
- * ssh into ecflow node (Using -X for ecflow_ui) 
- * cd into AQM-Workflow
+ * edit run type yaml: nco_aqm.yaml or user_aqm.yaml or test_aqm.yaml
+ * python ecf_generate.py
  * source setup_ecflow.sh
- * edit top primary section of ecf/defs/aqm_testing.def (edit to match your package structure for now)
+ * edit run_workflow.sh
  * bash run_workflow.sh
