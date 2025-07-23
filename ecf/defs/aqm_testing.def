@@ -3,24 +3,26 @@ suite aqm_test
   family primary
     edit NET 'aqm'
     edit RUN 'aqm'
-    edit PROJ 'AQM'
+    edit PROJ 'drsa-fire2'
     edit PROJENVIR 'DEV'
     edit MACHINE_SITE 'development' 
     edit ENVIR 'prod'
-    edit QUEUE 'dev'
+    edit QUEUE 'normal'
     edit QUEUE_ARCH 'dev_transfer'
     edit OUTPUTDIR '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/ecflow_aqm/para/output/prod/today'
-    edit ECF_INCLUDE '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/git/BrianCurtis-NOAA/AQM-Workflow/gaeac6_setup/ecf/include'
+    edit ECF_INCLUDE '/gpfs/f6/drsa-fire2/scratch/Brian.Curtis/git/BrianCurtis-NOAA/AQM-Workflow/gaeac6_setup/ecf/gaeac6/include'
     edit ECF_TRIES '1'
-    edit PDY '20230701
+    edit PDY '20230701'
+    edit aqm_ver '8.0'
+    edit ECF_JOB_CMD 'sbatch %ECF_JOB% 1> %ECF_JOBOUT% 2>&1'
     family 00
       edit CYC '00'
       task cycle_end
-        edit ECF_FILES '%PACKAGEHOME%/ecf'
+        edit ECF_FILES '%PACKAGEHOME%/ecf/gaeac6'
         cron 23:00
       family aqm
         family v1.0
-          edit ECF_FILES '%PACKAGEHOME%/ecf'
+          edit ECF_FILES '%PACKAGEHOME%/ecf/gaeac6'
           family nexus
             task jaqm_nexus_emission_00
               edit NSPT '00'

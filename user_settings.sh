@@ -33,8 +33,9 @@ export STMP=${PTMP}
 # export DATAROOT=${PTMP}/${USER}/aqm/ecflow_aqm
 # #export COMROOT=${PTMP}/ecflow_aqm/para/com
 # export COMROOT=/gpfs/f6/drsa-fire2/world-shared/AQM-Data/com
-export COMOUT=/gpfs/f6/drsa-fire2/world-shared/AQM-Data/com/aqm/v8.0/aqm.20230701
-export COMIN=${COMOUT}
+#export COMOUT=/gpfs/f6/drsa-fire2/world-shared/AQM-Data/com/aqm/v8.0/aqm.20230701
+export COMOUT=${ptmpdir}/${USER}/ecflow_aqm/para/com/aqm/v8.0/aqm.20230701
+export COMIN=/gpfs/f6/drsa-fire2/world-shared/AQM-Data/com/aqm/v8.0/aqm.20230701
 export DCOMROOT=/gpfs/f6/drsa-fire2/world-shared/AQM-Data/dcom
 # export COMPATH=${PTMP}/${USER}/ecflow_aqm/para/com/aqm
 # RUN_ENVIR typically 'nco' or 'dev'

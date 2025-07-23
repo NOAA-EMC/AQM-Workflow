@@ -1,5 +1,6 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_ics_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
@@ -32,6 +33,11 @@ module load python/${python_ver}
 module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
 module load nco/${nco_ver}
+module load py-xarray
+module load py-jinja2
+module load py-netcdf4
+module load py-scipy
+
 
 module list
 

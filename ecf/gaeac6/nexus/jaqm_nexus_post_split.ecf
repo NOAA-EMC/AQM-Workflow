@@ -1,5 +1,6 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_nexus_post_split_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
@@ -28,6 +29,9 @@ module load netcdf-c/${netcdf_ver}
 module load netcdf-fortran/${netcdf_fortran_ver}
 module load stack-python/${python_ver}
 module load python/${python_ver}
+module load py-jinja2
+module load py-netcdf4
+module load py-scipy
 
 module list
 

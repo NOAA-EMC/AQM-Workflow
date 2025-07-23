@@ -1,25 +1,25 @@
-# This is the main cmake file for ufs-srweather-app.
+# This is the main cmake file for AQM Workflow.
 
 cmake_minimum_required(VERSION 3.15)
 
 # Set the project name and version.
-project(ufs-srweather-app VERSION 1.0 LANGUAGES C CXX Fortran)
+project(AQM-Workflow VERSION 1.0 LANGUAGES C CXX Fortran)
 
-find_package(MPI REQUIRED COMPONENTS C CXX Fortran)
+find_package(MPI REQUIRED)
 
 # Set extended version info.
-SET(SRWA_VERSION_MAJOR 1)
-SET(SRWA_VERSION_MINOR 0)
-SET(SRWA_VERSION_PATCH 0)
-SET(SRWA_VERSION_NOTE "-development")
-SET(SRWA_VERSION ${SRWA_VERSION_MAJOR}.${SRWA_VERSION_MINOR}.${SRWA_VERSION_PATCH}${SRWA_VERSION_NOTE})
+SET(AQMW_VERSION_MAJOR 1)
+SET(AQMW_VERSION_MINOR 0)
+SET(AQMW_VERSION_PATCH 0)
+SET(AQMW_VERSION_NOTE "-development")
+SET(AQMW_VERSION ${AQMW_VERSION_MAJOR}.${AQMW_VERSION_MINOR}.${AQMW_VERSION_PATCH}${AQMW_VERSION_NOTE})
 
 # A function used to create autotools-style 'yes/no' definitions.
 # If a variable is set, it 'yes' is returned. Otherwise, 'no' is
 # returned.
 #
 # Also creates a version of the ret_val prepended with 'NC',
-# when feature is true, which is used to generate ufs_srweather_app_meta.h.
+# when feature is true, which is used to generate AQM-Workflow_meta.h.
 FUNCTION(is_disabled feature ret_val)
   IF(${feature})
     SET(${ret_val} "no" PARENT_SCOPE)
@@ -34,7 +34,7 @@ ENDFUNCTION()
 # returned.
 #
 # Also creates a version of the ret_val prepended with 'NC',
-# when feature is true, which is used to generate ufs_srweather_app_meta.h.
+# when feature is true, which is used to generate AQM-Workflow_meta.h.
 FUNCTION(is_enabled feature ret_val)
   IF(${feature})
     SET(${ret_val} "yes" PARENT_SCOPE)
@@ -107,30 +107,30 @@ is_enabled(BUILD_SHARED_LIBS enable_shared)
 is_enabled(STATUS_PARALLEL HAS_PARALLEL)
 
 # Generate file from template.
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ufs_srweather_app.settings.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/ufs_srweather_app.settings"
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/AQM-Workflow.settings.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/AQM-Workflow.settings"
   @ONLY)
 
 # Read in settings file, print out.
 # Avoid using system-specific calls so that this
 # might also work on Windows.
-FILE(READ "${CMAKE_CURRENT_BINARY_DIR}/ufs_srweather_app.settings"
-  UFS-SRWEATHER-APP_SETTINGS)
-MESSAGE(${UFS-SRWEATHER-APP_SETTINGS})
+FILE(READ "${CMAKE_CURRENT_BINARY_DIR}/AQM-Workflow.settings"
+	AQM-WORKFLOW_SETTINGS)
+MESSAGE(${AQM-WORKFLOW_SETTINGS})
 
-# Install ufs_srweather_app.settings file into same location
+# Install AQM-Workflow.settings file into same location
 # as the app.
-INSTALL(FILES "${CMAKE_BINARY_DIR}/ufs_srweather_app.settings"
+INSTALL(FILES "${CMAKE_BINARY_DIR}/AQM-Workflow.settings"
   DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 #####
-# Create 'ufs_srweather_app_meta.h' include file.
+# Create 'AQM-Workflow_meta.h' include file.
 #####
 configure_file(
-  ufs_srweather_app_meta.h.in
-  ufs_srweather_app_meta.h @ONLY)
+  AQM-Workflow_meta.h.in
+  AQM-Workflow_meta.h @ONLY)
 
-FILE(COPY "${CMAKE_CURRENT_BINARY_DIR}/ufs_srweather_app_meta.h" DESTINATION include)
+FILE(COPY "${CMAKE_CURRENT_BINARY_DIR}/AQM-Workflow_meta.h" DESTINATION include)
 
 add_custom_target(build DEPENDS pbuild)
 
@@ -292,21 +292,6 @@ if (BUILD_GSI)
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_BINDIR=${CMAKE_INSTALL_BINDIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DGSI_MODE=Regional -DENKF_MODE=FV3REG
     BUILD_ALWAYS TRUE
     STEP_TARGETS build
-    )
-endif()
-
-# Build rrfs_utl
-if (BUILD_RRFS_UTILS)
-  list(APPEND TARGET_LIST RRFS_UTILS)
-
-  ExternalProject_Add(RRFS_UTILS
-    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/rrfs_utl
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rrfs_utl
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_BINDIR=${CMAKE_INSTALL_BINDIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    BUILD_ALWAYS TRUE
-    STEP_TARGETS build
-    DEPENDS GSI
     )
 endif()
 

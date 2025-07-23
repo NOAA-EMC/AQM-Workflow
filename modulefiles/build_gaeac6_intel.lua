@@ -3,84 +3,74 @@ This module loads libraries for building the UFS SRW App on
 the NOAA RDHPC machine Gaea C5 using Intel-2023.1.0
 ]])
 
-whatis([===[Loads libraries needed for building the UFS SRW App on Gaea C5 ]===])
+whatis([===[Loads libraries needed for building the AQM Workflow on Gaea C6 ]===])
 
-
---prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/spack-stack-1.6.0/envs/upp-addon-env/install/modulefiles/Core")
---prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/upp-addon-env/install/modulefiles/Core")
-prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core")
+prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/c6/spack-stack-1.9.2/envs/ue-intel-2023.2.0/install/modulefiles/Core")
 
 stack_intel_ver=os.getenv("stack_intel_ver") or "2023.2.0"
 load(pathJoin("stack-intel", stack_intel_ver))
 
-stack_mpich_ver=os.getenv("stack_mpich_ver") or "8.1.29"
+stack_mpich_ver=os.getenv("stack_mpich_ver") or "8.1.30"
 load(pathJoin("stack-cray-mpich", stack_mpich_ver))
 
-stack_python_ver=os.getenv("stack_python_ver") or "3.10.13"
+-- craype_ver=os.getenv("craype_ver") or "2.7.34"
+-- load(pathJoin("craype", craype_ver))
+
+stack_python_ver=os.getenv("stack_python_ver") or "3.11.7"
 load(pathJoin("stack-python", stack_python_ver))
 
---cmake_ver=os.getenv("cmake_ver") or "3.27.9"
---cmake_ver=os.getenv("cmake_ver") or "3.23.1"   
-cmake_ver=os.getenv("cmake_ver") or "3.23.1"   
+cmake_ver=os.getenv("cmake_ver") or "3.27.9"   
 load(pathJoin("cmake", cmake_ver))
 
---load("srw_common")
---instead load the lib versions that work on latest AQM Hera lua, but in srw_common order
+local aqm_modules = {
+    {["bacio"]          = "2.4.1"},
+    {["bufr"]           = "12.1.0"},
+    {["crtm"]           = "2.4.0.1"},
+    {["esmf"]           = "8.8.0"},
+    {["fms"]            = "2024.02"},
+    {["g2"]             = "3.5.1"},
+    {["g2tmpl"]         = "1.13.0"},
+    {["gftl-shared"]    = "1.9.0"},
+    {["hdf5"]           = "1.14.3"},
+    {["ip"]             = "5.1.0"},
+    {["jasper"]         = "2.0.32"},
+    {["libpng"]         = "1.6.37"},
+    {["mapl"]           = "2.53.4-esmf-8.8.0"},
+    {["nccmp"]          = "1.9.0.1"},
+    {["nco"]            = "5.2.4"},
+    {["nemsio"]         = "2.5.4"},
+    {["netcdf-c"]       = "4.9.2"},
+    {["netcdf-fortran"] = "4.6.1"},
+    {["parallelio"]     = "2.6.2"},
+    {["prod_util"]      = "2.1.1"},
+    {["scotch"]         = "7.0.4"},
+    {["sfcio"]          = "1.4.2"},
+    {["sigio"]          = "2.3.3"},
+    {["sp"]             = "2.5.0"},
+    {["w3emc"]          = "2.10.0"},
+    {["w3nco"]          = "2.4.1"},
+    {["wgrib2"]         = "3.6.0"},
+    {["wrf-io"]         = "1.2.0"},
+    {["zlib"]           = "1.2.13"},
+}
 
-load(pathJoin("jasper", "2.0.32"))
-load(pathJoin("zlib", "1.2.13"))
-load(pathJoin("libpng", "1.6.37"))
+for i = 1, #aqm_modules do
+  for name, default_version in pairs(aqm_modules[i]) do
+    local env_version_name = string.gsub(name, "-", "_") .. "_ver"
+    load(pathJoin(name, os.getenv(env_version_name) or default_version))
+  end
+end
 
-load(pathJoin("netcdf-c", "4.9.2"))
-load(pathJoin("netcdf-fortran", "4.6.1"))
-load(pathJoin("parallelio", "2.5.10"))
-load(pathJoin("esmf", "8.6.0"))
---load(pathJoin("fms", "2024.01")) --srw has 2023.04
-load(pathJoin("fms", "2023.04"))
+prepend_path("MODULEPATH", "/ncrc/proj/epic/spack-stack/modulefiles")
+load("ecflow")
 
-load(pathJoin("bacio", "2.4.1"))
-load(pathJoin("crtm", "2.4.0.1"))
-load(pathJoin("g2", "3.4.5"))
-load(pathJoin("g2tmpl", "1.10.2"))
-load(pathJoin("ip", "4.3.0"))
-load(pathJoin("sp", "2.5.0"))
-load(pathJoin("w3emc", "2.10.0"))
-
-load(pathJoin("gftl-shared", "1.6.1"))
-load(pathJoin("mapl", "2.40.3-esmf-8.6.0"))
-
-load(pathJoin("nemsio", "2.5.4"))
-load(pathJoin("sfcio", "1.4.1"))
-load(pathJoin("sigio", "2.3.2"))
-load(pathJoin("w3nco", "2.4.1"))
-load(pathJoin("wrf-io", "1.2.0"))
-
---from AQM  hera.lua but not used in srw app luas
---commented out lines may need to come back when generating wflow
-load(pathJoin("hdf5", "1.14.0"))
-load(pathJoin("scotch", "7.0.4"))
---load(pathJoin("nemsiogfs", "2.5.3"))
---load(pathJoin("ncio", "1.1.2"))
-load(pathJoin("nccmp", "1.9.0.1"))
-load(pathJoin("nco", "5.0.6"))
-load(pathJoin("bufr", "12.0.1")) --srw has 12.0.32
---load(pathJoin("gfsio", "1.4.1"))
---load(pathJoin("landsfcutil", "2.4.1"))
-load(pathJoin("prod_util", "2.1.1"))
-load(pathJoin("wgrib2", "2.0.8"))
-
---AQM hera.lua does not have these 
-unload("darshan-runtime/3.4.0")
-unload("cray-pmi/6.1.10")
-
-setenv("CFLAGS","-diag-disable=10441")
-setenv("FFLAGS","-diag-disable=10441")
+unload("darshan-runtime")
+unload("cray-libsci")
 
 setenv("CC","cc")
-setenv("FC","ftn")
 setenv("CXX","CC")
+setenv("FC","ftn")
 
---same as AQM hera.lua
 setenv("CMAKE_C_COMPILER","cc")
 setenv("CMAKE_Fortran_COMPILER","ftn")
 setenv("CMAKE_CXX_COMPILER","CC")

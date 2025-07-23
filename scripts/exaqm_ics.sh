@@ -63,7 +63,8 @@ if [ "${WORKFLOW_MANAGER}" = "ecflow" ]; then
   SDATE=$($NDATE -6 ${PDY}${cyc})
   PDYS_P1=$(echo $SDATE | cut -c1-8)
   cycs_p1=$(echo $SDATE | cut -c9-10)
-  export PREV_CYCLE_DIR=$(compath.py ${NET}/${model_ver}/${RUN}.${PDYS_P1}/${cycs_p1})
+  export PREV_CYCLE_DIR=${COMROOT}/${NET}/${model_ver}/${RUN}.${PDYS_P1}/${cycs_p1}
+  #export PREV_CYCLE_DIR=${PREV_CYCLE_DIR:-$(compath.py ${NET}/${model_ver}/${RUN}.${PDYS_P1}/${cycs_p1})}
 fi
 
 #Handle COLDSTART condition by using fix file

@@ -16,7 +16,7 @@ export DATA=${DATA:-${DATAROOT}/${jobid}}
 mkdir -p ${DATA}
 cd ${DATA}
 
-. $USHaqm/aqm_${RUN_ENVIR}_config.sh
+. $USHaqm/aqm_${RUN_ENVIR}_${MACHINE_ID}_config.sh
 
 . $USHaqm/source_util_funcs.sh
 
@@ -32,7 +32,8 @@ export EXECaqm=${EXECaqm:-${HOMEaqm}/exec}
 export PARMaqm=${PARMaqm:-${HOMEaqm}/parm}
 export FIXaqm=${FIXaqm:-${HOMEaqm}/fix}
 
-export FIXemispt="${FIXemispt:-${FIXaqm}/emission/nei2016v1-pt}"
+#export FIXemispt="${FIXemispt:-${FIXaqm}/emission/nei2016v1-pt}"
+export FIXemispt="${FIXemispt:-${FIXaqm}/emission/NEI2016v1/v2023-01-PT}"
 
 export COMINgfs="${COMINgfs:-$(compath.py gfs/${gfs_ver})}"
 export COMIN="${COMIN:-$(compath.py ${NET}/${aqm_ver}/${RUN}.${PDY})}"

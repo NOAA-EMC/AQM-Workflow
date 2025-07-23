@@ -1,12 +1,13 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_post_%FHR%_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
 #SBATCH --clusters=c6
 #SBATCH --partition=batch
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=48
+#SBATCH --ntasks-per-node=24
 #SBATCH --time=%WALLTIME:00:10:00%
 
 model=aqm

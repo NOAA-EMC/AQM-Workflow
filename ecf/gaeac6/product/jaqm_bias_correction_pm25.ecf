@@ -1,12 +1,13 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_bias_correction_pm25_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
 #SBATCH --clusters=c6
 #SBATCH --partition=batch
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=32
+#SBATCH --ntasks-per-node=1
 #SBATCH --time=%WALLTIME:00:10:00%
 
 model=aqm

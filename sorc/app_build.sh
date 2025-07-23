@@ -66,7 +66,7 @@ settings () {
 cat << EOF_SETTINGS
 Settings:
 
-  SRW_DIR=${SRW_DIR}
+  AQM_DIR=${AQM_DIR}
   BUILD_DIR=${BUILD_DIR}
   INSTALL_DIR=${INSTALL_DIR}
   BIN_DIR=${BIN_DIR}
@@ -85,7 +85,6 @@ Settings:
   BUILD_UFS_UTILS=${BUILD_UFS_UTILS}
   BUILD_UPP=${BUILD_UPP}
   BUILD_GSI=${BUILD_GSI}
-  BUILD_RRFS_UTILS=${BUILD_RRFS_UTILS}
   BUILD_NEXUS=${BUILD_NEXUS}
   BUILD_AQM_UTILS=${BUILD_AQM_UTILS}
 
@@ -102,7 +101,7 @@ usage_error () {
 # default settings
 LCL_PID=$$
 SORC_DIR=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )" && pwd -P)
-SRW_DIR="${SORC_DIR}/.."
+AQM_DIR="${SORC_DIR}/.."
 BUILD_DIR="${SORC_DIR}/build"
 INSTALL_DIR="${SORC_DIR}/build"
 BIN_DIR="exec"
@@ -123,7 +122,6 @@ BUILD_UFS="off"
 BUILD_UFS_UTILS="off"
 BUILD_UPP="off"
 BUILD_GSI="off"
-BUILD_RRFS_UTILS="off"
 BUILD_NEXUS="off"
 BUILD_AQM_UTILS="off"
 
@@ -179,12 +177,11 @@ while :; do
     default) ;;
     all) DEFAULT_BUILD=false; BUILD_UFS="on";
          BUILD_UFS_UTILS="on"; BUILD_UPP="on";
-         BUILD_GSI="on"; BUILD_RRFS_UTILS="on";;
+         BUILD_GSI="on";;
     ufs) DEFAULT_BUILD=false; BUILD_UFS="on" ;;
     ufs_utils) DEFAULT_BUILD=false; BUILD_UFS_UTILS="on" ;;
     upp) DEFAULT_BUILD=false; BUILD_UPP="on" ;;
     gsi) DEFAULT_BUILD=false; BUILD_GSI="on" ;;
-    rrfs_utils) DEFAULT_BUILD=false; BUILD_RRFS_UTILS="on" ;;
     nexus) DEFAULT_BUILD=false; BUILD_NEXUS="on" ;;
     aqm_utils) DEFAULT_BUILD=false; BUILD_AQM_UTILS="on" ;;
     # unknown
@@ -202,12 +199,12 @@ EXTERNALS="${EXTERNALS^^}"
 
 # move the pre-compiled executables to the designated location and exit
 if [ "${BUILD}" = false ] && [ "${MOVE}" = true ]; then
-  if [[ ! ${SRW_DIR} -ef ${INSTALL_DIR} ]]; then
+  if [[ ! ${AQM_DIR} -ef ${INSTALL_DIR} ]]; then
     printf "... Moving pre-compiled executables to designated location ...\n"
-    mkdir -p ${SRW_DIR}/${BIN_DIR}
+    mkdir -p ${AQM_DIR}/${BIN_DIR}
     cd "${INSTALL_DIR}/${BIN_DIR}"
     for file in *; do
-      [ -x "${file}" ] && mv "${file}" "${SRW_DIR}/${BIN_DIR}"
+      [ -x "${file}" ] && mv "${file}" "${AQM_DIR}/${BIN_DIR}"
     done
   fi
   exit 0
@@ -228,19 +225,21 @@ if [ "${DEFAULT_BUILD}" = true ]; then
   BUILD_UFS="on"
   BUILD_UFS_UTILS="on"
   BUILD_UPP="on"
+  BUILD_NEXUS="on"
+  BUILD_AQM_UTILS="on"
 fi
 
 # Choose components to build for air quality modeling (SRW-AQM)
-if [ "${APPLICATION}" = "ATMAQ" ]; then
-  if [ "${DEFAULT_BUILD}" = true ]; then
-    BUILD_NEXUS="on"
-    BUILD_AQM_UTILS="on"
-  fi
-  if [ "${PLATFORM}" = "wcoss2" ]; then
-    BUILD_POST_STAT="on"
-  else
-    BUILD_POST_STAT="off"
-  fi
+if [ "${PLATFORM}" = "wcoss2" ]; then
+  BUILD_POST_STAT="on"
+else
+  BUILD_POST_STAT="off"
+fi
+
+if [ "${PLATFORM}" = "wcoss2" ]; then
+  export CRAY_CPU_TARGET=x86-64
+elif [ "${PLATFORM}" = "gaeac6" ]; then
+  export CRAY_CPU_TARGET=x86-64
 fi
 
 set -eu
@@ -248,15 +247,11 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    jet|hera|gaea) COMPILER=intel ;;
-    orion) COMPILER=intel ;;
+    hera|gaeac6) COMPILER=intel ;;
     wcoss2) COMPILER=intel ;;
-    cheyenne) COMPILER=intel ;;
-    macos,singularity) COMPILER=gnu ;;
-    odin,noaacloud) COMPILER=intel ;;
     *)
-      COMPILER=intel
-      printf "WARNING: Setting default COMPILER=intel for new platform ${PLATFORM}\n" >&2;
+      printf "ERROR: Unsupported platform ${PLATFORM}\n" >&2;
+      exit 1
       ;;
   esac
 fi
@@ -269,14 +264,14 @@ if [ "${VERBOSE}" = true ] ; then
 fi
 
 # source version file only if it is specified in versions directory
-BUILD_VERSION_FILE="${SRW_DIR}/versions/build.ver"
+BUILD_VERSION_FILE="${AQM_DIR}/versions/build.ver"
 if [ -f ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 
 # set MODULE_FILE for this platform/compiler combination
 MODULE_FILE="build_${PLATFORM}_${COMPILER}"
-if [ ! -f "${SRW_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
+if [ ! -f "${AQM_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
   printf "ERROR: module file does not exist for platform/compiler\n" >&2
   printf "  MODULE_FILE=${MODULE_FILE}\n" >&2
   printf "  PLATFORM=${PLATFORM}\n" >&2
@@ -331,7 +326,6 @@ CMAKE_SETTINGS="\
  -DBUILD_UFS_UTILS=${BUILD_UFS_UTILS}\
  -DBUILD_UPP=${BUILD_UPP}\
  -DBUILD_GSI=${BUILD_GSI}\
- -DBUILD_RRFS_UTILS=${BUILD_RRFS_UTILS}\
  -DBUILD_NEXUS=${BUILD_NEXUS}\
  -DBUILD_AQM_UTILS=${BUILD_AQM_UTILS}"
 
@@ -402,45 +396,41 @@ if [ $USE_SUB_MODULES = true ]; then
 
         # else fallback on app level modulefile
         printf "... Fall back to app level modulefile ...\n"
-        module use ${SRW_DIR}/modulefiles
+        module use ${AQM_DIR}/modulefiles
         module load ${MODULE_FILE}
     }
     if [ $BUILD_UFS = "on" ]; then
         printf "... Loading UFS modules ...\n"
-        module use ${SRW_DIR}/sorc/ufs-weather-model/modulefiles
+        module use ${AQM_DIR}/sorc/ufs-weather-model/modulefiles
         load_module "ufs_"
     fi
     if [ $BUILD_UFS_UTILS = "on" ]; then
         printf "... Loading UFS_UTILS modules ...\n"
-        module use ${SRW_DIR}/sorc/UFS_UTILS/modulefiles
+        module use ${AQM_DIR}/sorc/UFS_UTILS/modulefiles
         load_module "build."
     fi
     if [ $BUILD_UPP = "on" ]; then
         printf "... Loading UPP modules ...\n"
-        module use ${SRW_DIR}/sorc/UPP/modulefiles
+        module use ${AQM_DIR}/sorc/UPP/modulefiles
         load_module ""
     fi
     if [ $BUILD_GSI = "on" ]; then
         printf "... Loading GSI modules ...\n"
-        module use ${SRW_DIR}/sorc/gsi/modulefiles
+        module use ${AQM_DIR}/sorc/gsi/modulefiles
         load_module "gsi_"
-    fi
-    if [ $BUILD_RRFS_UTILS = "on" ]; then
-        printf "... Loading RRFS_UTILS modules ...\n"
-        load_module ""
     fi
     if [ $BUILD_NEXUS = "on" ]; then
         printf "... Loading NEXUS modules ...\n"
-        module use ${SRW_DIR}/sorc/arl_nexus/modulefiles
+        module use ${AQM_DIR}/sorc/arl_nexus/modulefiles
         load_module ""
     fi
     if [ $BUILD_AQM_UTILS = "on" ]; then
         printf "... Loading AQM-utils modules ...\n"
-        module use ${SRW_DIR}/sorc/AQM-utils/modulefiles
+        module use ${AQM_DIR}/sorc/AQM-utils/modulefiles
         load_module ""
     fi
 else
-    module use ${SRW_DIR}/modulefiles
+    module use ${AQM_DIR}/modulefiles
     module load ${MODULE_FILE}
 fi
 module list
@@ -455,6 +445,7 @@ if [ "${CLEAN}" = true ]; then
     fi
 else
     printf "... Generate CMAKE configuration ...\n"
+    printf "CMAKE_SETTINGS:\n${CMAKE_SETTINGS}\n"
     cmake ${SORC_DIR} ${CMAKE_SETTINGS} 2>&1 | tee log.cmake
 
     printf "... Compile and install executables in build directory ...\n"
@@ -466,10 +457,10 @@ else
     if [[ "${BUILD}" = false && "${MOVE}" = false ]] || 
        [[ "${BUILD}" = true && "${MOVE}" = true ]]; then
       printf "... Moving pre-compiled executables to designated location ...\n"
-      mkdir -p ${SRW_DIR}/${BIN_DIR}
+      mkdir -p ${AQM_DIR}/${BIN_DIR}
       cd "${INSTALL_DIR}/${BIN_DIR}"
       for file in *; do
-        [ -x "${file}" ] && mv "${file}" "${SRW_DIR}/${BIN_DIR}"
+        [ -x "${file}" ] && mv "${file}" "${AQM_DIR}/${BIN_DIR}"
       done
     fi
 fi

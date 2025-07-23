@@ -20,7 +20,7 @@ if [[ ! -d ${workflow_dir}/ecf/defs/submit ]]; then
   echo "Creating submit dir for workflow"
   mkdir ${workflow_dir}/ecf/defs/submit
 fi
-if [[ ! -d ${ptmpdir}/ecflow_aqm/para/com ]]; then
+if [[ ! -d ${ptmpdir}/${USER}/ecflow_aqm/para/com ]]; then
   echo "Making para/com dir for workflow"
-  mkdir -p ${ptmpdir}/ecflow_aqm/para/com
+  mkdir -p ${ptmpdir}/${USER}/ecflow_aqm/para/com
 fi

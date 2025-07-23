@@ -22,4 +22,4 @@ ecflow_client --load ecf/defs/aqm_testing.def # This should he soft_coded to use
 
 ecflow_client --begin /aqm_test #This should be soft coded to use a variable 'suite_name'
 
-ecflow_ui &
+echo "Please use 'ecflow_ui &' to control your run with ecflow"

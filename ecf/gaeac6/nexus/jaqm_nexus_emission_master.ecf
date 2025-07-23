@@ -1,13 +1,21 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_nexus_emission_%NSPT%_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
 #SBATCH --clusters=c6
 #SBATCH --partition=batch
-#SBATCH --nodes=3
-#SBATCH --ntasks-per-node=192
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=96
+#SBATCH --cpus-per-task=2
 #SBATCH --time=%WALLTIME:00:25:00%
+
+export OMP_NUM_THREADS=2
+export OMP_STACKSIZE=1024M
+export NC_BLKSZ=1M
+export FI_VERBS_PREFER_XRC=0
+export FI_CXI_RX_MATCH_MODE=hybrid
 
 model=aqm
 export cyc="%CYC%"
@@ -31,6 +39,7 @@ module load python/${python_ver}
 module load py-jinja2
 module load py-netcdf4
 module load py-scipy
+module load py-numpy
 
 module list
 

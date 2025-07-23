@@ -2,7 +2,7 @@
 
 set -eu
 
-ECF_DIR=$(pwd)
+ECF_DIR=$(pwd)/${MACHINE_ID}
 
 # Function that loop over forecast cycles and
 # creates link between the master and target

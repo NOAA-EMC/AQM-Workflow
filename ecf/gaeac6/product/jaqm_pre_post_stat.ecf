@@ -1,5 +1,6 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_pre_post_stat_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%

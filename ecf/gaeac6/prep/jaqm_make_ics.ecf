@@ -1,5 +1,6 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_make_ics_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
@@ -27,7 +28,16 @@ module load hdf5/${hdf5_ver}
 module load netcdf-c/${netcdf_ver}
 module load netcdf-fortran/${netcdf_fortran_ver}
 module load stack-python/${python_ver}
+module load parallelio/${parallelio_ver}
 module load python/${python_ver}
+module load esmf/${esmf_ver}
+module use /usw/hpss/modulefiles
+module load hsi
+module load py-jinja2
+module load py-netcdf4
+module load py-scipy
+module load py-pyyaml
+module load py-f90nml
 
 module list
 

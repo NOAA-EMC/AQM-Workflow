@@ -1,5 +1,6 @@
-#SBATCH -e err
-#SBATCH -o out
+#!/bin/bash
+#SBATCH -e %ECF_JOBOUT%
+#SBATCH -o %ECF_JOBOUT%
 #SBATCH --job-name="aqm_fire_emission_%CYC%"
 #SBATCH --account=%PROJ%
 #SBATCH --qos=%QUEUE%
@@ -19,7 +20,7 @@ export cyc="%CYC%"
 ############################################################
 module use ${stack_location}
 module load stack-intel/${intel_ver}
-module load craype/${craype_ver}
+# module load craype/${craype_ver}
 module load stack-cray-mpich/${cray_mpich_ver}
 module load hdf5/${hdf5_ver}
 module load netcdf-c/${netcdf_ver}
@@ -29,6 +30,10 @@ module load gsl/${gsl_ver}
 module load nco/${nco_ver}
 module load stack-python/${python_ver}
 module load python/${python_ver}
+module load esmf/${esmf_ver}
+module load py-xarray
+module load py-netcdf4
+module load py-jinja2
 
 module list
 

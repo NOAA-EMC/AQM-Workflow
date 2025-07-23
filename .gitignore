@@ -12,5 +12,7 @@ ush/*.swp
 __pycache__
 sorc/build
 sorc/*.fd
-ecf/post/jaqm_post_f*.ecf
-ecf/nexus/jaqm_nexus_emission_0*.ecf
+ecf/gaeac6/post/jaqm_post_f*.ecf
+ecf/gaeac6/nexus/jaqm_nexus_emission_0*.ecf
+ecf/wcoss2/post/jaqm_post_f*.ecf
+ecf/wcoss2/nexus/jaqm_nexus_emission_0*.ecf
