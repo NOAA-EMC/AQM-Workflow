@@ -5,7 +5,13 @@
 # Please develop this script knowing it will eventually apply to multiple systems.
 
 # Bring in user settings
-source user_settings.sh
+source ./user_settings.sh
+#./user_settings.sh
+#USER_PATH=$(realpath "./user_settings.sh")
+#USER_PATH=$PWD/user_settings.sh
+#echo $USER_PATH
+#echo $PWD
+#source ${USER_PATH}
 
 # ECFlow Server Settings
 export ECF_HOST=${ECF_HOST:-}

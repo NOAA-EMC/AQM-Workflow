@@ -1,0 +1,50 @@
+supported_machines:
+  acorn:
+    regex_hostnames:
+    - "adecflow0[12].acorn.wcoss2.ncep.noaa.gov"
+    - "alogin0[123].acorn.wcoss2.ncep.noaa.gov"
+  wcoss2:
+    regex_hostnames:
+    - "clogin0[1-9].cactus.wcoss2.ncep.noaa.gov"
+    - "clogin10.cactus.wcoss2.ncep.noaa.gov"
+    - "dlogin0[1-9].dogwood.wcoss2.ncep.noaa.gov"
+    - "dlogin0[1-9]"
+    - "dlogin10.dogwood.wcoss2.ncep.noaa.gov"
+    - "ddecflow0[1-2]"
+    - "cdecflow0[1-2]"
+  gaeac5:
+    regex_hostnames:
+    - "gaea5[1-8].ncrc.gov"
+    - "gaea5[1-8]"
+  gaeac6:
+    regex_hostnames:
+    - "gaea6[1-8].ncrc.gov"
+    - "gaea6[1-8]"
+  hera:
+    regex_hostnames:
+    - "hfe0[1-9]"
+    - "hfe1[0-2]"
+    - "hecflow01"
+  s4:
+    regex_hostnames:
+    - "s4-submit.ssec.wisc.edu"
+  jet:
+    regex_hostnames:
+    - "fe[1-8]"
+    - "tfe[12]"
+  orion:
+    regex_hostnames:
+    - "Orion-login-[1-4].HPC.MsState.Edu"
+  hercules:
+    regex_hostnames:
+    - "[Hh]ercules-login-[1-4].[Hh][Pp][Cc].[Mm]s[Ss]tate.[Ee]du"
+  derecho:
+    regex_hostnames:
+    - "derecho[1-8].hsn.de.hpc.ucar.edu"
+  frontera:
+    regex_hostnames:
+    - "login[1-4].frontera.tacc.utexas.edu"
+    - "c*.frontera.tacc.utexas.edu"
+  discover:
+    regex_hostnames:
+    - "discover3[1-5].prv.cube"

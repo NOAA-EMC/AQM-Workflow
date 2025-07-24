@@ -1,0 +1,46 @@
+---
+ #Set user directory, or the current working directory will be used
+ #Example user_dirs include: 
+ #wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]/ush
+ #gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username]/ush
+ user_dir:
+  wcoss2: 
+  gaeac6:
+#Provide package home. This will be the user_dir but without ush:
+#wcoss2: /lfs/h2/[organization]/[user_group]/noscrub/[wcoss2_username]
+#gaeac6: /gpfs/f6/drsa-fire2/world-shared/[gaeac6_username] 
+ pack_home:
+  wcoss2:
+  gaeac6:
+#What is your group for the workflow? (example: physics, nems, etc. )
+ USER_GROUP: physics
+ #What is your organization? (example: emc, arl, etc. )
+ ORG: emc
+ #What's the start date? (YYYYMMDD)
+ PDY: 20230701
+ #Which mode will you be generating the workflow for: realtime or retro?
+ MODE: realtime
+ #What version of AQM are you using? Default is v8.0.1.
+ aqm_ver: v8.0.1
+ #Which cycle do you want to run? (testing default is [00])
+ CYC: [00]
+ #How many forecast hours? (must match number of cycles you're running)
+ #i.e. if you run 2 cycles, provide 2 forecast hours (testing default is [06])
+ #Format for forecast hours example: [06, 72, 06]
+ HOURS: [06]
+ #how often do you want to restart? Example: every 6 hours is 06. 
+ RESTART_FREQ: 6
+ #Change queue based on machine:(wcoss2: dev, hera:hera, gaeac6:normal)  
+ QUEUE: dev
+ #Change queue_arch based on machine:(wcoss2: dev_transfer, hera: dtn-hera, gaeac6: hdtn1-ha)
+ QUEUE_ARCH: dev_transfer
+ #What is your project? This changes depending on machine. (wcoss2: AQM, NEMS, etc., gaeac6: drsa-fire2, etc., hera:naqfc, etc.)
+ PROJ: AQM #nems  currently does PROJ-PROJENVIR (c6:drsa-fire2, hera:naqfc)
+ #This is for wcoss2 only! (on c6 we will replaced this with wherever we get ecf files)
+ PROJENVIR: DEV
+
+ #---- do not edit below this line ----
+ NET: aqm
+ RUN: aqm
+ ENVIR: prod
+ MACHINE_SITE: development
