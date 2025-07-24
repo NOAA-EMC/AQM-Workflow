@@ -34,6 +34,7 @@ module load libjpeg/${libjpeg_ver}
 module load hdf5/${hdf5_ver}
 module load netcdf-c/${netcdf_ver}
 module load netcdf-fortran/${netcdf_fortran_ver}
+module load parallelio/${parallelio_ver}
 module load stack-python/${python_ver}
 module load python/${python_ver}
 module load py-jinja2
