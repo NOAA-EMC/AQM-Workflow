@@ -1,11 +1,6 @@
 #!/bin/bash
 
-set -xe
-
-msg="JOB $job HAS BEGUN"
-postmsg "$msg"
-   
-export pgm=aqm_point_source
+#
 #-----------------------------------------------------------------------
 #
 # Source the variable definitions file and the bash utility functions.
@@ -74,6 +69,7 @@ yyyymmddhh="${PDY}${cyc}"
 #-----------------------------------------------------------------------
 #
 PT_SRC_PRECOMB="${COMINemispt}"
+PT_REF_YEAR=2019
 #
 #-----------------------------------------------------------------------
 #
@@ -82,11 +78,11 @@ PT_SRC_PRECOMB="${COMINemispt}"
 #-----------------------------------------------------------------------
 #
 if [ ! -s "${DATA}/pt-${yyyymmddhh}.nc" ]; then 
-  ${HOMEaqm}/sorc/AQM-utils/python_utils/stack-pt-merge.py -s ${yyyymmddhh} -n ${nstep} -i ${PT_SRC_PRECOMB}
+  ${HOMEaqm}/sorc/AQM-utils/python_utils/stack-pt-merge.py -s ${yyyymmddhh} -n ${nstep} -i ${PT_SRC_PRECOMB} -r $PT_REF_YEAR
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"stack-pt-merge.py\" failed."
-      err_exit "${message_txt}"
+    err_exit "${message_txt}"
   fi
 fi
 

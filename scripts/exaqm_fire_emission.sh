@@ -77,34 +77,34 @@ else
   # Copy raw data 
   for ihr in {0..23}; do
     download_time=$( $DATE_UTIL --utc --date "${yyyymmdd_mh1} ${hh_mh1} UTC - $ihr hours" "+%Y%m%d%H" )
-    FILE_curr=Hourly_Emissions_3km_${download_time}00_${download_time}00.nc
+    FILE_curr=Hourly_Emissions_13km_${download_time}00_${download_time}00.nc
     if [ "$DO_REAL_TIME" = 'TRUE' ]; then
-      FILE_3km=RAVE-HrlyEmiss-3km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
+      FILE_13km=RAVE-HrlyEmiss-13km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
     else
-     # FILE_3km=${AQM_FIRE_FILE_PREFIX}_${download_time}00_${download_time}00.nc
-      FILE_3km=RAVE-HrlyEmiss-3km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
+      #FILE_13km=${AQM_FIRE_FILE_PREFIX}_${download_time}00_${download_time}00.nc
+      FILE_13km=RAVE-HrlyEmiss-13km_v*_blend_s${download_time}00000_e${download_time}59590_c*.nc
     fi
     yyyymmdd_dn=${download_time:0:8}
     hh_dn=${download_time:8:2}
     missing_download_time=$( $DATE_UTIL --utc --date "${yyyymmdd_dn} ${hh_dn} UTC - 24 hours" "+%Y%m%d%H" )
     yyyymmdd_dn_md1=${missing_download_time:0:8}
     if [ "$DO_REAL_TIME" = 'TRUE' ]; then
-     FILE_3km_md1=RAVE-HrlyEmiss-3km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
+     FILE_13km_md1=RAVE-HrlyEmiss-13km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
     else
-    # FILE_3km_md1=${AQM_FIRE_FILE_PREFIX}_${yyyymmdd_dn_md1}00_${yyyymmdd_dn_md1}00.nc
-     FILE_3km_md1=RAVE-HrlyEmiss-3km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
+     #FILE_13km_md1=${AQM_FIRE_FILE_PREFIX}_${yyyymmdd_dn_md1}00_${yyyymmdd_dn_md1}00.nc
+     FILE_13km_md1=RAVE-HrlyEmiss-13km_v*_blend_s${missing_download_time}00000_e${missing_download_time}59590_c*.nc
     fi
-    if [ -s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km}`) -gt 4000000 ]; then
-      cp -p ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_3km} ${FILE_curr}
-    elif [ -s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1}`) -gt 4000000 ]; then
-      echo "WARNING: ${FILE_3km} does not exist or broken. Replacing with the file of previous date ..."
-      cp -p ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_3km_md1} ${FILE_curr}
+    if [ -s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km}`) -gt 4000000 ]; then
+      cp -p ${DCOMINfire}/${yyyymmdd_dn}/rave/${FILE_13km} ${FILE_curr}
+    elif [ -s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1}` ] && [ $(stat -c %s `ls ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1}`) -gt 4000000 ]; then
+      echo "WARNING: ${FILE_13km} does not exist or broken. Replacing with the file of previous date ..."
+      cp -p ${DCOMINfire}/${yyyymmdd_dn_md1}/rave/${FILE_13km_md1} ${FILE_curr}
     else
       message_txt="Fire Emission RAW data does not exist or broken:
-  FILE_3km_md1 = \"${FILE_3km_md1}\"
+  FILE_13km_md1 = \"${FILE_13km_md1}\"
   DCOMINfire = \"${DCOMINfire}\""
 
-      cp -p ${FIXaqmfire}/Hourly_Emissions_3km_dummy.nc ${FILE_curr}
+      cp -p ${FIXaqmfire}/Hourly_Emissions_13km_dummy.nc ${FILE_curr}
       message_warning="WARNING: ${message_txt}. Replacing with the dummy file :: AQM RUN SOFT FAILED."
       print_info_msg "${message_warning}"
       if [ ! -z "${maillist_group2}" ]; then
@@ -113,50 +113,43 @@ else
     fi
   done  
 
-  ncks -O -h --mk_rec_dmn time Hourly_Emissions_3km_${download_time}00_${download_time}00.nc temp.nc
+  ncks -O -h --mk_rec_dmn time Hourly_Emissions_13km_${download_time}00_${download_time}00.nc temp.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to NCKS returned with nonzero exit code."
     err_exit "${message_txt}"
   fi
 
-  mv temp.nc Hourly_Emissions_3km_${download_time}00_${download_time}00.nc
+  mv temp.nc Hourly_Emissions_13km_${download_time}00_${download_time}00.nc
 
-  ncrcat -h Hourly_Emissions_3km_*.nc Hourly_Emissions_3km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc
+  ncrcat -h Hourly_Emissions_13km_*.nc Hourly_Emissions_13km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to NCRCAT returned with nonzero exit code."
     err_exit "${message_txt}"
   fi
 
-  cp -p ${FIXaqmfire}/esmpy_NA_9km_weight_file.conserv.nc .
-  cp -p ${FIXaqmfire}/grid_spec_RAVE_NA_3km.nc .
-  cp -p ${FIXaqmfire}/grid_spec_RRFS_NA_9km.nc .
+  input_fire="${DATA}/Hourly_Emissions_13km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc"
+  output_fire="${DATA}/Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_new24.t${cyc}z.nc"
 
-  input_fire="${DATA}/Hourly_Emissions_3km_${yyyymmdd}0000_${yyyymmdd}2300.t${cyc}z.nc"
-  output_fire="${DATA}/Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_new24.t${cyc}z.nc"
-  src_map="grid_spec_RAVE_NA_3km.nc"
-  tgt_map="grid_spec_RRFS_NA_9km.nc"
-  weight_file="esmpy_NA_9km_weight_file.conserv.nc"
-
-  ${USHdir}/aqm_utils_python/RAVE_remake.allspecies.aqmna9km.g1144.py --date "${yyyymmdd}" --cyc "${hh}" --src_map "${src_map}" --tgt_map "${tgt_map}" --weight_file "${weight_file}" --input_fire "${input_fire}" --output_fire "${output_fire}"
+  ${USHdir}/aqm_utils_python/RAVE_remake.allspecies.aqmna13km.g793.py --date "${yyyymmdd}" --cyc "${hh}" --input_fire "${input_fire}" --output_fire "${output_fire}"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"RAVE_remake.allspecies.py\" returned with nonzero exit code."
     err_exit "${message_txt}"
   fi
 
-  ncks --mk_rec_dmn Time Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_new24.t${cyc}z.nc -o Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc
+  ncks --mk_rec_dmn Time Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_new24.t${cyc}z.nc -o Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to NCKS returned with nonzero exit code."
     err_exit "${message_txt}"
   fi
 
-  cp Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_1.nc 
-  cp Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_2.nc
+  cp Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_1.nc 
+  cp Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_2.nc
 
-  ncrcat -O -D 2 Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_1.nc Hourly_Emissions_regrid_NA_9km_${yyyymmdd}_t${cyc}z_h24_2.nc ${aqm_fire_file_fn}
+  ncrcat -O -D 2 Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_1.nc Hourly_Emissions_regrid_NA_13km_${yyyymmdd}_t${cyc}z_h24_2.nc ${aqm_fire_file_fn}
 
   export err=$?
   if [ $err -ne 0 ]; then
@@ -189,17 +182,17 @@ fi
 #ncap2 -s 'where(Latitude <=49 && land_cover == 4 ) PM25 = PM25 * 0.55555'   temp4.nc temp5.nc
 #ncrename -v PM25,PM2.5 temp5.nc temp6.nc
 #mv temp6.nc ${aqm_fire_file_fn}
-#
 
 mv ${aqm_fire_file_fn} temp.nc
 ncrename -v PM2.5,PM25 temp.nc temp1.nc
-ncap2 -s 'where(Latitude > 30 && Latitude <=49 && land_cover == 1 ) PM25 = PM25 * 0.22222' temp1.nc temp2.nc
-ncap2 -s 'where(Latitude <=30 && land_cover == 1 ) PM25 = PM25 * 0.4'       temp2.nc temp3.nc
-ncap2 -s 'where(Latitude <=30 && land_cover >= 2 ) PM25 = PM25 * 0.55555'   temp3.nc temp4.nc
-ncrename -v PM25,PM2.5 temp4.nc temp5.nc
-mv temp5.nc ${aqm_fire_file_fn}
-cp "${DATA}/${aqm_fire_file_fn}" ${FIRE_EMISSION_STAGING_DIR}
+ncap2 -s 'where(Latitude >49 && land_cover == 1 ) PM25 = PM25 * 0.44444' temp1.nc temp2.nc
+ncap2 -s 'where(Latitude >30 && Latitude <=49 && land_cover == 1 ) PM25 = PM25 * 0.22222' temp2.nc temp3.nc
+ncap2 -s 'where(Latitude <=30 && land_cover == 1 ) PM25 = PM25 * 0.4'       temp3.nc temp4.nc
+ncap2 -s 'where(Latitude <=30 && land_cover >= 2 ) PM25 = PM25 * 0.55555'   temp4.nc temp5.nc
+ncrename -v PM25,PM2.5 temp5.nc temp6.nc
+mv temp6.nc ${aqm_fire_file_fn}
 
+cp "${DATA}/${aqm_fire_file_fn}" ${FIRE_EMISSION_STAGING_DIR}
 #
 #-----------------------------------------------------------------------
 #

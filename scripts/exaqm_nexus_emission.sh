@@ -153,6 +153,34 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "TRUE" ]; then
   fi
 fi
 #
+
+#######################################################################
+# This will be the section to set the datasets used in $workdir/NEXUS_Config.rc
+# All Datasets in that file need to be placed here as it will link the files
+# necessary to that folder.  In the future this will be done by a get_nexus_input
+# script
+#If both NEI2016 and NEI2019 are FALSE, it defaults to NEI2016.
+NEI2016="FALSE"
+NEI2019="FALSE"
+NEI2019_GLOBTEMPO="TRUE"
+TIMEZONES="TRUE"
+CEDS="TRUE"
+HTAP="TRUE"
+OMIHTAP="TRUE"
+MASKS="TRUE"
+NOAAGMD="TRUE"
+SOA="TRUE"
+EDGAR="TRUE"
+MEGAN="TRUE"
+MODIS_XLAI="TRUE"
+OLSON_MAP="TRUE"
+Yuan_XLAI="TRUE"
+GEOS="TRUE"
+AnnualScalar="TRUE"
+OFFLINE_SOILNOX="TRUE"
+
+NEXUS_INPUT_BASE_DIR=${COMINemis}
+
 #-----------------------------------------------------------------------
 #
 # Copy the NEXUS config files to the tmp directory  
@@ -163,10 +191,30 @@ cp ${EXECdir}/nexus ${DATA}
 
 cp ${FIXaqmnexus}/${NEXUS_GRID_FN} ${DATA}/grid_spec.nc
 
-if [ "${USE_GFS_SFC}" = "TRUE" ]; then
-  cp ${PARMdir}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
-else
-  cp ${PARMdir}/nexus_config/cmaq/*.rc ${DATA}
+if [ "${NEI2016}" = "TRUE" ]; then  #Use NEI2016
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cp ${PARMdir}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
+  else
+    cp ${PARMdir}/nexus_config/cmaq/*.rc ${DATA}
+  fi
+elif [ "${NEI2019}" = "TRUE" ]; then  #Use NEI2019
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cp ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2019/*.rc ${DATA}
+  else
+    cp ${PARMdir}/nexus_config/cmaq_nei2019/*.rc ${DATA}
+  fi
+elif [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then  #Use NEI2019 with updated global
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cp ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2019_globtempo/*.rc ${DATA}
+  else
+    cp ${PARMdir}/nexus_config/cmaq_nei2019_globtempo/*.rc ${DATA}
+  fi
+else #Default to NEI2016 Configs
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cp ${PARMdir}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
+  else
+    cp ${PARMdir}/nexus_config/cmaq/*.rc ${DATA}
+  fi	
 fi
 #
 #-----------------------------------------------------------------------
@@ -211,24 +259,25 @@ fi
 # All Datasets in that file need to be placed here as it will link the files 
 # necessary to that folder.  In the future this will be done by a get_nexus_input 
 # script
-NEI2016="TRUE"
-TIMEZONES="TRUE"
-CEDS="TRUE"
-HTAP2010="TRUE"
-OMIHTAP="TRUE"
-MASKS="TRUE"
-NOAAGMD="TRUE"
-SOA="TRUE"
-EDGAR="TRUE"
-MEGAN="TRUE"
-MODIS_XLAI="TRUE"
-OLSON_MAP="TRUE"
-Yuan_XLAI="TRUE"
-GEOS="TRUE"
-AnnualScalar="TRUE"
-OFFLINE_SOILNOX="TRUE"
-
-NEXUS_INPUT_BASE_DIR=${COMINemis}
+#NEI2016="FALSE"
+#NEI2019="TRUE"
+#TIMEZONES="TRUE"
+#CEDS="TRUE"
+#HTAP="TRUE"
+#OMIHTAP="TRUE"
+#MASKS="TRUE"
+#NOAAGMD="TRUE"
+#SOA="TRUE"
+#EDGAR="TRUE"
+#MEGAN="TRUE"
+#MODIS_XLAI="TRUE"
+#OLSON_MAP="TRUE"
+#Yuan_XLAI="TRUE"
+#GEOS="TRUE"
+#AnnualScalar="TRUE"
+#OFFLINE_SOILNOX="TRUE"
+#
+#NEXUS_INPUT_BASE_DIR=${COMINemis}
 ########################################################################
 
 #
@@ -256,8 +305,9 @@ fi
 #
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
+
 #
-if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
+if [ "${NEI2016}" = "TRUE" ]; then 
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
@@ -267,13 +317,63 @@ if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
     message_txt="Call to python script \"nexus_nei2016_linker.py\" failed."
     err_exit "${message_txt}"
   fi
-
   ${USHdir}/nexus_utils/python/nexus_nei2016_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2016_control_tilefix.py\" failed."
     err_exit "${message_txt}"
   fi
+#
+elif [ "${NEI2019}" = "TRUE" ]; then 
+  mkdir -p ${DATAinput}/NEMO
+  mkdir -p ${DATAinput}/NEMO/NEI2019
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
+  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2019_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_nei2019_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2019_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi
+elif [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then
+  mkdir -p ${DATAinput}/NEMO
+  mkdir -p ${DATAinput}/NEMO/NEI2019
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
+  mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
+  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2019_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_nei2019_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2019_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi
+else #Default to NEI2016
+  mkdir -p ${DATAinput}/NEI2016v1
+  mkdir -p ${DATAinput}/NEI2016v1/v2022-07
+  mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
+  ${USHdir}/nexus_utils/python/nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2022-07"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2016_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_nei2016_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_nei2016_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi	
 fi
 
 if [ "${TIMEZONES}" = "TRUE" ]; then # TIME ZONES
@@ -284,15 +384,19 @@ if [ "${MASKS}" = "TRUE" ]; then # MASKS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/MASKS ${DATAinput}
 fi
 
+if [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
+  ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
+fi
+
 if [ "${CEDS}" = "TRUE" ]; then #CEDS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CEDS ${DATAinput}
 fi
 
-if [ "${HTAP2010}" = "TRUE" ]; then #CEDS2014
+if [ "${HTAP}" = "TRUE" ]; then #HTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/HTAP ${DATAinput}
 fi
 
-if [ "${OMIHTAP}" = "TRUE" ]; then #CEDS2014
+if [ "${OMIHTAP}" = "TRUE" ]; then #OMI-HTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/OMI-HTAP_2019 ${DATAinput}
 fi
 

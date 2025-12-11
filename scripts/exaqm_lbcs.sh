@@ -247,7 +247,6 @@ cat > gefs2lbc-nemsio.ini <<EOF
  bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
  mofile='${AQM_MOFILE_FP}','.nemsio'
  lbcfile='${NET}.${cycle}${dot_ensmem}.gfs_bndy.tile7.f','.nc'
- inblend=10
  topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
 &end
 

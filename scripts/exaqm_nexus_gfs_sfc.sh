@@ -69,7 +69,10 @@ fcst_len_hrs_offset=$(( FCST_LEN_HRS + TIME_OFFSET_HRS ))
 #
 #-----------------------------------------------------------------------
 #
-GFS_SFC_TAR_DIR="${NEXUS_GFS_SFC_ARCHV_DIR}/rh${yyyy}/${yyyymm}/${yyyymmdd}"
+#prod GFS_SFC_TAR_DIR="${NEXUS_GFS_SFC_ARCHV_DIR}/rh${yyyy}/${yyyymm}/${yyyymmdd}"
+GFS_SFC_TAR_DIR="${NEXUS_GFS_SFC_ARCHV_DIR}/${yyyymmdd}${hh}"
+GFS_SFC_TAR_SUB_DIRA="gfs.${yyyymmdd}/${hh}/analysis/atmos" #retro
+GFS_SFC_TAR_SUB_DIRB="gfs.${yyyymmdd}/${hh}/model/atmos/history" #retro
 GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/atmos"
 
 if [ "${DO_REAL_TIME}" = "TRUE" ]; then
@@ -115,26 +118,32 @@ else
     GFS_SFC_TAR_FN_VER="v16.3"
   fi
   GFS_SFC_TAR_FN_PREFIX="com_gfs_${GFS_SFC_TAR_FN_VER}_gfs"
-  GFS_SFC_TAR_FN_SUFFIX_A="gfs_nca.tar"
-  GFS_SFC_TAR_FN_SUFFIX_B="gfs_ncb.tar"
+#prod GFS_SFC_TAR_FN_SUFFIX_A="gfs_nca.tar"
+#prod GFS_SFC_TAR_FN_SUFFIX_B="gfs_ncb.tar"
+  GFS_SFC_TAR_FN_SUFFIX_A="gfs_netcdfa.tar"
+  GFS_SFC_TAR_FN_SUFFIX_B="gfs_netcdfb.tar"
 
   # Check if the sfcanl file exists in the staging directory
-  gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_PREFIX}.${yyyymmdd}_${hh}.${GFS_SFC_TAR_FN_SUFFIX_A}"
+#prod gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_PREFIX}.${yyyymmdd}_${hh}.${GFS_SFC_TAR_FN_SUFFIX_A}"
+  gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_SUFFIX_A}"
   gfs_sfc_tar_fp="${GFS_SFC_TAR_DIR}/${gfs_sfc_tar_fn}"
   gfs_sfc_fns=("gfs.t${hh}z.sfcanl.nc")
-  gfs_sfc_fps="./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcanl.nc"
-  if [ "${fcst_len_hrs_offset}" -lt "40" ]; then
-    ARCHV_LEN_HRS="${fcst_len_hrs_offset}"
-  else
-    ARCHV_LEN_HRS="39"
-  fi
-  for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${ARCHV_LEN_HRS}); do
-    gfs_sfc_fns+="gfs.t${hh}z.sfcf${fhr}.nc"
-    gfs_sfc_fps+=" ./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcf${fhr}.nc"
-  done
+#prod gfs_sfc_fps="./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcanl.nc"
+  gfs_sfc_fps="${GFS_SFC_TAR_SUB_DIRA}/gfs.t${hh}z.sfcanl.nc"
+#prod  if [ "${fcst_len_hrs_offset}" -lt "40" ]; then
+#prod    ARCHV_LEN_HRS="${fcst_len_hrs_offset}"
+#prod  else
+#prod    ARCHV_LEN_HRS="39"
+#prod  fi
+#prod  for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${ARCHV_LEN_HRS}); do
+#prod    gfs_sfc_fns+="gfs.t${hh}z.sfcf${fhr}.nc"
+#prod    gfs_sfc_fps+=" ./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcf${fhr}.nc"
+#prod  done
 
   # Retrieve data from A file up to fcst_len_hrs_offset=39
   htar -tvf ${gfs_sfc_tar_fp}
+
+  echo "start retrieving ${gfs_sfc_fps}"
   
   htar -xvf ${gfs_sfc_tar_fp} ${gfs_sfc_fps} ${REDIRECT_OUT_ERR}
   export err=$?
@@ -145,16 +154,22 @@ else
  
 
   # Retireve data from B file when fcst_len_hrs_offset>=40
-  if [ "${fcst_len_hrs_offset}" -ge "40" ]; then
-    gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_PREFIX}.${yyyymmdd}_${hh}.${GFS_SFC_TAR_FN_SUFFIX_B}"
+#prod if [ "${fcst_len_hrs_offset}" -ge "40" ]; then
+#prod   gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_PREFIX}.${yyyymmdd}_${hh}.${GFS_SFC_TAR_FN_SUFFIX_B}"
+  if [ "${fcst_len_hrs_offset}" -ge "20" ]; then
+    gfs_sfc_tar_fn="${GFS_SFC_TAR_FN_SUFFIX_B}"
     gfs_sfc_tar_fp="${GFS_SFC_TAR_DIR}/${gfs_sfc_tar_fn}"
     gfs_sfc_fns=()
     gfs_sfc_fps=""
-    for fhr in $(seq -f "%03g" 42 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
+#prod for fhr in $(seq -f "%03g" 42 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
+    for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
       gfs_sfc_fns+="gfs.t${hh}z.sfcf${fhr}.nc"
-      gfs_sfc_fps+=" ./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcf${fhr}.nc"  
+#prod gfs_sfc_fps+=" ./${GFS_SFC_TAR_SUB_DIR}/gfs.t${hh}z.sfcf${fhr}.nc"
+      gfs_sfc_fps+=" ${GFS_SFC_TAR_SUB_DIRB}/gfs.t${hh}z.sfcf${fhr}.nc"  
     done
     htar -tvf ${gfs_sfc_tar_fp}
+
+    echo "start retrieving ${gfs_sfc_fps}"
     
     htar -xvf ${gfs_sfc_tar_fp} ${gfs_sfc_fps} ${REDIRECT_OUT_ERR}
     export err=$?
@@ -165,7 +180,9 @@ else
    
   fi
   # Link retrieved files to staging directory
-  ln -sf ${GFS_SFC_TAR_SUB_DIR}/gfs.*.nc .
+#prod ln -sf ${GFS_SFC_TAR_SUB_DIR}/gfs.*.nc .
+  ln -sf ${GFS_SFC_TAR_SUB_DIRA}/gfs.*.nc .
+  ln -sf ${GFS_SFC_TAR_SUB_DIRB}/gfs.*.nc .
 
 fi  
 #

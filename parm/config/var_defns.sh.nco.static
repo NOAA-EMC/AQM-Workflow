@@ -993,6 +993,7 @@ FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING=( \
 "FNVEGC  | vegetation_greenness" \
 "FNVETC  | vegetation_type" \
 "FNSOTC  | soil_type" \
+"FNSOCC  | soil_color" \
 "FNVMNC  | vegetation_greenness" \
 "FNVMXC  | vegetation_greenness" \
 "FNSLPC  | slope_type" \
@@ -1004,6 +1005,7 @@ SFC_CLIMO_FIELDS=( \
 "slope_type" \
 "snowfree_albedo" \
 "soil_type" \
+"soil_color" \
 "substrate_temperature" \
 "vegetation_greenness" \
 "vegetation_type" \

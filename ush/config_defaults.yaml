@@ -677,7 +677,7 @@ workflow:
   #
   CCPP_PHYS_SUITE: "FV3_GFS_v16"
   CCPP_PHYS_SUITE_FN: 'suite_{{ CCPP_PHYS_SUITE }}.xml'
-  CCPP_PHYS_SUITE_IN_CCPP_FP: '{{ [user.UFS_WTHR_MDL_DIR, "FV3", "ccpp", "suites", CCPP_PHYS_SUITE_FN] |path_join }}'
+  CCPP_PHYS_SUITE_IN_CCPP_FP: '{{ [user.UFS_WTHR_MDL_DIR, "UFSATM", "ccpp", "suites", CCPP_PHYS_SUITE_FN] |path_join }}'
   CCPP_PHYS_SUITE_FP: '{{ [workflow.EXPTDIR, CCPP_PHYS_SUITE_FN]|path_join }}'
   #
   #-----------------------------------------------------------------------
@@ -1912,7 +1912,7 @@ task_run_fcst:
   #
   #-----------------------------------------------------------------------
   #
-  USE_MERRA_CLIMO: '{{ workflow.CCPP_PHYS_SUITE == "FV3_GFS_v15_thompson_mynn_lam3km" or workflow.CCPP_PHYS_SUITE == "FV3_GFS_v17_p8" }}'
+  USE_MERRA_CLIMO: '{{ workflow.CCPP_PHYS_SUITE == "FV3_GFS_v15_thompson_mynn_lam3km" or workflow.CCPP_PHYS_SUITE == "FV3_GFS_v17_p8" or workflow.CCPP_PHYS_SUITE == "FV3_GFS_v17_p8_ugwpv1" }}'
   #
   #-----------------------------------------------------------------------
   #
@@ -3044,7 +3044,8 @@ cpl_aqm_parm:
 
   NEXUS_GRID_FN: "grid_spec_GSD_HRRR_25km.nc"
   NUM_SPLIT_NEXUS: 3
-  NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPPROD/hpssprod/runhistory"
+  NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt15_upd02_stream2"
+  #NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPPROD/hpssprod/runhistory"
   GFS_SFC_DATA_INTVL: 3
 
   COMINemispt: "/path/to/point/source/base/directory"

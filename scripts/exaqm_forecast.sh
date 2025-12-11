@@ -209,7 +209,7 @@ create_symlink_to_file target="$target" symlink="$symlink" \
 # that the FV3 model is hardcoded to recognize, and those are the names 
 # we use below.
 #
-suites=( "FV3_HRRR" "FV3_GFS_v15_thompson_mynn_lam3km" "FV3_GFS_v17_p8" )
+suites=( "FV3_HRRR" "FV3_GFS_v15_thompson_mynn_lam3km" "FV3_GFS_v17_p8" "FV3_GFS_v17_p8_ugwpv1")
 if [[ ${suites[@]} =~ "${CCPP_PHYS_SUITE}" ]] ; then
   file_ids=( "ss" "ls" )
   for file_id in "${file_ids[@]}"; do
@@ -448,6 +448,21 @@ cat > itag <<EOF
 /
 EOF
 fi
+
+#----------------------------------------------------------------------
+#
+# NOAHMP table copied from CCPP physics directory into $DATA directory.
+# This is a temporary solution that will need to be changed once NOAHMP
+# is included as a submodule in the weather model.
+#
+#----------------------------------------------------------------------
+#
+
+ln -s ${PARMdir}/noahmptable.tbl .
+
+#KW for UGWP_V1
+ln -s ${PARMdir}/ugwp_limb_tau.nc .
+
 #
 #-----------------------------------------------------------------------
 #

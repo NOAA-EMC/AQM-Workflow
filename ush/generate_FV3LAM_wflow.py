@@ -355,15 +355,15 @@ def generate_FV3LAM_wflow(ushdir, logfile: str = "log.generate_FV3LAM_wflow", de
             verbose=verbose,
         )
 
-        check_for_preexist_dir_file(FIXclim, "delete")
-        mkdir_vrfy("-p", FIXclim)
+#KW        check_for_preexist_dir_file(FIXclim, "delete")
+#KW        mkdir_vrfy("-p", FIXclim)
 
-        if SYMLINK_FIX_FILES:
-            ln_vrfy("-fsn", os.path.join(FIXaer, "merra2.aerclim*.nc"), FIXclim)
-            ln_vrfy("-fsn", os.path.join(FIXlut, "optics*.dat"), FIXclim)
-        else:
-            cp_vrfy(os.path.join(FIXaer, "merra2.aerclim*.nc"), FIXclim)
-            cp_vrfy(os.path.join(FIXlut, "optics*.dat"), FIXclim)
+#KW        if SYMLINK_FIX_FILES:
+#KW            ln_vrfy("-fsn", os.path.join(FIXaer, "merra2.aerclim*.nc"), FIXclim)
+#KW            ln_vrfy("-fsn", os.path.join(FIXlut, "optics*.dat"), FIXclim)
+#KW        else:
+#KW            cp_vrfy(os.path.join(FIXaer, "merra2.aerclim*.nc"), FIXclim)
+#KW            cp_vrfy(os.path.join(FIXlut, "optics*.dat"), FIXclim)
     #
     # -----------------------------------------------------------------------
     #
@@ -529,10 +529,11 @@ def generate_FV3LAM_wflow(ushdir, logfile: str = "log.generate_FV3LAM_wflow", de
             fv_core_nml_dict.update({
                 "dnats": 1
             })
-    elif CCPP_PHYS_SUITE == "FV3_GFS_v17_p8":
+    elif ( CCPP_PHYS_SUITE == "FV3_GFS_v17_p8" or
+         CCPP_PHYS_SUITE == "FV3_GFS_v17_p8_ugwpv1" ):
         if CPL_AQM:
             fv_core_nml_dict.update({
-                "dnats": 4
+                "dnats": 2
             })
         else:
             fv_core_nml_dict.update({

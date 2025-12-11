@@ -78,10 +78,13 @@ FV3GFS:
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
-      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+#prod      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+      - /NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt15_upd02_stream2/{yyyymmddhh}
     archive_internal_dir:
-      - ./gfs.{yyyymmdd}/{hh}
-      - ./gfs.{yyyymmdd}/{hh}/atmos
+#prod      - ./gfs.{yyyymmdd}/{hh}
+#prod      - ./gfs.{yyyymmdd}/{hh}/atmos
+      - gfs.{yyyymmdd}/{hh}/model/atmos/history
+      - gfs.{yyyymmdd}/{hh}/model/atmos/history
     archive_file_names:
       grib2:
         anl:
@@ -106,12 +109,14 @@ FV3GFS:
           - gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
           - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
           - com_gfs_v16.2_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
-          - com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
+#prod          - com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
+          - gfs_netcdfa.tar
         fcst:
           - ['gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
           - ['com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
           - ['com_gfs_v16.2_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'com_gfs_v16.2_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
-          - ['com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']            
+#prod          - ['com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'com_gfs_v16.3_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
+          - ['gfs_netcdfa.tar', 'gfs_netcdfb.tar']            
     file_names:
       <<: *gfs_file_names
   aws:

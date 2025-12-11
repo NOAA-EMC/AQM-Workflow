@@ -9,7 +9,7 @@
 
 &atmos_model_nml
     blocksize = 16
-    ccpp_suite = 'FV3_GFS_v16'
+    ccpp_suite = 'FV3_GFS_v17_p8_ugwpv1'
     chksum_debug = .false.
     dycore_only = .false.
 /
@@ -18,15 +18,14 @@
     knob_ugwp_azdir = 2, 4, 4, 4
     knob_ugwp_doaxyz = 1
     knob_ugwp_doheat = 1
-    knob_ugwp_dokdis = 1
+    knob_ugwp_dokdis = 2
     knob_ugwp_effac = 1, 1, 1, 1
-    knob_ugwp_ndx4lh = 1
+    knob_ugwp_ndx4lh = 4
     knob_ugwp_solver = 2
     knob_ugwp_source = 1, 1, 0, 0
     knob_ugwp_stoch = 0, 0, 0, 0
-    knob_ugwp_version = 0
+    knob_ugwp_version = 1
     knob_ugwp_wvspec = 1, 25, 25, 25
-    launch_level = 27
 /
 
 &diag_manager_nml
@@ -69,13 +68,13 @@
     d_con = 1.0
     d_ext = 0.0
     dddmp = 0.1
-    delt_max = 0.002
-    dnats = 5
-    do_sat_adj = .true.
+    delt_max = 0.008
+    dnats = 2
+    do_sat_adj = .false.
     do_schmidt = .true.
     do_vort_damp = .true.
     dwind_2d = .false.
-    dz_min = 6
+    dz_min = 2
     external_eta = .true.
     external_ic = .true.
     fill = .true.
@@ -90,23 +89,23 @@
     hord_vt = 5
     hydrostatic = .false.
     io_layout = 1, 1
-    k_split = 1
+    k_split = 6
     ke_bg = 0.0
     kord_mt = 9
     kord_tm = -9
     kord_tr = 9
     kord_wz = 9
     layout = 50, 34
-    make_nh = .false.
+    make_nh = .true.
     mountain = .false.
-    n_split = 8
+    n_split = 6
     n_sponge = 10
     n_zs_filter = 0
-    na_init = 0
+    na_init = 1
     ncep_ic = .false.
     nggps_ic = .true.
     no_dycore = .false.
-    nord = 2
+    nord = 1
     npx = 801
     npy = 545
     npz = 64
@@ -208,8 +207,8 @@
     dspheat = .true.
     effr_in = .true.
     fhcyc = 0
-    fhlwr = 3600.0
-    fhswr = 3600.0
+    fhlwr = 1200.0
+    fhswr = 1200.0
     fhzero = 1.0
     fscav_aero = 'aacd:0.0', 'acet:0.0', 'acrolein:0.0', 'acro_primary:0.0',
                  'ald2:0.0', 'ald2_primary:0.0', 'aldx:0.0', 'benzene:0.0',
@@ -231,26 +230,26 @@
                  'vsvpo2:0.0', 'vsvpo3:0.0', 'xopn:0.0', 'xylmn:0.0', '*:0.2'
     h2o_phys = .true.
     hybedmf = .false.
-    iaer = 5111
-    ialb = 1
+    iaer = 1011
+    ialb = 2
     iau_inc_files = ''
     icliq_sw = 2
     ico2 = 2
-    iems = 1
+    iems = 2
     imfdeepcnv = 2
     imfshalcnv = 2
-    imp_physics = 11
-    iopt_alb = 2
+    imp_physics = 8
+    iopt_alb = 1
     iopt_btr = 1
-    iopt_crs = 1
-    iopt_dveg = 1
+    iopt_crs = 2
+    iopt_dveg = 4
     iopt_frz = 1
     iopt_inf = 1
-    iopt_rad = 1
+    iopt_rad = 3
     iopt_run = 1
-    iopt_sfc = 1
+    iopt_sfc = 3
     iopt_snf = 4
-    iopt_stc = 1
+    iopt_stc = 3
     iopt_tbot = 2
     iopt_trs = 2
     iovr = 3
@@ -262,10 +261,10 @@
     ivegsrc = 1
     ldiag3d = .false.
     ldiag_ugwp = .false.
-    lgfdlmprad = .true.
-    lheatstrg = .true.
+    lgfdlmprad = .false.
+    lheatstrg = .false.
     lndp_type = 0
-    lsm = 1
+    lsm = 2
     lsoil = 4
     lwhtr = .true.
     n_var_lndp = 0
@@ -337,15 +336,13 @@
     fvmnl = 99999
     fvmxl = 99999
     landice = .true.
-    ldebug = .false.
-/
-
-&namsfc_dict
+    ldebug = .true.
     fnabsc = '@HOMEaqm@/fix/fix_lam/C793.maximum_snow_albedo.tileX.nc'
     fnalbc = '@HOMEaqm@/fix/fix_lam/C793.snowfree_albedo.tileX.nc'
     fnalbc2 = '@HOMEaqm@/fix/fix_lam/C793.facsf.tileX.nc'
     fnslpc = '@HOMEaqm@/fix/fix_lam/C793.slope_type.tileX.nc'
     fnsotc = '@HOMEaqm@/fix/fix_lam/C793.soil_type.tileX.nc'
+    fnsocc = '@HOMEaqm@/fix/fix_lam/C793.soil_color.tileX.nc'
     fntg3c = '@HOMEaqm@/fix/fix_lam/C793.substrate_temperature.tileX.nc'
     fnvegc = '@HOMEaqm@/fix/fix_lam/C793.vegetation_greenness.tileX.nc'
     fnvetc = '@HOMEaqm@/fix/fix_lam/C793.vegetation_type.tileX.nc'

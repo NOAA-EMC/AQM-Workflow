@@ -16,15 +16,23 @@
     knob_ugwp_azdir = 2,4,4,4
     knob_ugwp_doaxyz = 1
     knob_ugwp_doheat = 1
-    knob_ugwp_dokdis = 1
+    knob_ugwp_dokdis = 2
     knob_ugwp_effac = 1,1,1,1
-    knob_ugwp_ndx4lh = 1
+    knob_ugwp_ndx4lh = 4
     knob_ugwp_solver = 2
     knob_ugwp_source = 1,1,0,0
     knob_ugwp_stoch = 0,0,0,0
-    knob_ugwp_version = 0
+    knob_ugwp_version = 1
     knob_ugwp_wvspec = 1,25,25,25
-    launch_level = 25
+    knob_ugwp_palaunch = 275.0e2
+    knob_ugwp_nslope   = 1
+    knob_ugwp_lzmax    = 15.750e3
+    knob_ugwp_lzmin    = 0.75e3
+    knob_ugwp_lzstar   = 2.0e3
+    knob_ugwp_taumin   = 0.25e-3
+    knob_ugwp_tauamp   = 0.35e-3
+    knob_ugwp_lhmet    = 200.0e3
+    knob_ugwp_orosolv  = 'pss-1986'
 /
 
 &diag_manager_nml
