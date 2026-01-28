@@ -40,8 +40,8 @@ cpl_aqm_parm:
   AQM_GEFS_FILE_CYC: 00
   #DCOMINairnow: /lfs/h1/ops/prod/dcom
   DCOMINairnow: /lfs/h2/emc/physics/noscrub/jianping.huang/dcom 
-  COMINemis: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/emission
-  COMINemispt: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/emission/PT-NEI2019-HIAK2016
+  COMINemis: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission
+  COMINemispt: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission/NEMO/NEI2022/v2025-10/PT
   #DCOMINfire: /lfs/h1/ops/prod/dcom 
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2/rave_star 
   DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_NA_NRT/RAVE_raw_dcom

@@ -119,5 +119,5 @@ cpl_aqm_parm:
   AQM_RC_FIRE_FREQUENCY: hourly
   AQM_LBCS_FILES: am4_bndy.c793.2019<MM>.v1.nc
   NEXUS_GRID_FN: grid_spec_793.nc
-  NUM_SPLIT_NEXUS: 1
+  NUM_SPLIT_NEXUS: 6
 
