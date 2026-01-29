@@ -2,7 +2,7 @@ platform:
   WORKFLOW_MANAGER: rocoto
   NCORES_PER_NODE: 128
   SCHED: pbspro
-  FIXaqm_sav: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019 
+  FIXaqm_sav: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022 
   METPLUS_PATH: /apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.1
   MET_BIN_EXEC: bin
   MET_INSTALL_DIR: /apps/ops/para/libs/intel/19.1.3.304/met/10.1.1
@@ -19,12 +19,12 @@ platform:
   RUN_CMD_AQMLBC: mpiexec -n ${NUMTS}
   SCHED_NATIVE_CMD: -l place=excl
   PRE_TASK_CMDS: '{ ulimit -s unlimited; ulimit -a; }'
-  FIXaer: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_aer
-  FIXgsm: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_am 
-  FIXlut: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_lut
-  FIXorg: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_orog
-  FIXsfc: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_sfc_climo
-  FIXshp: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/ufs/NaturalEarth
+  FIXaer: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_aer
+  FIXgsm: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_am 
+  FIXlut: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_lut
+  FIXorg: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_orog
+  FIXsfc: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_sfc_climo
+  FIXshp: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/ufs/NaturalEarth
   EXTRN_MDL_DATA_STORES: hpss aws nomads
 data:
   ics_lbcs:
