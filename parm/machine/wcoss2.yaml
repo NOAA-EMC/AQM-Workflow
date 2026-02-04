@@ -29,7 +29,8 @@ platform:
 data:
   ics_lbcs:
     GSMGFS: compath.py ${envir}/gsmgfs/${gsmgfs_ver}/gsmgfs.${PDYext}
-    FV3GFS: compath.py ${envir}/gfs/${gfs_ver}/gfs.${PDYext}/${cycext}/atmos
+#    FV3GFS: compath.py ${envir}/gfs/${gfs_ver}/gfs.${PDYext}/${cycext}/atmos
+    FV3GFS: /lfs/h2/emc/ptmp/kai.wang/gfs/v17/gfs.${PDYext}/${cycext}/atmos
     RAP: compath.py ${envir}/rap/${rap_ver}/rap.${PDYext}
     NAM: compath.py ${envir}/nam/${nam_ver}/nam.${PDYext}
     HRRR: compath.py ${envir}/hrrr/${hrrr_ver}/hrrr.${PDYext}/conus

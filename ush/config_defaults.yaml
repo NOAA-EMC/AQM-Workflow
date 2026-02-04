@@ -3040,11 +3040,16 @@ cpl_aqm_parm:
   FIXaqmcanopy: '{{ [user.FIXaqm, "canopy"]|path_join }}'
   FIXaqmchem_lbcs: '{{ [user.FIXaqm, "chem_lbcs"]|path_join }}'
   FIXaqmnexus: '{{ [user.FIXaqm, "nexus"]|path_join }}'
-  FIXaqmnexus_gfs_sfc: '{{ [user.FIXaqm, "gfs"]|path_join }}'
+  #FIXaqmnexus_gfs_sfc: '{{ [user.FIXaqm, "gfs"]|path_join }}'
+  FIXaqmnexus_gfs_sfc: "/lfs/h2/emc/ptmp/kai.wang/gfs/v17"
 
   NEXUS_GRID_FN: "grid_spec_GSD_HRRR_25km.nc"
   NUM_SPLIT_NEXUS: 3
-  NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt15_upd02_stream2"
+  #NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt13_upd01_stream2"
+  #NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt15_upd02_stream2"
+  #NEXUS_GFS_SFC_ARCHV_DIR: "/5year/NCEPDEV/emc-global/emc.glopara/WCOSS2/GFSv17/retrov17_01_stream3"
+  #NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt13_upd01_stream3"
+  NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPDEV/emc-global/2year/emc.glopara/WCOSS2/GFSv17/rt15_upd02_stream3"
   #NEXUS_GFS_SFC_ARCHV_DIR: "/NCEPPROD/hpssprod/runhistory"
   GFS_SFC_DATA_INTVL: 3
 
