@@ -192,7 +192,7 @@ if [ ${DO_AQM_GEFS_LBCS} = "TRUE" ]; then
 
   AQM_MOFILE_FN="${AQM_GEFS_FILE_PREFIX}.t${AQM_GEFS_FILE_CYC}z.atmf"
   if [ "${DO_REAL_TIME}" = "TRUE" ]; then
-    AQM_MOFILE_FP="${COMINgefs}/gefs.${yyyymmdd}/${AQM_GEFS_FILE_CYC}/chem/sfcsig/${AQM_MOFILE_FN}"
+    AQM_MOFILE_FP="${COMINgefs}/gcafs.${yyyymmdd}/${AQM_GEFS_FILE_CYC}/chem/sfcsig/${AQM_MOFILE_FN}"
   else
     AQM_MOFILE_FP="${COMINgefs}/${yyyymmdd}/${AQM_GEFS_FILE_CYC}/${AQM_MOFILE_FN}"
   fi  
@@ -218,7 +218,7 @@ check_file_with_recheck() {
   for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
     hr_mod=$(( hr + EXTRN_MDL_LBCS_OFFSET_HRS ))
     fhr=$( printf "%03d" "${hr_mod}" )
-    AQM_MOFILE_FHR_FP="${AQM_MOFILE_FP}${fhr}.nemsio"
+    AQM_MOFILE_FHR_FP="${AQM_MOFILE_FP}${fhr}.nc"
     ln -sf ${AQM_MOFILE_FHR_FP}  .
     if [ -e "${AQM_MOFILE_FHR_FP}" ]; then
       # File exists, perform "ls" or "touch" action
@@ -250,12 +250,12 @@ check_file_with_recheck() {
 
   NUMTS="$(( FCST_LEN_HRS / LBC_SPEC_INTVL_HRS + 1 ))"
 
-cat > gefs2lbc-nemsio.ini <<EOF
+cat > gcafs2lbc.ini <<EOF
 &control
  tstepdiff=${TSTEPDIFF}
  dtstep=${LBC_SPEC_INTVL_HRS}
  bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
- mofile='${AQM_MOFILE_FP}','.nemsio'
+ mofile='${AQM_MOFILE_FP}','.nc'
  lbcfile='${NET}.${cycle}${dot_ensmem}.gfs_bndy.tile7.f','.nc'
  topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
 &end
@@ -280,7 +280,7 @@ Species converting Factor
 'aorgcj'  1.0   'numacc' 6775815.
 EOF
 
-  exec_fn="gefs2lbc_para"
+  exec_fn="gcafs2lbc_para"
   exec_fp="$EXECaqm/${exec_fn}"
   if [ ! -s "${exec_fp}" ]; then
     print_err_msg_exit "\
