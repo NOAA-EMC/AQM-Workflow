@@ -28,7 +28,7 @@ source "$HOMEaqm/versions/run.ver" || { echo "Failed to source run.ver"; exit 1;
 ## COMROOT=${COMROOT:-"${OPSROOT}/com"}
 OPSROOT=$(realpath ${COMROOT}/..)
 COMaqm=$(compath.py -o "aqm/${aqm_ver}") || { echo "Failed to assign COMaqm"; exit 1; }
-COMINgefs=$(compath.py "gefs/${gefs_ver}") || { echo "Failed to assign COMINgefs"; exit 1; }
+COMINgcafs=$(compath.py "gcafs/${gcafs_ver}") || { echo "Failed to assign COMINgcafs"; exit 1; }
 MODEL_VER_DFV=${COMaqm:(-4)}
 #
 # Replace special characters 
@@ -37,7 +37,7 @@ HOMEaqm=$(printf '%q' "$HOMEaqm")
 COMROOT=$(printf '%q' "$COMROOT")
 DCOMROOT=$(printf '%q' "$DCOMROOT")
 COMaqm=$(printf '%q' "$COMaqm")
-COMINgefs=$(printf '%q' "$COMINgefs")
+COMINgcafs=$(printf '%q' "$COMINgcafs")
 DATA=$(printf '%q' "$DATA")
 MODEL_VER_DFV=$(printf '%q' "$MODEL_VER_DFV")
 #
@@ -53,7 +53,7 @@ for file_in in ${File_to_modify_source}; do
   sed -i -e "s|@COMaqm@|${COMaqm}|g"               "$file_tmp"
   sed -i -e "s|@WARMSTART_PDY@|${WARMSTART_PDY}|g" "$file_tmp"
   sed -i -e "s|@OPSROOT@|${OPSROOT}|g"             "$file_tmp"
-  sed -i -e "s|@COMINgefs@|${COMINgefs}|g"         "$file_tmp"
+  sed -i -e "s|@COMINgcafs@|${COMINgcafs}|g"         "$file_tmp"
   sed -i -e "s|@DCOMROOT@|${DCOMROOT}|g"         "$file_tmp"
   sed -i -e "s|@DATA@|${DATA}|g"                   "$file_tmp"
   sed -i -e "s|@MODEL_VER_DFV@|${MODEL_VER_DFV}|g"                   "$file_tmp"
