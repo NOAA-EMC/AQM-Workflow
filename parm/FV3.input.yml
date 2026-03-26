@@ -821,6 +821,7 @@ FV3_GFS_v17_p8_ugwpv1:
     satmedmf: True
     sedi_semi: True
     shal_cnv: True
+    do_canopy: True
   mpp_io_nml:
     deflate_level: 1
     shuffle: 1
