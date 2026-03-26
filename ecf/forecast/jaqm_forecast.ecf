@@ -20,17 +20,20 @@ module load craype/${craype_ver}
 module load cray-mpich/${cray_mpich_ver}
 module load cray-pals/${cray_pals_ver}
 module load jasper/${jasper_ver}
-module load hdf5/${hdf5_ver}
-module load netcdf/${netcdf_ver}
-module load fms/${fms_ver}
+module load pnetcdf-D/${pnetcdf_ver}
+module load hdf5-D/${hdf5_ver}
+module load netcdf-D/${netcdf_ver}
+module load fms-D/${fms_ver}
 module load crtm/${crtm_ver}
 module load g2/${g2_ver}
 module load g2tmpl/${g2tmpl_ver}
 module load ip/${ip_ver}
 module load sp/${sp_ver}
 module load w3emc/${w3emc_ver}
-module load pio/${pio_ver}
-module load esmf/${esmf_ver}
+module load pio-D/${pio_ver}
+module load esmf-D/${esmf_ver}
+module load gftl-shared/${gftl_shared_ver}
+module load mapl-D/${mapl_ver}
 module load libjpeg/${libjpeg_ver}
 module load python/${python_ver}
 
