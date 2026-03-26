@@ -2,7 +2,7 @@ platform:
   WORKFLOW_MANAGER: rocoto
   NCORES_PER_NODE: 128
   SCHED: pbspro
-  FIXaqm_sav: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019 
+  FIXaqm_sav: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022 
   METPLUS_PATH: /apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.1
   MET_BIN_EXEC: bin
   MET_INSTALL_DIR: /apps/ops/para/libs/intel/19.1.3.304/met/10.1.1
@@ -19,17 +19,18 @@ platform:
   RUN_CMD_AQMLBC: mpiexec -n ${NUMTS}
   SCHED_NATIVE_CMD: -l place=excl
   PRE_TASK_CMDS: '{ ulimit -s unlimited; ulimit -a; }'
-  FIXaer: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_aer
-  FIXgsm: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_am 
-  FIXlut: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_lut
-  FIXorg: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_orog
-  FIXsfc: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/fix_sfc_climo
-  FIXshp: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/ufs/NaturalEarth
+  FIXaer: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_aer
+  FIXgsm: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_am 
+  FIXlut: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_lut
+  FIXorg: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_orog
+  FIXsfc: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/fix_sfc_climo
+  FIXshp: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/ufs/NaturalEarth
   EXTRN_MDL_DATA_STORES: hpss aws nomads
 data:
   ics_lbcs:
     GSMGFS: compath.py ${envir}/gsmgfs/${gsmgfs_ver}/gsmgfs.${PDYext}
-    FV3GFS: compath.py ${envir}/gfs/${gfs_ver}/gfs.${PDYext}/${cycext}/atmos
+#    FV3GFS: compath.py ${envir}/gfs/${gfs_ver}/gfs.${PDYext}/${cycext}/atmos
+    FV3GFS: /lfs/h2/emc/ptmp/kai.wang/gfs/v17/gfs.${PDYext}/${cycext}/atmos
     RAP: compath.py ${envir}/rap/${rap_ver}/rap.${PDYext}
     NAM: compath.py ${envir}/nam/${nam_ver}/nam.${PDYext}
     HRRR: compath.py ${envir}/hrrr/${hrrr_ver}/hrrr.${PDYext}/conus
@@ -40,8 +41,8 @@ cpl_aqm_parm:
   AQM_GEFS_FILE_CYC: 00
   #DCOMINairnow: /lfs/h1/ops/prod/dcom
   DCOMINairnow: /lfs/h2/emc/physics/noscrub/jianping.huang/dcom 
-  COMINemis: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/emission
-  COMINemispt: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2019/emission/PT-NEI2019-HIAK2016
+  COMINemis: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission
+  COMINemispt: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission/NEMO/NEI2022/v2025-10/PT
   #DCOMINfire: /lfs/h1/ops/prod/dcom 
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2/rave_star 
   DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_NA_NRT/RAVE_raw_dcom

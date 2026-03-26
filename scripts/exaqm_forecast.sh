@@ -460,9 +460,6 @@ fi
 
 ln -s ${PARMdir}/noahmptable.tbl .
 
-#KW for UGWP_V1
-ln -s ${PARMdir}/ugwp_limb_tau.nc .
-
 #
 #-----------------------------------------------------------------------
 #
