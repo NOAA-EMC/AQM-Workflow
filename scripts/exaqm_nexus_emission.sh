@@ -153,6 +153,33 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "TRUE" ]; then
     fi
   fi
 fi
+
+#
+#######################################################################
+# This will be the section to set the datasets used in $workdir/NEXUS_Config.rc 
+# All Datasets in that file need to be placed here as it will link the files 
+# necessary to that folder.  In the future this will be done by a get_nexus_input 
+# script
+NEI2022_GLOBTEMPO="TRUE"
+TIMEZONES="TRUE"
+CEDS="TRUE"
+HTAP="TRUE"
+OMIHTAP="TRUE"
+MASKS="TRUE"
+NOAAGMD="TRUE"
+SOA="TRUE"
+EDGAR="TRUE"
+MEGAN="TRUE"
+MODIS_XLAI="TRUE"
+OLSON_MAP="TRUE"
+Yuan_XLAI="TRUE"
+GEOS="TRUE"
+AnnualScalar="TRUE"
+OFFLINE_SOILNOX="TRUE"
+
+NEXUS_INPUT_BASE_DIR=${FIXemis}
+########################################################################
+
 #
 #-----------------------------------------------------------------------
 #
@@ -164,10 +191,18 @@ cpreq ${EXECaqm}/nexus ${DATA}
 
 cpreq ${FIXaqmnexus}/${NEXUS_GRID_FN} ${DATA}/grid_spec.nc
 
-if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then  #Use NEI2022 with updated global
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cpreq ${PARMaqm}/nexus_config/cmaq_gfs_megan_nei2022_globtempo/*.rc ${DATA}
+  else
+    cpreq ${PARMaqm}/nexus_config/cmaq_nei2022_globtempo/*.rc ${DATA}
+  fi
+else #Default to NEI2016 Configs
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
     cpreq ${PARMaqm}/nexus_config/cmaq_gfs_megan/*.rc ${DATA}
-else
+  else
     cpreq ${PARMaqm}/nexus_config/cmaq/*.rc ${DATA}
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -207,31 +242,6 @@ else
     end_date=`$NDATE +${end_del_hr1} ${yyyymmdd}${hh}` 
   fi
 fi
-#
-#######################################################################
-# This will be the section to set the datasets used in $workdir/NEXUS_Config.rc 
-# All Datasets in that file need to be placed here as it will link the files 
-# necessary to that folder.  In the future this will be done by a get_nexus_input 
-# script
-NEI2016="TRUE"
-TIMEZONES="TRUE"
-CEDS="TRUE"
-HTAP2010="TRUE"
-OMIHTAP="TRUE"
-MASKS="TRUE"
-NOAAGMD="TRUE"
-SOA="TRUE"
-EDGAR="TRUE"
-MEGAN="TRUE"
-MODIS_XLAI="FALSE"
-OLSON_MAP="TRUE"
-Yuan_XLAI="TRUE"
-GEOS="TRUE"
-AnnualScalar="TRUE"
-OFFLINE_SOILNOX="TRUE"
-
-NEXUS_INPUT_BASE_DIR=${FIXemis}
-########################################################################
 
 #
 #----------------------------------------------------------------------
@@ -259,7 +269,24 @@ fi
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
 #
-if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
+if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then
+  mkdir -p ${DATAinput}/NEMO
+  mkdir -p ${DATAinput}/NEMO/NEI2022
+  mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10
+  mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10/${mm}
+  ${USHaqm}/nexus_utils/python/nexus_nei2022_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2025-10"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2022_linker.py\" failed."
+    err_exit "${message_txt}"
+  fi
+  ${USHaqm}/nexus_utils/python/nexus_nei2022_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2022_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+  fi
+else #Default to NEI2016
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
@@ -269,7 +296,6 @@ if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
     message_txt="FATAL ERROR Call to python script \"nexus_nei2016_linker.py\" failed."
     err_exit "${message_txt}"
   fi
-
   ${USHaqm}/nexus_utils/python/nexus_nei2016_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
   export err=$?
   if [ $err -ne 0 ]; then
@@ -286,15 +312,19 @@ if [ "${MASKS}" = "TRUE" ]; then # MASKS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/MASKS ${DATAinput}
 fi
 
+if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
+  ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
+fi
+
 if [ "${CEDS}" = "TRUE" ]; then #CEDS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CEDS ${DATAinput}
 fi
 
-if [ "${HTAP2010}" = "TRUE" ]; then #CEDS2014
+if [ "${HTAP}" = "TRUE" ]; then #HTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/HTAP ${DATAinput}
 fi
 
-if [ "${OMIHTAP}" = "TRUE" ]; then #CEDS2014
+if [ "${OMIHTAP}" = "TRUE" ]; then #OMIHTAP
   ln -sf ${NEXUS_INPUT_BASE_DIR}/OMI-HTAP_2019 ${DATAinput}
 fi
 
