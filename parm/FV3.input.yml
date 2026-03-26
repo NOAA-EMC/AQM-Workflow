@@ -548,3 +548,96 @@ FV3_GFS_v17_p8:
     ldebug: False
   surf_map_nml: !!python/none
 
+FV3_GFS_v17_p8_ugwpv1:
+  fv_core_nml:
+    <<: *gfs_v15_fv_core
+    agrid_vel_rst: False
+    d2_bg_k1: 0.20
+    d2_bg_k2: 0.04
+    dnats: 4
+    do_sat_adj: False
+    fv_sg_adj: 450
+    hord_dp: -5
+    hord_mt: 5
+    hord_tm: 5
+    hord_tr: 8
+    hord_vt: 5
+    k_split: 2
+    make_nh: True
+    n_split: 4
+    n_sponge: 42
+    na_init: 1 
+    nord: 2
+    nudge_dz: False
+    res_latlon_dynamics: ''
+    rf_fast: !!python/none
+    rf_cutoff: 750.0
+    rf_cutoff_w: 0
+    tau: 10.0
+    fast_tau_w_sec: 0.2
+  gfs_physics_nml:
+    cdmbgwd: [1.67, 8.8, 1.0, 1.0]
+    cnvcld: True
+    cnvgwd: True
+    decfl: 10
+    do_deep: True
+    do_gsl_drag_ls_bl: True
+    do_gsl_drag_ss: False
+    do_gsl_drag_tofd: True
+    do_gwd_opt_psl: True
+    psl_gwd_dx_factor: 2.0
+    do_mynnedmf: False
+    do_mynnsfclay: False
+    do_tofd: False
+    do_ugwp: False
+    do_ugwp_v0: False
+    do_ugwp_v0_orog_only: False
+    do_ugwp_v0_nst_only: False
+    do_ugwp_v1: True
+    do_ugwp_v1_orog_only: False
+    dt_inner: 150.0
+    fhlwr: 3600.0
+    fhswr: 3600.0
+    frac_grid: True
+    gwd_opt: 2
+    iaer: 1011
+    ialb: 2
+    icliq_sw: 2
+    iems: 2
+    imfdeepcnv: 2
+    imfshalcnv: 2
+    iopt_alb: 1
+    iopt_btr: 1
+    iopt_crs: 2
+    iopt_dveg: 4
+    iopt_frz: 1
+    iopt_inf: 1
+    iopt_rad: 3
+    iopt_run: 1
+    iopt_sfc: 3
+    iopt_snf: 4
+    iopt_stc: 3
+    iopt_tbot: 2
+    iovr: 3
+    isatmedmf: 1
+    ldiag_ugwp: False
+    lseaspray: True
+    lgfdlmprad: False
+    lheatstrg: False
+    lradar: True
+    lsm: 2
+    lsoil_lsm: 4
+    ltaerosol: False
+    min_lakeice: 0.15
+    min_seaice: 0.15
+    qdiag3d: False
+    ras: False
+    satmedmf: True
+    sedi_semi: True
+    shal_cnv: True
+    do_canopy: True
+  mpp_io_nml:
+    deflate_level: 1
+    shuffle: 1
+  surf_map_nml: !!python/none
+
