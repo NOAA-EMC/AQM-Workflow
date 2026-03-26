@@ -8,7 +8,7 @@ postmsg "$msg"
 export pgm=aqm_lbcs
 
 EMAIL_SDM=${EMAIL_SDM:-YES}
-GEFS_AERO_LBCS_CHECK=${GEFS_AERO_LBCS_CHECK:-YES}
+GCAFS_AERO_LBCS_CHECK=${GCAFS_AERO_LBCS_CHECK:-YES}
 
 #-----------------------------------------------------------------------
 #
@@ -51,7 +51,7 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that generates chemical and GEFS
+This is the ex-script for the task that generates chemical and GCAFS
 lateral boundary conditions.
 ========================================================================"
 #
@@ -174,27 +174,75 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Add GEFS-LBCS
+# Add GCAFS-LBCS
 #
 #-----------------------------------------------------------------------
 #
 #
-if [ ${DO_AQM_GEFS_LBCS} = "TRUE" ]; then
-  AQM_GEFS_FILE_CYC=${AQM_GEFS_FILE_CYC:-"${hh}"}
-  AQM_GEFS_FILE_CYC=$( printf "%02d" "${AQM_GEFS_FILE_CYC}" )
-
-  GEFS_CYC_DIFF=$(( cyc - AQM_GEFS_FILE_CYC ))
-  if [ "${GEFS_CYC_DIFF}" -lt "0" ]; then
-    TSTEPDIFF=$( printf "%02d" $(( 24 + ${GEFS_CYC_DIFF} )) )
-  else
-    TSTEPDIFF=$( printf "%02d" ${GEFS_CYC_DIFF} )
-  fi
-
-  AQM_MOFILE_FN="${AQM_GEFS_FILE_PREFIX}.t${AQM_GEFS_FILE_CYC}z.atmf"
+if [ ${DO_AQM_GCAFS_LBCS} = "TRUE" ]; then
   if [ "${DO_REAL_TIME}" = "TRUE" ]; then
-    AQM_MOFILE_FP="${COMINgefs}/gefs.${yyyymmdd}/${AQM_GEFS_FILE_CYC}/chem/sfcsig/${AQM_MOFILE_FN}"
+    if [ "${cyc}" = "00" ]; then
+      EXTRN_GCAFS_LBCS_OFFSET_HRS=12
+      CDATE_MOD=`$NDATE -${EXTRN_GCAFS_LBCS_OFFSET_HRS} ${PDY}${cyc}`
+      yyyymmdd=${CDATE_MOD:0:8}
+      mm="${CDATE_MOD:4:2}"
+      hh="${CDATE_MOD:8:2}"
+      AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
+      AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
+      GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+      TSTEPDIFF=$( printf "%02d" $(( 24 + ${GCAFS_CYC_DIFF} )) )
+      AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
+      AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
+    elif [ "${cyc}" = "06" ]; then
+      EXTRN_GCAFS_LBCS_OFFSET_HRS=18
+      CDATE_MOD=`$NDATE -${EXTRN_GCAFS_LBCS_OFFSET_HRS} ${PDY}${cyc}`
+      yyyymmdd=${CDATE_MOD:0:8}
+      mm="${CDATE_MOD:4:2}"
+      hh="${CDATE_MOD:8:2}"
+      AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
+      AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
+      GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+      TSTEPDIFF=$( printf "%02d" $(( 24 + ${GCAFS_CYC_DIFF} )) )
+      AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
+      AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
+    elif [ "${cyc}" = "12" ]; then
+      EXTRN_GCAFS_LBCS_OFFSET_HRS=12
+      CDATE_MOD=`$NDATE -${EXTRN_GCAFS_LBCS_OFFSET_HRS} ${PDY}${cyc}`
+      yyyymmdd=${CDATE_MOD:0:8}
+      mm="${CDATE_MOD:4:2}"
+      hh="${CDATE_MOD:8:2}"
+      AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
+      AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
+      GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+      TSTEPDIFF=$( printf "%02d" ${GCAFS_CYC_DIFF} )
+      AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
+      AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
+    else
+      EXTRN_GCAFS_LBCS_OFFSET_HRS=18
+      CDATE_MOD=`$NDATE -${EXTRN_GCAFS_LBCS_OFFSET_HRS} ${PDY}${cyc}`
+      yyyymmdd=${CDATE_MOD:0:8}
+      mm="${CDATE_MOD:4:2}"
+      hh="${CDATE_MOD:8:2}"
+      AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
+      AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
+      GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+      TSTEPDIFF=$( printf "%02d" ${GCAFS_CYC_DIFF} )
+      AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
+      AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
+    fi
   else
-    AQM_MOFILE_FP="${COMINgefs}/${yyyymmdd}/${AQM_GEFS_FILE_CYC}/${AQM_MOFILE_FN}"
+    AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
+    AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
+
+    GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+    if [ "${GCAFS_CYC_DIFF}" -lt "0" ]; then
+      TSTEPDIFF=$( printf "%02d" $(( 24 + ${GCAFS_CYC_DIFF} )) )
+    else
+      TSTEPDIFF=$( printf "%02d" ${GCAFS_CYC_DIFF} )
+    fi
+
+    AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atmf"
+    AQM_MOFILE_FP="${COMINgcafs}/${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/${AQM_MOFILE_FN}"
   fi  
 
 check_file_with_recheck() {
@@ -214,11 +262,11 @@ check_file_with_recheck() {
  return 1  # File not found even after rechecks
 }
 
-  # Check if GEFS aerosol files exist
+  # Check if GCAFS aerosol files exist
   for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
     hr_mod=$(( hr + EXTRN_MDL_LBCS_OFFSET_HRS ))
     fhr=$( printf "%03d" "${hr_mod}" )
-    AQM_MOFILE_FHR_FP="${AQM_MOFILE_FP}${fhr}.nemsio"
+    AQM_MOFILE_FHR_FP="${AQM_MOFILE_FP}${fhr}.nc"
     ln -sf ${AQM_MOFILE_FHR_FP}  .
     if [ -e "${AQM_MOFILE_FHR_FP}" ]; then
       # File exists, perform "ls" or "touch" action
@@ -234,13 +282,13 @@ check_file_with_recheck() {
         # File not found even after rechecks
         echo "WARNING File was not found even after rechecks: $AQM_MOFILE_FHR_FP"
         
-	GEFS_AERO_LBCS_CHECK="NO"
+	GCAFS_AERO_LBCS_CHECK="NO"
 	 
         if [ "${EMAIL_SDM^^}" = "YES" ] ; then
           MAILFROM=${MAILFROM:-"nco.spa@noaa.gov"}
           #MAILTO=${MAILTO:-"sdm@noaa.gov"}
           MAILTO=${MAILTO:-"${maillist}"}
-          subject="${cyc}Z ${RUN^^} Output for ${basinname:-} GEFS_AERO LBCS "
+          subject="${cyc}Z ${RUN^^} Output for ${basinname:-} GCAFS_AERO LBCS "
           mail.py -s "${subject}" -v "${MAILTO}" 
         fi
 
@@ -250,12 +298,12 @@ check_file_with_recheck() {
 
   NUMTS="$(( FCST_LEN_HRS / LBC_SPEC_INTVL_HRS + 1 ))"
 
-cat > gefs2lbc-nemsio.ini <<EOF
+cat > gcafs2lbc.ini <<EOF
 &control
  tstepdiff=${TSTEPDIFF}
  dtstep=${LBC_SPEC_INTVL_HRS}
  bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
- mofile='${AQM_MOFILE_FP}','.nemsio'
+ mofile='${AQM_MOFILE_FP}','.nc'
  lbcfile='${NET}.${cycle}${dot_ensmem}.gfs_bndy.tile7.f','.nc'
  topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
 &end
@@ -280,11 +328,11 @@ Species converting Factor
 'aorgcj'  1.0   'numacc' 6775815.
 EOF
 
-  exec_fn="gefs2lbc_para"
+  exec_fn="gcafs2lbc_para"
   exec_fp="$EXECaqm/${exec_fn}"
   if [ ! -s "${exec_fp}" ]; then
     print_err_msg_exit "\
-The executable (exec_fp) for GEFS LBCs does not exist:
+The executable (exec_fp) for GCAFS LBCs does not exist:
   exec_fp = \"${exec_fp}\"
 Please ensure that you've built this executable."
   fi
@@ -295,7 +343,7 @@ Please ensure that you've built this executable."
 #
 #----------------------------------------------------------------------
 #
- if [ ${GEFS_AERO_LBCS_CHECK} = "YES" ]; then    
+ if [ ${GCAFS_AERO_LBCS_CHECK} = "YES" ]; then    
   startmsg
   sync
    eval ${RUN_CMD_AQMLBC} ${exec_fp} ${REDIRECT_OUT_ERR} >> $pgmout 2>errfile
@@ -307,7 +355,7 @@ Please ensure that you've built this executable."
 
   print_info_msg "
 ========================================================================
-Successfully added GEFS aerosol LBCs !!!
+Successfully added GCAFS aerosol LBCs !!!
 ========================================================================"
 #
  else
@@ -315,7 +363,7 @@ Successfully added GEFS aerosol LBCs !!!
 
   print_info_msg "
 ========================================================================
- Failed to add GEFS aerosol LBCs due to missing GEFS LBCS ! 
+ Failed to add GCAFS aerosol LBCs due to missing GCAFS LBCS ! 
 ========================================================================"
  fi
 fi
