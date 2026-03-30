@@ -98,8 +98,8 @@ yyyymm_m3=${PDYm3:0:6}
 #
 #-----------------------------------------------------------------------
 #
-if [ "${PREDEF_GRID_NAME}" = "AQM_NA_9km" ]; then
-  id_domain=1144
+if [ "${PREDEF_GRID_NAME}" = "AQM_NA_13km" ]; then
+  id_domain=793
 fi
 
 if [ ${#FCST_LEN_CYCL[@]} -gt 1 ]; then
@@ -378,8 +378,8 @@ EOF1
       cat ${pgmout}
     fi
     # split into two files: one for 24hr_ave and one for 1h_max
-    wgrib2 aqm-pm25_bc.${id_domain}.grib2  |grep  "PMTF"   | ${WGRIB2} -i  aqm-pm25_bc.${id_domain}.grib2  -grib aqm.t${cyc}z.ave_24hr_pm25_bc.1144.grib2 
-    wgrib2 aqm-pm25_bc.${id_domain}.grib2  |grep  "PDMAX1" | ${WGRIB2} -i  aqm-pm25_bc.${id_domain}.grib2  -grib aqm.t${cyc}z.max_1hr_pm25_bc.1144.grib2 
+#    wgrib2 aqm-pm25_bc.${id_domain}.grib2  |grep  "PMTF"   | ${WGRIB2} -i  aqm-pm25_bc.${id_domain}.grib2  -grib aqm.t${cyc}z.ave_24hr_pm25_bc.1144.grib2 
+#    wgrib2 aqm-pm25_bc.${id_domain}.grib2  |grep  "PDMAX1" | ${WGRIB2} -i  aqm-pm25_bc.${id_domain}.grib2  -grib aqm.t${cyc}z.max_1hr_pm25_bc.1144.grib2 
    
     cpreq ${DATA}/${NET}.${cycle}.ave_24hr_pm25_bc.${id_domain}.grib2 ${COMOUT}
     cpreq ${DATA}/${NET}.${cycle}.max_1hr_pm25_bc.${id_domain}.grib2 ${COMOUT}

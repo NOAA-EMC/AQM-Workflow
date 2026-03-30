@@ -99,8 +99,8 @@ yyyymm_m3=${PDYm3:0:6}
 #
 #-----------------------------------------------------------------------
 #
-if [ "${PREDEF_GRID_NAME}" = "AQM_NA_9km" ]; then
-  id_domain=1144
+if [ "${PREDEF_GRID_NAME}" = "AQM_NA_13km" ]; then
+  id_domain=793
 fi
 
 if [ ${#FCST_LEN_CYCL[@]} -gt 1 ]; then
