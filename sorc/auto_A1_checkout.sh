@@ -15,7 +15,8 @@ cd ../parm
  cp -rp ../sorc/AQM-utils/parm  aqm_utils
  cp -rp ../sorc/arl_nexus/config nexus_config
  cp -rp ../sorc/UFS_UTILS/parm  ufs_utils
- cp -rp ../sorc/UPP/parm upp	
+ cp -rp ../sorc/UPP/parm upp
+ cp -p ../sorc/UPP/fix/nam_micro_lookup.dat upp/	
  
 cd ../ush
  rm -rf aqm_utils_python nexus_utils
