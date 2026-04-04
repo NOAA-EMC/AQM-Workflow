@@ -74,21 +74,21 @@ FV3_EXEC_FN='ufs_model'
 DATA_TABLE_FN='data_table'
 DIAG_TABLE_FN='diag_table'
 FIELD_TABLE_FN='field_table'
-DIAG_TABLE_TMPL_FN='diag_table_aqm.FV3_GFS_v16'
-FIELD_TABLE_TMPL_FN='field_table_aqm.FV3_GFS_v16'
+DIAG_TABLE_TMPL_FN='diag_table_aqm.FV3_GFS_v17_p8_ugwpv1'
+FIELD_TABLE_TMPL_FN='field_table_aqm.FV3_GFS_v17_p8_ugwpv1'
 MODEL_CONFIG_FN='model_configure'
-NEMS_CONFIG_FN='nems.configure'
+UFS_CONFIG_FN='ufs.configure'
 AQM_RC_FN='aqm.rc'
 AQM_RC_TMPL_FN='aqm.rc'
 FV3_NML_BASE_SUITE_FP='@HOMEaqm@/parm/input.nml.FV3'
 FV3_NML_YAML_CONFIG_FP='@HOMEaqm@/parm/FV3.input.yml'
-DIAG_TABLE_TMPL_FP='@HOMEaqm@/parm/diag_table_aqm.FV3_GFS_v16'
-FIELD_TABLE_TMPL_FP='@HOMEaqm@/parm/field_table_aqm.FV3_GFS_v16'
+DIAG_TABLE_TMPL_FP='@HOMEaqm@/parm/diag_table_aqm.FV3_GFS_v17_p8_ugwpv1'
+FIELD_TABLE_TMPL_FP='@HOMEaqm@/parm/field_table_aqm.FV3_GFS_v17_p8_ugwpv1'
 MODEL_CONFIG_TMPL_FP='@HOMEaqm@/parm/model_configure'
-NEMS_CONFIG_TMPL_FP='@HOMEaqm@/parm/nems.configure'
+UFS_CONFIG_TMPL_FP='@HOMEaqm@/parm/ufs.configure'
 AQM_RC_TMPL_FP='@HOMEaqm@/parm/aqm.rc'
 FIELD_TABLE_FP='@HOMEaqm@/parm/config/field_table'
-NEMS_CONFIG_FP='@HOMEaqm@/parm/config/nems.configure'
+UFS_CONFIG_FP='@HOMEaqm@/parm/config/ufs.configure'
 FV3_NML_FP='@HOMEaqm@/parm/config/input.nml'
 FCST_MODEL='ufs-weather-model'
 WFLOW_XML_FN='FV3LAM_wflow.xml'
@@ -101,13 +101,15 @@ FIXdir='@HOMEaqm@/fix'
 FIXam='@HOMEaqm@/fix/fix_am'
 FIXclim='@HOMEaqm@/fix/fix_clim'
 FIXlam='@HOMEaqm@/fix/fix_lam'
-CCPP_PHYS_SUITE='FV3_GFS_v16'
-CCPP_PHYS_SUITE_FN='suite_FV3_GFS_v16.xml'
-CCPP_PHYS_SUITE_IN_CCPP_FP='@HOMEaqm@/sorc/ufs-weather-model/FV3/ccpp/suites/suite_FV3_GFS_v16.xml'
-CCPP_PHYS_SUITE_FP='@HOMEaqm@/parm/config/suite_FV3_GFS_v16.xml'
-FIELD_DICT_FN='fd_nems.yaml'
-FIELD_DICT_IN_UWM_FP='@HOMEaqm@/sorc/ufs-weather-model/tests/parm/fd_nems.yaml'
-FIELD_DICT_FP='@HOMEaqm@/parm/config/fd_nems.yaml'
+THOMPSON_MP_CLIMO_FN='Thompson_MP_MONTHLY_CLIMO.nc'
+THOMPSON_MP_CLIMO_FP='@HOMEaqm@/fix/fix_am/Thompson_MP_MONTHLY_CLIMO.nc'
+CCPP_PHYS_SUITE='FV3_GFS_v17_p8_ugwpv1'
+CCPP_PHYS_SUITE_FN='suite_FV3_GFS_v17_p8_ugwpv1.xml'
+CCPP_PHYS_SUITE_IN_CCPP_FP='@HOMEaqm@/sorc/ufs-weather-model/UFSATM/ccpp/suites/suite_FV3_GFS_v17_p8_ugwpv1.xml'
+CCPP_PHYS_SUITE_FP='@HOMEaqm@/parm/config/suite_FV3_GFS_v17_p8_ugwpv1.xml'
+FIELD_DICT_FN='fd_ufs.yaml'
+FIELD_DICT_IN_UWM_FP='@HOMEaqm@/sorc/ufs-weather-model/tests/parm/fd_ufs.yaml'
+FIELD_DICT_FP='@HOMEaqm@/parm/config/fd_ufs.yaml'
 GRID_GEN_METHOD='ESGgrid'
 PREDEF_GRID_NAME='AQM_NA_13km'
 DATE_FIRST_CYCL='202310180000'
@@ -127,7 +129,7 @@ WARMSTART_CYCLE_DIR='@COMaqm@/aqm.@WARMSTART_PDY@/18'
 RES_IN_FIXLAM_FILENAMES='793'
 CRES='C793'
 SDF_USES_RUC_LSM='FALSE'
-SDF_USES_THOMPSON_MP='FALSE'
+SDF_USES_THOMPSON_MP='TRUE'
 
 # [nco]
 envir_dfv='para'
@@ -316,7 +318,7 @@ WRTCMP_nx=''
 WRTCMP_ny=''
 WRTCMP_dx=''
 WRTCMP_dy=''
-USE_MERRA_CLIMO='FALSE'
+USE_MERRA_CLIMO='TRUE'
 DO_FCST_RESTART='TRUE'
 
 # [task_run_post]
@@ -604,10 +606,10 @@ NUM_MISSING_OBS_FILES_MAX='2'
 # [cpl_aqm_parm]
 CPL_AQM='TRUE'
 DO_AQM_DUST='TRUE'
-DO_AQM_CANOPY='FALSE'
+DO_AQM_CANOPY='TRUE'
 DO_AQM_PRODUCT='TRUE'
 DO_AQM_CHEM_LBCS='TRUE'
-DO_AQM_GEFS_LBCS='TRUE'
+DO_AQM_GCAFS_LBCS='TRUE'
 DO_AQM_SAVE_AIRNOW_HIST='TRUE'
 DO_AQM_SAVE_FIRE='FALSE'
 AQM_BIO_FILE='BEIS_RRFScmaq_C775.ncf'
@@ -622,9 +624,9 @@ AQM_RC_FIRE_FREQUENCY='hourly'
 AQM_RC_PRODUCT_FN='aqm.prod.nc'
 AQM_RC_PRODUCT_FREQUENCY='hourly'
 AQM_LBCS_FILES='am4_bndy.c793.2019<MM>.v1.nc'
-COMINgefs='@COMINgefs@'
-AQM_GEFS_FILE_PREFIX='geaer'
-AQM_GEFS_FILE_CYC=''
+COMINgcafs='@COMINgcafs@'
+AQM_GCAFS_FILE_PREFIX='gcafs'
+AQM_GCAFS_FILE_CYC=''
 FIXemis='@HOMEaqm@/fix/emission'
 FIXaqmconfig='@HOMEaqm@/fix/aqm/epa/data'
 FIXaqmfire='@HOMEaqm@/fix/fire'
@@ -636,7 +638,7 @@ FIXaqmnexus='@HOMEaqm@/fix/nexus'
 NEXUS_GRID_FN='grid_spec_793.nc'
 NUM_SPLIT_NEXUS='6'
 NEXUS_GFS_SFC_ARCHV_DIR='/NCEPPROD/hpssprod/runhistory'
-FIXemispt='@HOMEaqm@/fix/emission/nei2016v1-pt'
+FIXemispt='@HOMEaqm@/fix/emission/NEMO/NEI2022/v2025-10/PT'
 DCOMINairnow='@DCOMROOT@'
 COMINbicor='@COMaqm@'
 COMOUTbicor='@COMaqm@'
@@ -670,6 +672,7 @@ FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING=( \
 "FNVEGC  | vegetation_greenness" \
 "FNVETC  | vegetation_type" \
 "FNSOTC  | soil_type" \
+"FNSOCC  | soil_color" \
 "FNVMNC  | vegetation_greenness" \
 "FNVMXC  | vegetation_greenness" \
 "FNSLPC  | slope_type" \
@@ -681,6 +684,7 @@ SFC_CLIMO_FIELDS=( \
 "slope_type" \
 "snowfree_albedo" \
 "soil_type" \
+"soil_color" \
 "substrate_temperature" \
 "vegetation_greenness" \
 "vegetation_type" \
@@ -714,6 +718,9 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "fix_co2_proj/global_co2historicaldata_2019.txt" \
 "fix_co2_proj/global_co2historicaldata_2020.txt" \
 "fix_co2_proj/global_co2historicaldata_2021.txt" \
+"fix_co2_proj/global_co2historicaldata_2022.txt" \
+"fix_co2_proj/global_co2historicaldata_2023.txt" \
+"fix_co2_proj/global_co2historicaldata_2024.txt" \
 "global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt" \
 "global_h2o_pltc.f77" \
@@ -726,6 +733,14 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
 "HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77" \
+"ugwp_limb_tau.nc" \
+"CCN_ACTIVATE.BIN" \
+"freezeH2O.dat" \
+"qr_acr_qg.dat" \
+"qr_acr_qs.dat" \
+"qr_acr_qgV2.dat" \
+"qr_acr_qsV2.dat" \
+"Thompson_MP_MONTHLY_CLIMO.nc" \
 )
 FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING=( \
 "FNGLAC | global_glacier.2x2.grb" \
@@ -750,6 +765,9 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "co2historicaldata_2019.txt | fix_co2_proj/global_co2historicaldata_2019.txt" \
 "co2historicaldata_2020.txt | fix_co2_proj/global_co2historicaldata_2020.txt" \
 "co2historicaldata_2021.txt | fix_co2_proj/global_co2historicaldata_2021.txt" \
+"co2historicaldata_2022.txt | fix_co2_proj/global_co2historicaldata_2022.txt" \
+"co2historicaldata_2023.txt | fix_co2_proj/global_co2historicaldata_2023.txt" \
+"co2historicaldata_2024.txt | fix_co2_proj/global_co2historicaldata_2024.txt" \
 "co2historicaldata_glob.txt | global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt          | co2monthlycyc.txt" \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
@@ -759,6 +777,14 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "sfc_emissivity_idx.txt     | global_sfc_emissivity_idx.txt" \
 "solarconstant_noaa_an.txt  | global_solarconstant_noaa_an.txt" \
 "global_o3prdlos.f77        | ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77" \
+"ugwp_limb_tau.nc           | ugwp_limb_tau.nc" \
+"CCN_ACTIVATE.BIN | CCN_ACTIVATE.BIN" \
+"freezeH2O.dat | freezeH2O.dat" \
+"qr_acr_qg.dat | qr_acr_qg.dat" \
+"qr_acr_qs.dat | qr_acr_qs.dat" \
+"qr_acr_qgV2.dat | qr_acr_qgV2.dat" \
+"qr_acr_qsV2.dat | qr_acr_qsV2.dat" \
+"Thompson_MP_MONTHLY_CLIMO.nc | Thompson_MP_MONTHLY_CLIMO.nc" \
 )
 
 # [grid_params]

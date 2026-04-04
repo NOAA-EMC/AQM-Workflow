@@ -16,6 +16,7 @@ cd ../parm
  cp -rp ../sorc/arl_nexus/config nexus_config
  cp -rp ../sorc/UFS_UTILS/parm  ufs_utils
  cp -rp ../sorc/UPP/parm upp	
+ cp -p ../sorc/UPP/fix/nam_micro_lookup.dat upp/
  
 cd ../ush
  rm -rf aqm_utils_python nexus_utils
@@ -28,7 +29,7 @@ cd ../ush
 #-------------------------------------------------------------------
 cd ../sorc
 
-for src in aqm_bias_correct aqm_bias_interpolate aqm_post_bias_cor_grib2 aqm_post_grib2 aqm_post_maxi_bias_cor_grib2 aqm_post_maxi_grib2  convert_airnow_csv gefs2lbcs_para 
+for src in aqm_bias_correct aqm_bias_interpolate aqm_post_bias_cor_grib2 aqm_post_grib2 aqm_post_maxi_bias_cor_grib2 aqm_post_maxi_grib2  convert_airnow_csv gefs2lbcs_para gcafs2lbcs_para 
 do
  ln -s AQM-utils/sorc/${src}.fd .
  done

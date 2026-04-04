@@ -7,28 +7,27 @@
 #
 #  General settings
 #
-ae_matrix_nml: {{ aqm_config_dir }}/AE_cb6r3_ae6_aq.nml
-gc_matrix_nml: {{ aqm_config_dir }}/GC_cb6r3_ae6_aq.nml
-nr_matrix_nml: {{ aqm_config_dir }}/NR_cb6r3_ae6_aq.nml
+ae_matrix_nml: {{ aqm_config_dir }}/AE_cb6r5_ae7_aq.nml
+gc_matrix_nml: {{ aqm_config_dir }}/GC_cb6r5_ae7_aq.nml
+nr_matrix_nml: {{ aqm_config_dir }}/NR_cb6r5_ae7_aq.nml
 tr_matrix_nml: {{ aqm_config_dir }}/Species_Table_TR_0.nml
 
-csqy_data:   {{ aqm_config_dir }}/CSQY_DATA_cb6r3_ae6_aq
+csqy_data:   {{ aqm_config_dir }}/CSQY_DATA_cb6r5_ae7_aq
 optics_data: {{ aqm_config_dir }}/PHOT_OPTICS.dat
 omi_data:    {{ aqm_config_dir }}/omi_cmaq_2015_361X179.dat
+
+desid_chem_ctrl: {{ aqm_config_dir }}/CMAQ_Control_DESID_cb6r5_ae7_aq.nml
+desid_ctrl: {{ aqm_config_dir }}/CMAQ_Control_DESID.nml
+misc_ctrl:  {{ aqm_config_dir }}/CMAQ_Control_Misc.nml
 
 init_concentrations: {{ init_concentrations | lower }}
 
 run_aerosol: true
 
-# - scale surface aerosol emissions over snow (fugitive dust correction)
-#   disabled if keyword is missing or value outside [0.,1.]
-#
-fugitive_dust_scale: 0.01
-
 {%- if ccpp_phys_suite in ["FV3_GFS_v15p2", "FV3_GFS_v16"] %}
 mp_tracer_map: gfdl
 dy_tracer_map_start: 9
-{%- elif ccpp_phys_suite in ["FV3_GFS_v17_p8"]  %}
+{%- elif ccpp_phys_suite in ["FV3_GFS_v17_p8_ugwpv1"]  %}
 mp_tracer_map: thompson
 dy_tracer_map_start: 11
 {%- endif %}
@@ -92,13 +91,12 @@ anthro_species::
     ALD2          1.00000  ALD2          KG/M2/S
     ALD2_PRIMARY  1.00000  ALD2_PRIMARY  KG/M2/S
     ALDX          1.00000  ALDX          KG/M2/S
+    APIN          1.00000  APIN          KG/M2/S
     BENZ          1.00000  BENZ          KG/M2/S
     BUTADIENE13   1.00000  BUTADIENE13   KG/M2/S
     CH4           1.00000  CH4           KG/M2/S
-    CH4_INV       1.00000  CH4_INV       KG/M2/S
     CL2           1.00000  CL2           KG/M2/S
     CO            1.00000  CO            KG/M2/S
-    CO2_INV       1.00000  CO2_INV       KG/M2/S
     ETH           1.00000  ETH           KG/M2/S
     ETHA          1.00000  ETHA          KG/M2/S
     ETHY          1.00000  ETHY          KG/M2/S
@@ -286,6 +284,8 @@ fire_type: gbbepx
 fire_file: {{ aqm_rc_fire_file_fp }}
 fire_frequency: {{ aqm_rc_fire_frequency }}
 fire_plume_rise: sofiev
+fires_surface_frac: 0.01
+fires_adjacent_frac: 0.15
 fire_species::
     PAL     0.0006     PM2.5       KG/M2/S
     PCA     0.0039     PM2.5       KG/M2/S
@@ -309,27 +309,27 @@ fire_species::
     SO2     0.0080     CO          KG/M2/S
     NH3     0.0150     CO          KG/M2/S
     CO      1.0000     CO          KG/M2/S
-    ACET    0.0000     CO          KG/M2/S
-    ALD2    0.0000     CO          KG/M2/S
-    ALDX    0.0000     CO          KG/M2/S
-    BENZ    0.0000     CO          KG/M2/S
-    CH4     0.0000     CO          KG/M2/S
-    ETH     0.0000     CO          KG/M2/S
-    ETHA    0.0000     CO          KG/M2/S
-    ETHY    0.0000     CO          KG/M2/S
+    ACET    0.0011     CO          KG/M2/S
+    ALD2    0.0010     CO          KG/M2/S
+    ALDX    0.0030     CO          KG/M2/S
+    BENZ    0.0010     CO          KG/M2/S
+    CH4     0.0092     CO          KG/M2/S
+    ETH     0.0022     CO          KG/M2/S
+    ETHA    0.0011     CO          KG/M2/S
+    ETHY    0.0005     CO          KG/M2/S
     ETOH    0.0000     CO          KG/M2/S
-    FORM    0.0000     CO          KG/M2/S
-    IOLE    0.0000     CO          KG/M2/S
-    ISOP    0.0000     CO          KG/M2/S
-    KET     0.0000     CO          KG/M2/S
-    MEOH    0.0000     CO          KG/M2/S
-    OLE     0.0000     CO          KG/M2/S
-    PAR     0.0000     CO          KG/M2/S
-    PRPA    0.0000     CO          KG/M2/S
-    TERP    0.0000     CO          KG/M2/S
-    TOL     0.0000     CO          KG/M2/S
-    UNR     0.0000     CO          KG/M2/S
-    XYL     0.0000     CO          KG/M2/S
+    FORM    0.0043     CO          KG/M2/S
+    IOLE    0.0005     CO          KG/M2/S
+    ISOP    0.0002     CO          KG/M2/S
+    KET     0.0003     CO          KG/M2/S
+    MEOH    0.0039     CO          KG/M2/S
+    OLE     0.0034     CO          KG/M2/S
+    PAR     0.0075     CO          KG/M2/S
+    PRPA    0.0005     CO          KG/M2/S
+    TERP    0.0004     CO          KG/M2/S
+    TOL     0.0013     CO          KG/M2/S
+    UNR     0.0100     CO          KG/M2/S
+    XYL     0.0003     CO          KG/M2/S
     FRP     1000000    MeanFRP     1
 ::
 
@@ -348,14 +348,11 @@ pt_stack_temperature: STKTK
 pt_stack_velocity:    STKVE
 pt_species::
     ACET          1.0000  ACET          MOL/S
-    ACROLEIN      1.0000  ACROLEIN      MOL/S
     ALD2          1.0000  ALD2          MOL/S
     ALD2_PRIMARY  1.0000  ALD2_PRIMARY  MOL/S
     ALDX          1.0000  ALDX          MOL/S
     BENZ          1.0000  BENZ          MOL/S
-    BUTADIENE13   1.0000  BUTADIENE13   MOL/S
     CH4           1.0000  CH4           MOL/S
-    CL2           1.0000  CL2           MOL/S
     CO            1.0000  CO            MOL/S
     ETH           1.0000  ETH           MOL/S
     ETHA          1.0000  ETHA          MOL/S
@@ -363,7 +360,6 @@ pt_species::
     ETOH          1.0000  ETOH          MOL/S
     FORM          1.0000  FORM          MOL/S
     FORM_PRIMARY  1.0000  FORM_PRIMARY  MOL/S
-    HCL           1.0000  HCL           MOL/S
     HONO          1.0000  HONO          MOL/S
     IOLE          1.0000  IOLE          MOL/S
     ISOP          1.0000  ISOP          MOL/S

@@ -230,6 +230,7 @@ case "${CCPP_PHYS_SUITE}" in
   "FV3_GFS_2017_gfdlmp" | \
   "FV3_GFS_2017_gfdlmp_regional" | \
   "FV3_GFS_v16" | \
+  "FV3_GFS_v17_p8_ugwpv1" | \
   "FV3_GFS_v15p2" )
     varmap_file="GFSphys_var_map.txt"
     ;;

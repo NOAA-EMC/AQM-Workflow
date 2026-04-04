@@ -1,5 +1,5 @@
 #############################################
-####  NEMS Run-Time Configuration File  #####
+####  UFS Run-Time Configuration File   #####
 #############################################
 
 # ESMF #
@@ -8,7 +8,7 @@ logKindFlag:            ESMF_LOGKIND_MULTI
 {%- else %}
 logKindFlag:            ESMF_LOGKIND_MULTI_ON_ERROR
 {%- endif %}
-globalResourceControl:  true
+globalResourceControl:  false 
 
 {% if cpl_aqm  %}
 # EARTH #
