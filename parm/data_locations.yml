@@ -70,8 +70,8 @@ FV3GFS:
           - gfs.t{hh}z.atmanl.nc
           - gfs.t{hh}z.sfcanl.nc
         fcst:
-          - gfs.t{hh}z.atmf{fcst_hr:03d}.nc
-          - gfs.t{hh}z.sfcf{fcst_hr:03d}.nc
+          - gfs.t{hh}z.atm.f{fcst_hr:03d}.nc
+          - gfs.t{hh}z.sfc.f{fcst_hr:03d}.nc
   hpss:
     protocol: htar
     archive_path:
