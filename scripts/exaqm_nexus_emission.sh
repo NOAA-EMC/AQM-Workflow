@@ -116,7 +116,7 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "FALSE" ]; then
                           relative="${relative_link_flag}"
 
    for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
-     gfs_sfc_fn="gfs.t${hh}z.sfcf${fhr}.nc"
+     gfs_sfc_fn="gfs.t${hh}z.sfc.f${fhr}.nc"
      if [ -e "${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}" ]; then
        gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
        create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
@@ -496,7 +496,7 @@ fi
 
 if [ "${USE_GFS_SFC}" = "TRUE" ]; then # GFS INPUT
   mkdir -p ${DATAinput}/GFS_SFC
-  ${USHdir}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfcf???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
+  ${USHdir}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfc.f???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_gfs_bio.py\" failed."
