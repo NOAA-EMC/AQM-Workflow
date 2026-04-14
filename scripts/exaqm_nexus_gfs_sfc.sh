@@ -77,23 +77,26 @@ GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/atmos"
 
 if [ "${DO_REAL_TIME}" = "TRUE" ]; then
   GFS_SFC_LOCAL_DIR="${COMINgfs}/${GFS_SFC_TAR_SUB_DIR}"
+  GFS_SFC_LOCAL_DIRA="${COMINgfs}/${GFS_SFC_TAR_SUB_DIRA}"
+  GFS_SFC_LOCAL_DIRB="${COMINgfs}/${GFS_SFC_TAR_SUB_DIRB}"
 else
   GFS_SFC_LOCAL_DIR="${FIXaqmnexus_gfs_sfc}/${GFS_SFC_TAR_SUB_DIR}"
 fi	
 
 # copy files from local directory
-if [ -d ${GFS_SFC_LOCAL_DIR} ]; then
-  gfs_sfc_fn="gfs.t${hh}z.sfcanl.nc"
-
+if [ -d ${GFS_SFC_LOCAL_DIRA} ]; then
+  #gfs_ana_fn="gfs.t${hh}z.sfcanl.nc"
+  gfs_ana_fn="gfs.t${hh}z.analysis.sfc.a006.nc"
+  
   relative_link_flag="FALSE"
-  gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
-  create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
+  gfs_ana_fp="${GFS_SFC_LOCAL_DIRA}/${gfs_ana_fn}"
+  create_symlink_to_file target="${gfs_ana_fp}" symlink="${gfs_ana_fn}" \
 	                   relative="${relative_link_flag}"
 
   for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
-    gfs_sfc_fn="gfs.t${hh}z.sfcf${fhr}.nc"
-    if [ -e "${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}" ]; then
-      gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
+    gfs_sfc_fn="gfs.t${hh}z.sfc.f${fhr}.nc"
+    if [ -e "${GFS_SFC_LOCAL_DIRB}/${gfs_sfc_fn}" ]; then
+      gfs_sfc_fp="${GFS_SFC_LOCAL_DIRB}/${gfs_sfc_fn}"
       create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
 	                     relative="${relative_link_flag}"
     else
