@@ -81,11 +81,12 @@ if [ "${DO_REAL_TIME}" = "TRUE" ]; then
   GFS_SFC_LOCAL_DIRB="${COMINgfs}/${GFS_SFC_TAR_SUB_DIRB}"
 else
   GFS_SFC_LOCAL_DIR="${FIXaqmnexus_gfs_sfc}/${GFS_SFC_TAR_SUB_DIR}"
+  GFS_SFC_LOCAL_DIRA="${FIXaqmnexus_gfs_sfc}/${GFS_SFC_TAR_SUB_DIRA}"
+  GFS_SFC_LOCAL_DIRB="${FIXaqmnexus_gfs_sfc}/${GFS_SFC_TAR_SUB_DIRB}"
 fi	
 
 # copy files from local directory
 if [ -d ${GFS_SFC_LOCAL_DIRA} ]; then
-  #gfs_ana_fn="gfs.t${hh}z.sfcanl.nc"
   gfs_ana_fn="gfs.t${hh}z.analysis.sfc.a006.nc"
   
   relative_link_flag="FALSE"

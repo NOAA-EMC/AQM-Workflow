@@ -48,7 +48,7 @@ if [ "${MACHINE}" = "WCOSS2" ]; then
   export COMIN="${COMIN:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY})}"
   export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY}/${cyc})}"
   export COMINgfs="${COMINgfs:-$(compath.py ${envir}/gfs/${gfs_ver})}"
-  export COMINgefs="${COMINgefs:-$(compath.py ${envir}/gefs/${gefs_ver})}"
+  export COMINgcafs="${COMINgcafs:-$(compath.py ${envir}/gcafs/${gcafs_ver})}"
   export COMOUTwmo="${COMOUTwmo:-${COMOUT}/wmo}"
 else
   export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"

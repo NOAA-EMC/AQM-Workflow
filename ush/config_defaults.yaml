@@ -1665,7 +1665,9 @@ task_make_lbcs:
 task_run_fcst:
   TN_RUN_FCST: "run_fcst"
   NNODES_RUN_FCST: '{{ (PE_MEMBER01 + PPN_RUN_FCST - 1) // PPN_RUN_FCST }}'
+  #NNODES_RUN_FCST: '{{ (PE_MEMBER01 + 128 - 1) // 128 }}'
   PPN_RUN_FCST: '{{ platform.NCORES_PER_NODE // OMP_NUM_THREADS_RUN_FCST }}'
+  #PPN_RUN_FCST: '{{ platform.NCORES_PER_NODE // 1 }}'
   WTIME_RUN_FCST: 04:30:00
   MAXTRIES_RUN_FCST: 1
   FV3_EXEC_FP: '{{ [user.EXECdir, workflow.FV3_EXEC_FN]|path_join }}'
@@ -2886,8 +2888,8 @@ cpl_aqm_parm:
   # DO_AQM_CHEM_LBCS:
   # Add chemical LBCs to chemical LBCs
   # 
-  # DO_AQM_GEFS_LBCS:
-  # Add GEFS aerosol LBCs to chemical LBCs
+  # DO_AQM_GCAFS_LBCS:
+  # Add GCAFS aerosol LBCs to chemical LBCs
   #
   # DO_AQM_SAVE_AIRNOW_HIST:
   # Save bias-correction airnow training data
@@ -2949,14 +2951,14 @@ cpl_aqm_parm:
   # AQM_LBCS_FILES:
   # File name of chemical LBCs
   #
-  # DCOMINgefs:
-  # Path to the directory containing GEFS aerosol LBC files
+  # DCOMINgcafs:
+  # Path to the directory containing GCAFS aerosol LBC files
   #
-  # AQM_GEFS_FILE_PREFIX:
-  # Prefix of AQM GEFS file ("geaer" or "gfs")
+  # AQM_GCAFS_FILE_PREFIX:
+  # Prefix of AQM GCAFS file ("geaer" or "gfs")
   #
-  # AQM_GEFS_FILE_CYC:
-  # Cycle of the GEFS aerosol LBC files only if it is fixed
+  # AQM_GCAFS_FILE_CYC:
+  # Cycle of the GCAFS aerosol LBC files only if it is fixed
   # 
   # COMINemis:
   # Same as GRID_DIR but for the the air quality emission generation task.
@@ -3004,7 +3006,7 @@ cpl_aqm_parm:
   DO_AQM_CANOPY: false
   DO_AQM_PRODUCT: true
   DO_AQM_CHEM_LBCS: true
-  DO_AQM_GEFS_LBCS: false
+  DO_AQM_GCAFS_LBCS: false
   DO_AQM_SAVE_AIRNOW_HIST: false
   DO_AQM_SAVE_FIRE: false
 
@@ -3028,9 +3030,9 @@ cpl_aqm_parm:
 
   AQM_LBCS_FILES: "am4_bndy_c793.2019<MM>.v1.nc"
 
-  COMINgefs: ""
-  AQM_GEFS_FILE_PREFIX: "geaer"
-  AQM_GEFS_FILE_CYC: ""
+  COMINgcafs: ""
+  AQM_GCAFS_FILE_PREFIX: "gcafs"
+  AQM_GCAFS_FILE_CYC: ""
 
   COMINemis: ""
   FIXaqmconfig: '{{ [user.FIXaqm, "aqm/epa/data"]|path_join }}'
