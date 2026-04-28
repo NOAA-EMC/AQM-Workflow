@@ -1665,9 +1665,7 @@ task_make_lbcs:
 task_run_fcst:
   TN_RUN_FCST: "run_fcst"
   NNODES_RUN_FCST: '{{ (PE_MEMBER01 + PPN_RUN_FCST - 1) // PPN_RUN_FCST }}'
-  #NNODES_RUN_FCST: '{{ (PE_MEMBER01 + 128 - 1) // 128 }}'
   PPN_RUN_FCST: '{{ platform.NCORES_PER_NODE // OMP_NUM_THREADS_RUN_FCST }}'
-  #PPN_RUN_FCST: '{{ platform.NCORES_PER_NODE // 1 }}'
   WTIME_RUN_FCST: 04:30:00
   MAXTRIES_RUN_FCST: 1
   FV3_EXEC_FP: '{{ [user.EXECdir, workflow.FV3_EXEC_FN]|path_join }}'
@@ -2955,7 +2953,7 @@ cpl_aqm_parm:
   # Path to the directory containing GCAFS aerosol LBC files
   #
   # AQM_GCAFS_FILE_PREFIX:
-  # Prefix of AQM GCAFS file ("geaer" or "gfs")
+  # Prefix of AQM GCAFS file ("gcafs")
   #
   # AQM_GCAFS_FILE_CYC:
   # Cycle of the GCAFS aerosol LBC files only if it is fixed
