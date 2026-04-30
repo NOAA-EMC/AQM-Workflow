@@ -2886,8 +2886,8 @@ cpl_aqm_parm:
   # DO_AQM_CHEM_LBCS:
   # Add chemical LBCs to chemical LBCs
   # 
-  # DO_AQM_GEFS_LBCS:
-  # Add GEFS aerosol LBCs to chemical LBCs
+  # DO_AQM_GCAFS_LBCS:
+  # Add GCAFS aerosol LBCs to chemical LBCs
   #
   # DO_AQM_SAVE_AIRNOW_HIST:
   # Save bias-correction airnow training data
@@ -2949,14 +2949,14 @@ cpl_aqm_parm:
   # AQM_LBCS_FILES:
   # File name of chemical LBCs
   #
-  # DCOMINgefs:
-  # Path to the directory containing GEFS aerosol LBC files
+  # DCOMINgcafs:
+  # Path to the directory containing GCAFS aerosol LBC files
   #
-  # AQM_GEFS_FILE_PREFIX:
-  # Prefix of AQM GEFS file ("geaer" or "gfs")
+  # AQM_GCAFS_FILE_PREFIX:
+  # Prefix of AQM GCAFS file ("gcafs")
   #
-  # AQM_GEFS_FILE_CYC:
-  # Cycle of the GEFS aerosol LBC files only if it is fixed
+  # AQM_GCAFS_FILE_CYC:
+  # Cycle of the GCAFS aerosol LBC files only if it is fixed
   # 
   # COMINemis:
   # Same as GRID_DIR but for the the air quality emission generation task.
@@ -3004,7 +3004,7 @@ cpl_aqm_parm:
   DO_AQM_CANOPY: false
   DO_AQM_PRODUCT: true
   DO_AQM_CHEM_LBCS: true
-  DO_AQM_GEFS_LBCS: false
+  DO_AQM_GCAFS_LBCS: false
   DO_AQM_SAVE_AIRNOW_HIST: false
   DO_AQM_SAVE_FIRE: false
 
@@ -3028,9 +3028,9 @@ cpl_aqm_parm:
 
   AQM_LBCS_FILES: "am4_bndy_c793.2019<MM>.v1.nc"
 
-  COMINgefs: ""
-  AQM_GEFS_FILE_PREFIX: "geaer"
-  AQM_GEFS_FILE_CYC: ""
+  COMINgcafs: ""
+  AQM_GCAFS_FILE_PREFIX: "gcafs"
+  AQM_GCAFS_FILE_CYC: ""
 
   COMINemis: ""
   FIXaqmconfig: '{{ [user.FIXaqm, "aqm/epa/data"]|path_join }}'

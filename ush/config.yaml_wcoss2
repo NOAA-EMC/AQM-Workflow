@@ -102,7 +102,7 @@ global:
 cpl_aqm_parm:
   CPL_AQM: true
   DO_AQM_CHEM_LBCS: true 
-  DO_AQM_GEFS_LBCS: true 
+  DO_AQM_GCAFS_LBCS: true 
   DO_AQM_DUST: true 
   DO_AQM_CANOPY: true
   DO_AQM_PRODUCT: true 
