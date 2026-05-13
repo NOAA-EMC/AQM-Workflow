@@ -238,7 +238,7 @@ if [ ${DO_AQM_GCAFS_LBCS} = "TRUE" ]; then
     fi
 
     AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
-    AQM_MOFILE_FP="${COMINgcafs}/${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/${AQM_MOFILE_FN}"
+    AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
     #AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/${AQM_MOFILE_FN}"
   fi  
 
