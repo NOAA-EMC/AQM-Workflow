@@ -109,18 +109,20 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "FALSE" ]; then
    fi
    fcst_len_hrs_offset=$(( FCST_LEN_HRS + TIME_OFFSET_HRS ))
 
-   GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/atmos"
+   GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/model/atmos/history"
+   GFS_ANA_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/analysis/atmos"
    GFS_SFC_LOCAL_DIR="${COMINgfs}/${GFS_SFC_TAR_SUB_DIR}"
+   GFS_ANA_LOCAL_DIR="${COMINgfs}/${GFS_ANA_TAR_SUB_DIR}"
    GFS_SFC_DATA_INTVL="3"
 
-   gfs_sfc_fn="gfs.t${hh}z.sfcanl.nc"
+   gfs_ana_fn="gfs.t${hh}z.analysis.sfc.a006.nc"
    relative_link_flag="FALSE"
-   gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
-   create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
+   gfs_ana_fp="${GFS_ANA_LOCAL_DIR}/${gfs_ana_fn}"
+   create_symlink_to_file target="${gfs_ana_fp}" symlink="${gfs_ana_fn}" \
                           relative="${relative_link_flag}"
 
    for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
-     gfs_sfc_fn="gfs.t${hh}z.sfcf${fhr}.nc"
+     gfs_sfc_fn="gfs.t${hh}z.sfc.f${fhr}.nc"
      if [ -e "${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}" ]; then
        gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
        create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
@@ -342,7 +344,7 @@ check_dead_link ${DATA}
 
 if [ "${USE_GFS_SFC}" = "TRUE" ]; then # GFS INPUT
   mkdir -p ${DATAinput}/GFS_SFC
-  ${USHaqm}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfcf???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
+  ${USHaqm}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfc.f???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_gfs_bio.py\" failed."
