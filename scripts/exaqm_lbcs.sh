@@ -226,11 +226,11 @@ if [ ${DO_AQM_GCAFS_LBCS} = "TRUE" ]; then
       AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
       AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
     fi
-  else
+  else #assuming only 00z data available
     AQM_GCAFS_FILE_CYC=${AQM_GCAFS_FILE_CYC:-"${hh}"}
     AQM_GCAFS_FILE_CYC=$( printf "%02d" "${AQM_GCAFS_FILE_CYC}" )
-
     GCAFS_CYC_DIFF=$(( cyc - AQM_GCAFS_FILE_CYC ))
+    EXTRN_GCAFS_LBCS_OFFSET_HRS=$( printf "%02d" "${GCAFS_CYC_DIFF}" )
     if [ "${GCAFS_CYC_DIFF}" -lt "0" ]; then
       TSTEPDIFF=$( printf "%02d" $(( 24 + ${GCAFS_CYC_DIFF} )) )
     else
@@ -238,8 +238,7 @@ if [ ${DO_AQM_GCAFS_LBCS} = "TRUE" ]; then
     fi
 
     AQM_MOFILE_FN="${AQM_GCAFS_FILE_PREFIX}.t${AQM_GCAFS_FILE_CYC}z.atm.f"
-    AQM_MOFILE_FP="${COMINgcafs}/${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/${AQM_MOFILE_FN}"
-    #AQM_MOFILE_FP="${COMINgcafs}/gcafs.${yyyymmdd}/${AQM_GCAFS_FILE_CYC}/${AQM_MOFILE_FN}"
+    AQM_MOFILE_FP="${COMINgcafs}/gcafs.${PDY}/${AQM_GCAFS_FILE_CYC}/model/atmos/history/${AQM_MOFILE_FN}"
   fi  
 
 check_file_with_recheck() {
