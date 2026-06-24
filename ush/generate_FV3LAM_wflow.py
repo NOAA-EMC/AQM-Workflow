@@ -533,7 +533,7 @@ def generate_FV3LAM_wflow(ushdir, logfile: str = "log.generate_FV3LAM_wflow", de
          CCPP_PHYS_SUITE == "FV3_GFS_v17_p8_ugwpv1" ):
         if CPL_AQM:
             fv_core_nml_dict.update({
-                "dnats": 4
+                "dnats": 6
             })
         else:
             fv_core_nml_dict.update({
