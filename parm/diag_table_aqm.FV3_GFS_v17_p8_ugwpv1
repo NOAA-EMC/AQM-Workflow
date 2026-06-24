@@ -223,6 +223,9 @@
 # aerosol diagnostics
 ###
 "gfs_phys",    "aod",         "aod",           "fv3_history2d",      "all",  .false.,  "none",  2
+#"gfs_dyn",     "pm25_tot",    "pm25_tot",      "fv3_history",        "all",  .false.,  "none",  2
+#"gfs_dyn",     "noy",         "noy",           "fv3_history",        "all",  .false.,  "none",  2
+#"gfs_dyn",     "voc",         "voc",           "fv3_history",        "all",  .false.,  "none",  2
 
 #=============================================================================================
 #

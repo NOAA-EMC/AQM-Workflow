@@ -554,7 +554,7 @@ FV3_GFS_v17_p8_ugwpv1:
     agrid_vel_rst: False
     d2_bg_k1: 0.20
     d2_bg_k2: 0.04
-    dnats: 4
+    dnats: 6
     do_sat_adj: False
     fv_sg_adj: 450
     hord_dp: -5

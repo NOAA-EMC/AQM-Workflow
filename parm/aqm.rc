@@ -33,7 +33,7 @@ dy_tracer_map_start: 11
 {%- endif %}
 
 ctm_aod: true
-ctm_pmdiag: true
+ctm_aqdiag: true
 ctm_stdout: maintask
 
 #
