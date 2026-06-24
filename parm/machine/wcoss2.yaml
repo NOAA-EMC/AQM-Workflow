@@ -30,26 +30,27 @@ data:
   ics_lbcs:
     GSMGFS: compath.py ${envir}/gsmgfs/${gsmgfs_ver}/gsmgfs.${PDYext}
 #    FV3GFS: compath.py ${envir}/gfs/${gfs_ver}/gfs.${PDYext}/${cycext}/atmos
-#    FV3GFS: /lfs/h2/emc/ptmp/kai.wang/gfs/v17/gfs.${PDYext}/${cycext}/atmos
-    FV3GFS: /lfs/h2/emc/gfstemp/emc.global/comroot/retrov17_01_realtime/gfs.${PDYext}/${cycext}/model/atmos/history
+    FV3GFS: /lfs/h2/emc/physics/noscrub/kai.wang/gfs/v17/gfs.${PDYext}/${cycext}/model/atmos/history
+#    FV3GFS: /lfs/h2/emc/gfstemp/emc.global/comroot/retrov17_01_realtime/gfs.${PDYext}/${cycext}/model/atmos/history
     RAP: compath.py ${envir}/rap/${rap_ver}/rap.${PDYext}
     NAM: compath.py ${envir}/nam/${nam_ver}/nam.${PDYext}
     HRRR: compath.py ${envir}/hrrr/${hrrr_ver}/hrrr.${PDYext}/conus
 cpl_aqm_parm:
   #COMINgefs: /lfs/h1/ops/prod/com/gefs/v12.3
-  COMINgcafs: /lfs/h2/emc/ptmp/Li.Pan/gcafs/com
+  #COMINgcafs: /lfs/h2/emc/ptmp/Li.Pan/gcafs/com
+  COMINgcafs: /lfs/h2/emc/ptmp/kai.wang/gcafs
   #COMINgefs: /lfs/h2/emc/ptmp/kai.wang/gefs/v12.3
   #AQM_GEFS_FILE_CYC: 00
-  DCOMINairnow: /lfs/h1/ops/prod/dcom
-  #DCOMINairnow: /lfs/h2/emc/physics/noscrub/jianping.huang/dcom 
+  #DCOMINairnow: /lfs/h1/ops/prod/dcom
+  DCOMINairnow: /lfs/h2/emc/physics/noscrub/kai.wang/dcom 
   COMINemis: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission
   COMINemispt: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v7.0/fix_newUFS_ccpp17_NEI2022/emission/NEMO/NEI2022/v2025-10/PT
-  DCOMINfire: /lfs/h1/ops/prod/dcom 
+  #DCOMINfire: /lfs/h1/ops/prod/dcom 
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2/rave_star 
-  #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_NA_NRT/RAVE_raw_dcom
+  DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_NA_NRT/RAVE_raw_dcom
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2/rave_star/regridding
   #DCOMINfire: /lfs/h2/emc/physics/noscrub/kai.wang/RAVE_fire/RAVE_v2/rave_star/regridding/ 
-  COMINbicor: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v8.0/bias_correction/aqmv8.0.0k
-  COMOUTbicor: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v8.0/bias_correction/aqmv8.0.0k
+  COMINbicor: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v8.0/bias_correction/aqmv8.0.1
+  COMOUTbicor: /lfs/h2/emc/physics/noscrub/kai.wang/UFS_SRW_App/aqm.v8.0/bias_correction/aqmv8.0.1
 
