@@ -166,7 +166,8 @@ NEI2016="FALSE"
 NEI2019="FALSE"
 NEI2019_GLOBTEMPO="FALSE"
 NEI2022="FALSE"
-NEI2022_GLOBTEMPO="TRUE"
+NEI2022_GLOBTEMPO="FALSE"
+NEI2022_GLOBTEMPO_METEMIS="TRUE"
 TIMEZONES="TRUE"
 CEDS="TRUE"
 HTAP="TRUE"
@@ -182,6 +183,10 @@ Yuan_XLAI="TRUE"
 GEOS="TRUE"
 AnnualScalar="TRUE"
 OFFLINE_SOILNOX="TRUE"
+
+# Set MetEmis sectors for testing
+# Valid options are: "onroad", "livestock", "rwc", "afdust", "all", "none"
+METEMIS_SECTOR="all"
 
 NEXUS_INPUT_BASE_DIR=${COMINemis}
 
@@ -224,6 +229,12 @@ elif [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then  #Use NEI2022 with updated global
     cp ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2022_globtempo/*.rc ${DATA}
   else
     cp ${PARMdir}/nexus_config/cmaq_nei2022_globtempo/*.rc ${DATA}
+  fi
+elif [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then  #Use NEI2022 with updated global and MetEmis
+  if [ "${USE_GFS_SFC}" = "TRUE" ]; then
+    cp ${PARMdir}/nexus_config/cmaq_gfs_megan_nei2022_globtempo_metemis/*.rc ${DATA}
+  else
+    cp ${PARMdir}/nexus_config/cmaq_nei2022_globtempo_metemis/*.rc ${DATA}
   fi
 else #Default to NEI2016 Configs
   if [ "${USE_GFS_SFC}" = "TRUE" ]; then
@@ -327,7 +338,7 @@ if [ "${NEI2016}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2022-07"
+  ${USHdir}/nexus_utils/python/nexus_nei2016_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2022-07"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2016_linker.py\" failed."
@@ -345,7 +356,7 @@ elif [ "${NEI2019}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEMO/NEI2019
   mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
   mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2023-03"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2019_linker.py\" failed."
@@ -362,7 +373,7 @@ elif [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEMO/NEI2019
   mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03
   mkdir -p ${DATAinput}/NEMO/NEI2019/v2023-03/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2023-03"
+  ${USHdir}/nexus_utils/python/nexus_nei2019_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2023-03"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2019_linker.py\" failed."
@@ -379,7 +390,7 @@ elif [ "${NEI2022}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEMO/NEI2022
   mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10
   mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2022_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2025-10"
+  ${USHdir}/nexus_utils/python/nexus_nei2022_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2025-10"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2022_linker.py\" failed."
@@ -396,7 +407,7 @@ elif [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEMO/NEI2022
   mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10
   mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2022_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2025-10"
+  ${USHdir}/nexus_utils/python/nexus_nei2022_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2025-10"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2022_linker.py\" failed."
@@ -408,11 +419,33 @@ elif [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then
     message_txt="Call to python script \"nexus_nei2022_control_tilefix.py\" failed."
     err_exit "${message_txt}"
   fi  
+elif [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then
+  ${USHdir}/nexus_utils/python/nexus_nei2022_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} --nei-version "v2026-05" --metemis ${METEMIS_SECTOR} --metemis-version "v2026-04"
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2022_linker.py\" failed."
+    err_exit "${message_txt}"
+    print_err_msg_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_nei2022_control_tilefix.py -f ${DATA}/NEXUS_Config.rc -t ${DATA}/HEMCO_sa_Time.rc # -d ${yyyymmdd}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_nei2022_control_tilefix.py\" failed."
+    err_exit "${message_txt}"
+    print_err_msg_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_disable_metemis.py ${DATA}/NEXUS_Config.rc --except ${METEMIS_SECTOR}
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_disable_metemis.py\" failed."
+    err_exit "${message_txt}"
+    print_err_msg_exit "${message_txt}"
+  fi
 else #Default to NEI2016
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
-  ${USHdir}/nexus_utils/python/nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2022-07"
+  ${USHdir}/nexus_utils/python/nexus_nei2016_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2022-07"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_nei2016_linker.py\" failed."
@@ -438,7 +471,7 @@ if [ "${NEI2019_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
 fi
 
-if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
+if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ] || [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then # CAMS-TEMPO
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
 fi
 
@@ -501,6 +534,13 @@ if [ "${USE_GFS_SFC}" = "TRUE" ]; then # GFS INPUT
   if [ $err -ne 0 ]; then
     message_txt="Call to python script \"nexus_gfs_bio.py\" failed."
     err_exit "${message_txt}"
+  fi
+  ${USHdir}/nexus_utils/python/nexus_gfs_metemis.py -i ${DATA}/GFS_SFC/gfs.t??z.sfc.f???.nc -o ${DATA}/GFS_SFC_METEMIS_INPUT.nc
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="Call to python script \"nexus_gfs_metemis.py\" failed."
+    err_exit "${message_txt}"
+    print_err_msg_exit "${message_txt}"
   fi
 fi
 

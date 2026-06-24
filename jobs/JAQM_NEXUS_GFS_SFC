@@ -6,6 +6,7 @@ set -xue
 
 #-----------------------------------------------------------------------
 export USHaqm=${EXECaqm:-${HOMEaqm}/ush}
+export COMINgfs="/lfs/h2/emc/physics/noscrub/kai.wang/gfs/v17"
 
 export subcyc='00'
 export pid=${pid:-$$}
