@@ -23,6 +23,6 @@ load(pathJoin("zlib", os.getenv("zlib_ver")))
 load(pathJoin("wgrib2", os.getenv("wgrib2_ver")))
 load(pathJoin("bufr", os.getenv("bufr_ver")))
 
-prepend_path("MODULEPATH", os.getenv("modulepath_grib"))
+--prepend_path("MODULEPATH", os.getenv("modulepath_grib"))
 load(pathJoin("grib_util", os.getenv("grib_util_ver")))
 load(pathJoin("prod_util", os.getenv("prod_util_ver")))
