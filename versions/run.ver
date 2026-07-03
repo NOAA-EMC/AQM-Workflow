@@ -44,7 +44,7 @@ export gsl_ver=2.7
 export nco_ver=5.0.6
 
 export wgrib2_ver=2.0.8_wmo
-export grib_util_ver=1.2.4
+export grib_util_ver=1.5.0
 
 export maillist="nco.spa@noaa.gov,barry.baker@noaa.gov,kai.wang@noaa.gov"
 export MAILTO="nco.spa@noaa.gov,barry.baker@noaa.gov,kai.wang@noaa.gov"
