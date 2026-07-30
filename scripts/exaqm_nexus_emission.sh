@@ -109,18 +109,20 @@ if [ "${RUN_TASK_NEXUS_GFS_SFC}" = "FALSE" ]; then
    fi
    fcst_len_hrs_offset=$(( FCST_LEN_HRS + TIME_OFFSET_HRS ))
 
-   GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/atmos"
+   GFS_SFC_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/model/atmos/history"
+   GFS_ANA_TAR_SUB_DIR="gfs.${yyyymmdd}/${hh}/analysis/atmos"
    GFS_SFC_LOCAL_DIR="${COMINgfs}/${GFS_SFC_TAR_SUB_DIR}"
+   GFS_ANA_LOCAL_DIR="${COMINgfs}/${GFS_ANA_TAR_SUB_DIR}"
    GFS_SFC_DATA_INTVL="3"
 
-   gfs_sfc_fn="gfs.t${hh}z.sfcanl.nc"
+   gfs_ana_fn="gfs.t${hh}z.analysis.sfc.a006.nc"
    relative_link_flag="FALSE"
-   gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
-   create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
+   gfs_ana_fp="${GFS_ANA_LOCAL_DIR}/${gfs_ana_fn}"
+   create_symlink_to_file target="${gfs_ana_fp}" symlink="${gfs_ana_fn}" \
                           relative="${relative_link_flag}"
 
    for fhr in $(seq -f "%03g" 0 ${GFS_SFC_DATA_INTVL} ${fcst_len_hrs_offset}); do
-     gfs_sfc_fn="gfs.t${hh}z.sfcf${fhr}.nc"
+     gfs_sfc_fn="gfs.t${hh}z.sfc.f${fhr}.nc"
      if [ -e "${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}" ]; then
        gfs_sfc_fp="${GFS_SFC_LOCAL_DIR}/${gfs_sfc_fn}"
        create_symlink_to_file target="${gfs_sfc_fp}" symlink="${gfs_sfc_fn}" \
@@ -160,7 +162,7 @@ fi
 # All Datasets in that file need to be placed here as it will link the files 
 # necessary to that folder.  In the future this will be done by a get_nexus_input 
 # script
-NEI2022_GLOBTEMPO="TRUE"
+NEI2022_GLOBTEMPO_METEMIS="TRUE"
 TIMEZONES="TRUE"
 CEDS="TRUE"
 HTAP="TRUE"
@@ -170,12 +172,16 @@ NOAAGMD="TRUE"
 SOA="TRUE"
 EDGAR="TRUE"
 MEGAN="TRUE"
-MODIS_XLAI="TRUE"
+MODIS_XLAI="FALSE"
 OLSON_MAP="TRUE"
 Yuan_XLAI="TRUE"
 GEOS="TRUE"
 AnnualScalar="TRUE"
 OFFLINE_SOILNOX="TRUE"
+
+# Set MetEmis sectors for testing
+# Valid options are: "onroad", "livestock", "rwc", "afdust", "all", "none"
+METEMIS_SECTOR="all"
 
 NEXUS_INPUT_BASE_DIR=${FIXemis}
 ########################################################################
@@ -191,11 +197,11 @@ cpreq ${EXECaqm}/nexus ${DATA}
 
 cpreq ${FIXaqmnexus}/${NEXUS_GRID_FN} ${DATA}/grid_spec.nc
 
-if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then  #Use NEI2022 with updated global
+if [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then  #Use NEI2022 with updated global and MetEmis
   if [ "${USE_GFS_SFC}" = "TRUE" ]; then
-    cpreq ${PARMaqm}/nexus_config/cmaq_gfs_megan_nei2022_globtempo/*.rc ${DATA}
+    cpreq ${PARMaqm}/nexus_config/cmaq_gfs_megan_nei2022_globtempo_metemis/*.rc ${DATA}
   else
-    cpreq ${PARMaqm}/nexus_config/cmaq_nei2022_globtempo/*.rc ${DATA}
+    cpreq ${PARMaqm}/nexus_config/cmaq_nei2022_globtempo_metemis/*.rc ${DATA}
   fi
 else #Default to NEI2016 Configs
   if [ "${USE_GFS_SFC}" = "TRUE" ]; then
@@ -269,12 +275,12 @@ fi
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
 #
-if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then
+if [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then
   mkdir -p ${DATAinput}/NEMO
   mkdir -p ${DATAinput}/NEMO/NEI2022
-  mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10
-  mkdir -p ${DATAinput}/NEMO/NEI2022/v2025-10/${mm}
-  ${USHaqm}/nexus_utils/python/nexus_nei2022_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2025-10"
+  mkdir -p ${DATAinput}/NEMO/NEI2022/v2026-05
+  mkdir -p ${DATAinput}/NEMO/NEI2022/v2026-05/${mm}
+  ${USHaqm}/nexus_utils/python/nexus_nei2022_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2026-05" --metemis ${METEMIS_SECTOR} --metemis-version "v2026-04"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_nei2022_linker.py\" failed."
@@ -290,7 +296,7 @@ else #Default to NEI2016
   mkdir -p ${DATAinput}/NEI2016v1
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07
   mkdir -p ${DATAinput}/NEI2016v1/v2022-07/${mm}
-  ${USHaqm}/nexus_utils/python/nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${DATAinput} -v "v2022-07"
+  ${USHaqm}/nexus_utils/python/nexus_nei2016_linker.py --src-dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work-dir ${DATAinput} -v "v2022-07"
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_nei2016_linker.py\" failed."
@@ -312,7 +318,7 @@ if [ "${MASKS}" = "TRUE" ]; then # MASKS
   ln -sf ${NEXUS_INPUT_BASE_DIR}/MASKS ${DATAinput}
 fi
 
-if [ "${NEI2022_GLOBTEMPO}" = "TRUE" ]; then # CAMS-TEMPO
+if [ "${NEI2022_GLOBTEMPO_METEMIS}" = "TRUE" ]; then # CAMS-TEMPO
   ln -sf ${NEXUS_INPUT_BASE_DIR}/CAMS-TEMPO ${DATAinput}
 fi
 
@@ -372,10 +378,16 @@ check_dead_link ${DATA}
 
 if [ "${USE_GFS_SFC}" = "TRUE" ]; then # GFS INPUT
   mkdir -p ${DATAinput}/GFS_SFC
-  ${USHaqm}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfcf???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
+  ${USHaqm}/nexus_utils/python/nexus_gfs_bio.py -i ${DATA}/GFS_SFC/gfs.t??z.sfc.f???.nc -o ${DATA}/GFS_SFC_MEGAN_INPUT.nc
   export err=$?
   if [ $err -ne 0 ]; then
     message_txt="FATAL ERROR Call to python script \"nexus_gfs_bio.py\" failed."
+      err_exit "${message_txt}"
+  fi
+  ${USHaqm}/nexus_utils/python/nexus_gfs_metemis.py -i ${DATA}/GFS_SFC/gfs.t??z.sfc.f???.nc -o ${DATA}/GFS_SFC_METEMIS_INPUT.nc
+  export err=$?
+  if [ $err -ne 0 ]; then
+    message_txt="FATAL ERROR Call to python script \"nexus_gfs_metemis.py\" failed."
       err_exit "${message_txt}"
   fi
 fi

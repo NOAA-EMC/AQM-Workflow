@@ -1016,3 +1016,13 @@
            "units",        "ug/m3"
            "tracer_usage", "chemistry", "type=diagnostic"
            "profile_type", "fixed", "surface_value=0.0" /
+ "TRACER", "atmos_mod", "NOy"
+           "longname",     "NOy from AQM model"
+           "units",        "ppmV"
+           "tracer_usage", "chemistry", "type=diagnostic"
+           "profile_type", "fixed", "surface_value=0.0" /
+ "TRACER", "atmos_mod", "VOC"
+           "longname",     "VOC from AQM model"
+           "units",        "ppmC"
+           "tracer_usage", "chemistry", "type=diagnostic"
+           "profile_type", "fixed", "surface_value=0.0" /
