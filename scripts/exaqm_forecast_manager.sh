@@ -99,7 +99,7 @@ if [ $cyc = 06 -o $cyc = 12 ]; then
           source_phy="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.phy.f${fhr_ct}.nc"
           target_dyn="${COMOUT}/${NET}.${cycle}${dot_ensmem}.dyn.f${fhr_ct}.nc"
           target_phy="${COMOUT}/${NET}.${cycle}${dot_ensmem}.phy.f${fhr_ct}.nc"
-          source_log="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.log.atm.f${fhr_ct}"
+          source_log="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.logf${fhr_ct}"
           if [ -e ${source_log} ]; then
             eval $NCP ${source_dyn} ${target_dyn}
             eval $NCP ${source_phy} ${target_phy}
@@ -124,7 +124,7 @@ if [ $cyc = 06 -o $cyc = 12 ]; then
             source_phy="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.phy.f${fhr_ct}.nc"
             target_dyn="${COMOUT}/${NET}.${cycle}${dot_ensmem}.dyn.f${fhr_ct}.nc"
             target_phy="${COMOUT}/${NET}.${cycle}${dot_ensmem}.phy.f${fhr_ct}.nc"
-            source_log="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.log.atm.f${fhr_ct}"
+            source_log="${shared_output_data}/${NET}.${cycle}${dot_ensmem}.logf${fhr_ct}"
             if [ -e ${source_log} ]; then
               eval $NCP ${source_dyn} ${target_dyn}
               eval $NCP ${source_phy} ${target_phy}
